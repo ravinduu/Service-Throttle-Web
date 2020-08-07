@@ -5,4 +5,4 @@ Service Throttle web is a web app for On-Demand Vehicle Detailing and Repair Ser
 You can find the documentations from [wiki](https://github.com/ravdsn/Service-Throttle-Web/wiki).
 
 ## License
-Service Throttel is [Apache-2.0 Licensed](https://github.com/ravdsn/Service-Throttle-Web/blob/master/LICENSE).
+Service Throttel Web is [Apache-2.0 Licensed](https://github.com/ravdsn/Service-Throttle-Web/blob/master/LICENSE).
