@@ -1,0 +1,28 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: st-uaa-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/service_throttle_data_warehouse
+    username: root
+    password: root
+    intialize: true
+  jpa:
+    properties:
+      hibernate:
+        dialate: org.hibernate.dialect.MySQL5InnoDBDialate
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+  mail:
+    host: localhost
+    port: 25
+    username:
+    password:
+    messages:
+      cache-duration: PT1S
+    thymeleaf:
+      cache: false
