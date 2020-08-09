@@ -14,40 +14,40 @@ public class Customer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long cId;
+    private long custId;
 
     @Size(max = 50)
     @Column(length = 50)
-    private String cFirstName;
+    private String custFirstName;
 
     @Size(max = 50)
     @Column(length = 50)
-    private String cLastName;
+    private String custLastName;
 
     @Size(min = 5, max = 254)
     @Column(length = 254, unique = true)
-    private String cPhoneNumber;
+    private String custPhoneNumber;
 
     @NotNull
     @Size(min = 5, max = 100)
     @Column(length = 100, unique = true)
-    private String cUsername;
+    private String custUsername;
 
     @JsonIgnore
     @NotNull
     @Size(min = 8)
     @Column(nullable = false)
-    private String cPassword;
+    private String custPassword;
 
     @NotNull
     @Email
     @Size(min = 5, max = 254)
     @Column(length = 254, nullable = false, unique = true)
-    private String cEmail;
+    private String custEmail;
 
     @Size(max = 254)
     @Column(length = 254)
-    private String cAddress;
+    private String custAddress;
 
     private Instant created;
 
@@ -55,68 +55,68 @@ public class Customer implements Serializable {
     @Column(nullable = false)
     private boolean activated = false;
 
-    public long getcId() {
-        return cId;
+    public long getCustId() {
+        return custId;
     }
 
-    public void setcId(long cId) {
-        this.cId = cId;
+    public void setCustId(long custId) {
+        this.custId = custId;
     }
 
-    public String getcFirstName() {
-        return cFirstName;
+    public String getCustFirstName() {
+        return custFirstName;
     }
 
-    public void setcFirstName(String cFirstName) {
-        this.cFirstName = cFirstName;
+    public void setCustFirstName(String custFirstName) {
+        this.custFirstName = custFirstName;
     }
 
-    public String getcLastName() {
-        return cLastName;
+    public String getCustLastName() {
+        return custLastName;
     }
 
-    public void setcLastName(String cLastName) {
-        this.cLastName = cLastName;
+    public void setCustLastName(String custLastName) {
+        this.custLastName = custLastName;
     }
 
-    public String getcPhoneNumber() {
-        return cPhoneNumber;
+    public String getCustPhoneNumber() {
+        return custPhoneNumber;
     }
 
-    public void setcPhoneNumber(String cPhoneNumber) {
-        this.cPhoneNumber = cPhoneNumber;
+    public void setCustPhoneNumber(String custPhoneNumber) {
+        this.custPhoneNumber = custPhoneNumber;
     }
 
-    public String getcUsername() {
-        return cUsername;
+    public String getCustUsername() {
+        return custUsername;
     }
 
-    public void setcUsername(String cUsername) {
-        this.cUsername = cUsername;
+    public void setCustUsername(String custUsername) {
+        this.custUsername = custUsername;
     }
 
-    public String getcPassword() {
-        return cPassword;
+    public String getCustPassword() {
+        return custPassword;
     }
 
-    public void setcPassword(String cPassword) {
-        this.cPassword = cPassword;
+    public void setCustPassword(String custPassword) {
+        this.custPassword = custPassword;
     }
 
-    public String getcEmail() {
-        return cEmail;
+    public String getCustEmail() {
+        return custEmail;
     }
 
-    public void setcEmail(String cEmail) {
-        this.cEmail = cEmail;
+    public void setCustEmail(String custEmail) {
+        this.custEmail = custEmail;
     }
 
-    public String getcAddress() {
-        return cAddress;
+    public String getCustAddress() {
+        return custAddress;
     }
 
-    public void setcAddress(String cAddress) {
-        this.cAddress = cAddress;
+    public void setCustAddress(String custAddress) {
+        this.custAddress = custAddress;
     }
 
     public Instant getCreated() {
@@ -138,14 +138,14 @@ public class Customer implements Serializable {
     @Override
     public String toString() {
         return "Customer{" +
-                "cId=" + cId +
-                ", cFirstName='" + cFirstName + '\'' +
-                ", cLastName='" + cLastName + '\'' +
-                ", cPhoneNumber='" + cPhoneNumber + '\'' +
-                ", cUsername='" + cUsername + '\'' +
-                ", cPassword='" + cPassword + '\'' +
-                ", cEmail='" + cEmail + '\'' +
-                ", cAddress='" + cAddress + '\'' +
+                "custId=" + custId +
+                ", custFirstName='" + custFirstName + '\'' +
+                ", custLastName='" + custLastName + '\'' +
+                ", custPhoneNumber='" + custPhoneNumber + '\'' +
+                ", custUsername='" + custUsername + '\'' +
+                ", custPassword='" + custPassword + '\'' +
+                ", custEmail='" + custEmail + '\'' +
+                ", custAddress='" + custAddress + '\'' +
                 ", created=" + created +
                 ", activated=" + activated +
                 '}';

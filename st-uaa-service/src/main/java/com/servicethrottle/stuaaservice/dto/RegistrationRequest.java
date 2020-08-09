@@ -1,49 +1,37 @@
 package com.servicethrottle.stuaaservice.dto;
 
 public class RegistrationRequest {
-    private String cEmail;
-    private String cUsername;
-    private String cPassword;
+    private String custUsername;
+    private String custEmail;
+    private String custPassword;
 
-    public RegistrationRequest(String cEmail, String cUsername, String cPassword) {
-        this.cEmail = cEmail;
-        this.cUsername = cUsername;
-        this.cPassword = cPassword;
+    public RegistrationRequest(String custEmail, String custUsername, String custPassword) {
+        this.custEmail = custEmail;
+        this.custUsername = custUsername;
+        this.custPassword = custPassword;
     }
 
-    public RegistrationRequest() {
+    public String getCustUsername() {
+        return custUsername;
     }
 
-    public String getcEmail() {
-        return cEmail;
+    public void setCustUsername(String custUsername) {
+        this.custUsername = custUsername;
     }
 
-    public void setcEmail(String cEmail) {
-        this.cEmail = cEmail;
+    public String getCustEmail() {
+        return custEmail;
     }
 
-    public String getcUsername() {
-        return cUsername;
+    public void setCustEmail(String custEmail) {
+        this.custEmail = custEmail;
     }
 
-    public void setcUsername(String cUsername) {
-        this.cUsername = cUsername;
+    public String getCustPassword() {
+        return custPassword;
     }
 
-    public String getcPassword() {
-        return cPassword;
-    }
-
-    public void setcPassword(String cPassword) {
-        this.cPassword = cPassword;
-    }
-
-    @Override
-    public String toString() {
-        return "RegistrationRequest{" +
-                "cEmail='" + cEmail + '\'' +
-                ", cUsername='" + cUsername + '\'' +
-                ", cPassword='" + cPassword + '\'' +
-                '}';
+    public void setCustPassword(String custPassword) {
+        this.custPassword = custPassword;
     }
 }
