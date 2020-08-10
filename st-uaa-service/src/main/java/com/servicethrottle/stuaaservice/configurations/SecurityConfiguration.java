@@ -18,6 +18,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeRequests()
                 .antMatchers("/account/register").permitAll()
+                .antMatchers("/account/activate/**").permitAll()
+                .antMatchers("/account/edit").permitAll()
                 .anyRequest().authenticated();
     }
 
