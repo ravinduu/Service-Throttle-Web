@@ -24,8 +24,8 @@ public class Customer implements Serializable {
     @Column(length = 50)
     private String custLastName;
 
-    @Size(min = 5, max = 254)
-    @Column(length = 254, unique = true)
+    @Size(min = 9, max = 12)
+    @Column(length = 12, unique = true)
     private String custPhoneNumber;
 
     @NotNull

@@ -13,8 +13,6 @@ public class ActivationCode {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @NotNull
-    @Column(nullable = false)
     private String activationCode;
 
     @OneToOne(fetch = LAZY)
