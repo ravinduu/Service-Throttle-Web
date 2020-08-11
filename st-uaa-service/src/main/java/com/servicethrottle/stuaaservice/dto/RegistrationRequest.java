@@ -1,8 +1,25 @@
 package com.servicethrottle.stuaaservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class RegistrationRequest {
+
+    @NotNull
+    @Size(min = 5, max = 100)
     private String custUsername;
+
+    @NotNull
+    @Email
+    @Size(min = 5, max = 254)
     private String custEmail;
+
+    @JsonIgnore
+    @NotNull
+    @Size(min = 8)
     private String custPassword;
 
     public RegistrationRequest(String custEmail, String custUsername, String custPassword) {

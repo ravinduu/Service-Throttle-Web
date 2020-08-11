@@ -1,10 +1,28 @@
 package com.servicethrottle.stuaaservice.dto;
 
+import javax.persistence.Column;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class EditRequest {
+
+    @Size(max = 50)
     private String custFirstName;
+
+    @Size(max = 50)
     private String custLastName;
+
+    @Size(min = 9, max = 12)
     private String custPhoneNumber;
+
+    @NotNull
+    @Email
+    @Size(min = 5, max = 254)
     private String custEmail;
+
+    @Size(max = 254)
+    @Column(length = 254)
     private String custAddress;
 
     public EditRequest(String custFirstName,
