@@ -7,9 +7,11 @@ import com.servicethrottle.stuaaservice.exceptions.InvalidActivationCodeExceptio
 import com.servicethrottle.stuaaservice.exceptions.UsernameAlreadyUsedException;
 import com.servicethrottle.stuaaservice.models.ActivationCode;
 import com.servicethrottle.stuaaservice.models.Customer;
+import com.servicethrottle.stuaaservice.models.Login;
 import com.servicethrottle.stuaaservice.repositories.ActivationCodeRepository;
 import com.servicethrottle.stuaaservice.repositories.CustomerRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,18 +27,19 @@ import java.util.UUID;
 @Transactional
 public class CustomerService {
 
-    final
-    CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
-    final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    final
-    ActivationCodeRepository activationCodeRepository;
+    private final ActivationCodeRepository activationCodeRepository;
 
-    public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder, ActivationCodeRepository activationCodeRepository) {
+    private final LoginService loginService;
+
+    public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder, ActivationCodeRepository activationCodeRepository, LoginService loginService) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
         this.activationCodeRepository = activationCodeRepository;
+        this.loginService = loginService;
     }
 
 
@@ -70,7 +73,6 @@ public class CustomerService {
         activationCode.setCustomer(customer);
         activationCodeRepository.save(activationCode);
         return code;
-
     }
 
     private void activateAccount(ActivationCode activationCode) throws AccountNotFoundException {
@@ -80,12 +82,19 @@ public class CustomerService {
                         .getCustUsername())
                         .orElseThrow(() -> new AccountNotFoundException());
         customer.setActivated(true);
+
+        Login newLogin = new Login();
+        newLogin.setPassword(customer.getCustPassword());
+        newLogin.setUsername(customer.getCustUsername());
+        loginService.createLogin(newLogin);
+
         customerRepository.save(customer);
     }
 
     public void verifyCode(String code) throws AccountNotFoundException {
         Optional<ActivationCode> activationCode = activationCodeRepository.findByActivationCode(code);
         activateAccount(activationCode.orElseThrow(() -> new InvalidActivationCodeException()));
+        activationCode.ifPresent(activationCode1 -> activationCodeRepository.deleteById(activationCode1.getId()));
     }
 
     public void editAccount(EditRequest editRequest) throws AccountNotFoundException {
