@@ -26,3 +26,10 @@ spring:
       cache-duration: PT1S
     thymeleaf:
       cache: false
+
+language:
+  key: en-US
+
+ServiceThrottle:
+  email: servicethrottle@example.com
+  subject: Service Throttle account Activation Email
