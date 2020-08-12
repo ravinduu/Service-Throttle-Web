@@ -17,7 +17,6 @@ public class RegistrationRequest {
     @Size(min = 5, max = 254)
     private String custEmail;
 
-    @JsonIgnore
     @NotNull
     @Size(min = 8)
     private String custPassword;
