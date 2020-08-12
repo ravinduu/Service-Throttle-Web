@@ -11,14 +11,11 @@ import com.servicethrottle.stuaaservice.models.Login;
 import com.servicethrottle.stuaaservice.repositories.ActivationCodeRepository;
 import com.servicethrottle.stuaaservice.repositories.CustomerRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.auth.login.AccountNotFoundException;
-import javax.validation.constraints.Null;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,11 +32,14 @@ public class CustomerService {
 
     private final LoginService loginService;
 
-    public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder, ActivationCodeRepository activationCodeRepository, LoginService loginService) {
+    private final MailService mailService;
+
+    public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder, ActivationCodeRepository activationCodeRepository, LoginService loginService, MailService mailService) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
         this.activationCodeRepository = activationCodeRepository;
         this.loginService = loginService;
+        this.mailService = mailService;
     }
 
 
@@ -57,8 +57,7 @@ public class CustomerService {
         customer.setActivated(false);
         customer.setCreated(Instant.now());
         customerRepository.save(customer);
-
-        String activationCode = this.generateActivationCode(customer);// send this from mail;
+        this.generateActivationCode(customer);
         return customer;
     }
 
@@ -66,13 +65,13 @@ public class CustomerService {
         return passwordEncoder.encode(password);
     }
 
-    private String generateActivationCode(Customer customer) {
+    private void generateActivationCode(Customer customer) {
         String code = UUID.randomUUID().toString();
         ActivationCode activationCode = new ActivationCode();
         activationCode.setActivationCode(code);
         activationCode.setCustomer(customer);
         activationCodeRepository.save(activationCode);
-        return code;
+        //mailService.sendActivationEmail(activationCode);
     }
 
     private void activateAccount(ActivationCode activationCode) throws AccountNotFoundException {
@@ -91,10 +90,12 @@ public class CustomerService {
         customerRepository.save(customer);
     }
 
-    public void verifyCode(String code) throws AccountNotFoundException {
+    public String verifyCode(String code) throws AccountNotFoundException {
         Optional<ActivationCode> activationCode = activationCodeRepository.findByActivationCode(code);
+        String username = activationCode.get().getCustomer().getCustUsername();
         activateAccount(activationCode.orElseThrow(() -> new InvalidActivationCodeException()));
         activationCode.ifPresent(activationCode1 -> activationCodeRepository.deleteById(activationCode1.getId()));
+        return username;
     }
 
     public void editAccount(EditRequest editRequest) throws AccountNotFoundException {
@@ -109,5 +110,12 @@ public class CustomerService {
             customer.setCustAddress(editRequest.getCustAddress());
             customerRepository.save(customer);
         }
+    }
+
+    public Customer getCustomer(String username) throws AccountNotFoundException {
+        Customer customer = customerRepository
+                .findOneByCustUsername(username)
+                .orElseThrow(() -> new AccountNotFoundException());
+        return customer;
     }
 }
