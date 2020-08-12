@@ -4,23 +4,29 @@ import com.servicethrottle.stuaaservice.dto.EditRequest;
 import com.servicethrottle.stuaaservice.dto.RegistrationRequest;
 import com.servicethrottle.stuaaservice.models.Customer;
 import com.servicethrottle.stuaaservice.services.CustomerService;
+import org.apache.tomcat.util.http.HeaderUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.io.NotActiveException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @RestController
 @RequestMapping("/account")
 public class AccountController {
 
-    final
-    CustomerService customerService;
+    private final RestTemplate restTemplate;
 
-    public AccountController(CustomerService customerService) {
+    private final CustomerService customerService;
+
+    public AccountController(CustomerService customerService, RestTemplate restTemplate) {
         this.customerService = customerService;
+        this.restTemplate = restTemplate;
     }
 
     @PostMapping("/register")
@@ -30,10 +36,9 @@ public class AccountController {
     }
 
     @GetMapping("/activate/{code}")
-    public ResponseEntity<String> activateAccount(@PathVariable ("code") String code)
-            throws AccountNotFoundException {
-        customerService.verifyCode(code);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public Customer activateAccount(@PathVariable ("code") String code)
+            throws AccountNotFoundException, URISyntaxException {
+        return restTemplate.getForObject("http://localhost:8081/customer/"+customerService.verifyCode(code), Customer.class);
     }
 
     @PutMapping("/edit")
