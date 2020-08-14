@@ -1,5 +1,7 @@
 package com.servicethrottle.stuaaservice.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 import static javax.persistence.FetchType.LAZY;
