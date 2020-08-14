@@ -1,20 +1,19 @@
 package com.servicethrottle.stuaaservice.controllers;
 
-import com.servicethrottle.stuaaservice.dto.EditRequest;
+import com.servicethrottle.stuaaservice.dto.FinishRequest;
 import com.servicethrottle.stuaaservice.dto.RegistrationRequest;
 import com.servicethrottle.stuaaservice.models.Customer;
 import com.servicethrottle.stuaaservice.services.CustomerService;
-import org.apache.tomcat.util.http.HeaderUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.security.auth.login.AccountNotFoundException;
-import java.io.NotActiveException;
-import java.net.URI;
 import java.net.URISyntaxException;
+
+//REST controller for managing creation of customer accounts as well as
+//        verification new account and reset password
 
 @RestController
 @RequestMapping("/account")
@@ -29,33 +28,43 @@ public class AccountController {
         this.restTemplate = restTemplate;
     }
 
+
+//    registerAccount method is for add new customer to the system
+//    verification code is send to the email
+//    can access by anyone
+//    inputs are username, password and email, RegistrationRequest DTO
     @PostMapping("/register")
     public ResponseEntity<String> registerAccount(@RequestBody RegistrationRequest registrationRequest){
         customerService.registerUser(registrationRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+//    activateAccount method if for activate, verify the account of  newly added customer using the verification code
+//    verification code send to the email
     @GetMapping("/activate/{code}")
     public Customer activateAccount(@PathVariable ("code") String code)
             throws AccountNotFoundException, URISyntaxException {
         return restTemplate.getForObject("http://localhost:8081/customer/"+customerService.verifyCode(code), Customer.class);
     }
 
-    @PutMapping("/edit")
-    public ResponseEntity<String> editAccount(@RequestBody EditRequest editRequest)
+//    finish new account creation
+//    add missing data
+//    use FinishRequestDto
+    @PutMapping("/finish/{username}")
+    public ResponseEntity<String> finishAccount(
+            @RequestBody FinishRequest finishRequest,
+            @PathVariable ("username") String username)
             throws AccountNotFoundException{
-        customerService.editAccount(editRequest);
+        customerService.finishAccount(finishRequest, username);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/change-password")
-    public ResponseEntity<String> changePassword(/*password change request*/){
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
+//    reset password of an existing Account by email request
+//    parameter is the customer email
     @PutMapping("/reset-password/init")
-    public ResponseEntity<String> requestPasswordReset(/*password change request*/){
-        //this send email for change password
+    public ResponseEntity<String> requestPasswordReset(String custEmail){
+        customerService.passwordResetEmail(custEmail);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

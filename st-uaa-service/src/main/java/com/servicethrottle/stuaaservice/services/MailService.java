@@ -2,6 +2,7 @@ package com.servicethrottle.stuaaservice.services;
 
 import com.servicethrottle.stuaaservice.exceptions.MailSendingFailException;
 import com.servicethrottle.stuaaservice.models.ActivationCode;
+import com.servicethrottle.stuaaservice.models.PasswordResetKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -18,8 +19,6 @@ public class MailService {
     @Value("${ServiceThrottle.Email")
     private String serviceThrottleEmail;
 
-    @Value("${ServiceThrottle.subject")
-    private String serviceThrottleEmailSubject;
 
     private final JavaMailSender mailSender;
 
@@ -28,13 +27,18 @@ public class MailService {
     }
 
     public void sendActivationEmail(ActivationCode activationCode) {
-        sendEmail(activationCode,
-                serviceThrottleEmailSubject,
+        sendEmail(activationCode.getCustomer().getCustEmail(),
+                "Service Throttle account Activation Email",
                 "please click on the below url to activate your account :" + " path/"+activationCode.getActivationCode());
     }
 
-    private void sendEmail(ActivationCode activationCode, String subject, String body) {
-        String recipient = activationCode.getCustomer().getCustEmail();
+    public void sendPasswordResetRequestEmail(PasswordResetKey passwordResetKey) {
+        sendEmail(passwordResetKey.getCustomer().getCustEmail(),
+                "Service Throttle Password Reset Key",
+                "Use this Key to reset Your password : " + passwordResetKey.getResetKey());
+    }
+
+    private void sendEmail(String recipient, String subject, String body) {
         if(recipient.equals(null)) return;
         MimeMessagePreparator mimeMessagePreparator = mimeMessage -> {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
@@ -52,4 +56,5 @@ public class MailService {
         }
 
     }
+
 }
