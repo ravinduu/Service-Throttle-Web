@@ -15,7 +15,7 @@ spring:
       hibernate:
         dialate: org.hibernate.dialect.MySQL5InnoDBDialate
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     generate-ddl: true
   mail:
     host: localhost
@@ -32,4 +32,3 @@ language:
 
 ServiceThrottle:
   email: servicethrottle@example.com
-  subject: Service Throttle account Activation Email
