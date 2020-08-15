@@ -48,6 +48,14 @@ public class AccountController {
         return restTemplate.getForObject("http://localhost:8081/customer/"+customerService.verifyCode(code), Customer.class);
     }
 
+//    resend activation code
+//    new activation code will send to the email
+    @PutMapping("/resend-code")
+    public ResponseEntity<String> resendActivationCode(@RequestBody RegistrationRequest registrationRequest) throws AccountNotFoundException {
+        customerService.resendActivationCode(registrationRequest);
+        return ResponseEntity.ok().body("Resend Code");
+    }
+
 //    finish new account creation
 //    add missing data
 //    use FinishRequestDto
@@ -66,7 +74,7 @@ public class AccountController {
     @PostMapping("/reset-password/init")
     public ResponseEntity<String> requestPasswordReset(@RequestBody String custEmail){
         customerService.passwordResetEmail(custEmail);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().body("Key send to email");
     }
 
 

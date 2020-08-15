@@ -11,6 +11,7 @@ import com.servicethrottle.stuaaservice.models.PasswordResetKey;
 import com.servicethrottle.stuaaservice.repositories.ActivationCodeRepository;
 import com.servicethrottle.stuaaservice.repositories.CustomerRepository;
 
+import com.servicethrottle.stuaaservice.repositories.LoginRepository;
 import com.servicethrottle.stuaaservice.repositories.PasswordResetRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -171,7 +172,6 @@ public class CustomerService {
         // reset old password to new password and save
         customer.setCustPassword(encodePassword(newPassword));
         customerRepository.save(customer);
-
 //        remove resetKeyDetails
         passwordResetRepository.deleteById(passwordResetKey.getId());
     }
@@ -187,7 +187,23 @@ public class CustomerService {
     public void deleteCustomer(String username) throws AccountNotFoundException {
 //        get customer
         Customer customer = getCustomer(username);
-//        delete that customer
+//        delete login data of the customer
+        loginService.deleteLogin(customer);
         customerRepository.delete(customer);
+    }
+
+
+    public void resendActivationCode(RegistrationRequest registrationRequest) throws AccountNotFoundException {
+        String custUsername = registrationRequest.getCustUsername();
+        Customer customer = getCustomer(custUsername);
+        //find old code
+        ActivationCode activationCode = activationCodeRepository.findByCustomer(customer).get(); // add custom exception <<account already activated>>
+//        create new code and save it
+        String newCode = UUID.randomUUID().toString();
+//        activation code and customer details save in ActivationCode table
+        activationCode.setActivationCode(newCode);
+        activationCodeRepository.save(activationCode);
+//        send new code to email
+        //mailService.sendActivationEmail(activationCode);
     }
 }

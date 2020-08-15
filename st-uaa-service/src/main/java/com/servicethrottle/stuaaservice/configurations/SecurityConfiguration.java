@@ -19,7 +19,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/account/register").permitAll()
                 .antMatchers("/account/activate/**").permitAll()
-                .antMatchers("/account/edit").permitAll()
+                .antMatchers("/account/resend-code").permitAll()
                 .antMatchers("/customer/**").permitAll()
                 .antMatchers("/customer/delete/**").permitAll()
                 .antMatchers("/login").permitAll()
