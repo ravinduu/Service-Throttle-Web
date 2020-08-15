@@ -184,4 +184,10 @@ public class CustomerService {
         return customer;
     }
 
+    public void deleteCustomer(String username) throws AccountNotFoundException {
+//        get customer
+        Customer customer = getCustomer(username);
+//        delete that customer
+        customerRepository.delete(customer);
+    }
 }

@@ -2,6 +2,7 @@ package com.servicethrottle.stuaaservice.controllers;
 
 import com.servicethrottle.stuaaservice.models.Customer;
 import com.servicethrottle.stuaaservice.services.CustomerService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +36,12 @@ public class CustomerController {
         return customerService.getAll();
     }
 
-
-
+//    delete customer
+//    can access by account owner as well as the admins
+    @DeleteMapping("/delete/{username}")
+    public ResponseEntity<String> deleteCustomer(@PathVariable ("username") String username) throws AccountNotFoundException {
+        customerService.deleteCustomer(username);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }
