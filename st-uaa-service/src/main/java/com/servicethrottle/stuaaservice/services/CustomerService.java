@@ -2,10 +2,8 @@ package com.servicethrottle.stuaaservice.services;
 
 import com.servicethrottle.stuaaservice.dto.FinishRequest;
 import com.servicethrottle.stuaaservice.dto.RegistrationRequest;
-import com.servicethrottle.stuaaservice.exceptions.AccountNotActivatedException;
-import com.servicethrottle.stuaaservice.exceptions.InvalidActivationCodeException;
-import com.servicethrottle.stuaaservice.exceptions.NoAccountByThisEmailException;
-import com.servicethrottle.stuaaservice.exceptions.UsernameAlreadyUsedException;
+import com.servicethrottle.stuaaservice.dto.ResetPasswordRequest;
+import com.servicethrottle.stuaaservice.exceptions.*;
 import com.servicethrottle.stuaaservice.models.ActivationCode;
 import com.servicethrottle.stuaaservice.models.Customer;
 import com.servicethrottle.stuaaservice.models.Login;
@@ -149,6 +147,7 @@ public class CustomerService {
     }
 
     public void passwordResetEmail(String custEmail) {
+        System.out.println(custEmail+"Customer service");
         Customer customer = getCustomerByEmail(custEmail);
 //        customer get password reset key
         String key = UUID.randomUUID().toString();
@@ -159,7 +158,22 @@ public class CustomerService {
         passwordResetRepository.save(passwordResetKey);
 //        send reset password request email
 //        mailService.sendPasswordResetRequestEmail(passwordResetKey);
+    }
 
+    public void finishPasswordReset(ResetPasswordRequest resetPasswordRequest) {
+//        verify the reset key
+        String resetKey = resetPasswordRequest.getResetKey();
+        PasswordResetKey passwordResetKey = passwordResetRepository.findOneByResetKey(resetKey)
+                .orElseThrow(()-> new InvalidResetKeyException());
+
+        String newPassword = resetPasswordRequest.getNewPassword();
+        Customer customer = passwordResetKey.getCustomer();
+        // reset old password to new password and save
+        customer.setCustPassword(encodePassword(newPassword));
+        customerRepository.save(customer);
+
+//        remove resetKeyDetails
+        passwordResetRepository.deleteById(passwordResetKey.getId());
     }
 
 
@@ -169,4 +183,5 @@ public class CustomerService {
                 .orElseThrow(() -> new NoAccountByThisEmailException());
         return customer;
     }
+
 }

@@ -2,6 +2,7 @@ package com.servicethrottle.stuaaservice.controllers;
 
 import com.servicethrottle.stuaaservice.dto.FinishRequest;
 import com.servicethrottle.stuaaservice.dto.RegistrationRequest;
+import com.servicethrottle.stuaaservice.dto.ResetPasswordRequest;
 import com.servicethrottle.stuaaservice.models.Customer;
 import com.servicethrottle.stuaaservice.services.CustomerService;
 import org.springframework.http.HttpStatus;
@@ -62,14 +63,19 @@ public class AccountController {
 
 //    reset password of an existing Account by email request
 //    parameter is the customer email
-    @PutMapping("/reset-password/init")
-    public ResponseEntity<String> requestPasswordReset(String custEmail){
+    @PostMapping("/reset-password/init")
+    public ResponseEntity<String> requestPasswordReset(@RequestBody String custEmail){
         customerService.passwordResetEmail(custEmail);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/reset-password/finish")
-    public ResponseEntity<String> finishPasswordReset(/*RequestBody KeyAndPasswordVM keyAndPassword*/) {
+
+//    password reset finish
+//    user ResetPasswordRequest DTO
+//    parameters are resetkey and newPassword
+    @PutMapping("/reset-password/finish")
+    public ResponseEntity<String> finishPasswordReset(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+        customerService.finishPasswordReset(resetPasswordRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
