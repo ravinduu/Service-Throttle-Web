@@ -20,13 +20,10 @@ import java.net.URISyntaxException;
 @RequestMapping("/account")
 public class AccountController {
 
-    private final RestTemplate restTemplate;
-
     private final CustomerService customerService;
 
-    public AccountController(CustomerService customerService, RestTemplate restTemplate) {
+    public AccountController(CustomerService customerService) {
         this.customerService = customerService;
-        this.restTemplate = restTemplate;
     }
 
 
@@ -40,32 +37,35 @@ public class AccountController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+
 //    activateAccount method if for activate, verify the account of  newly added customer using the verification code
 //    verification code send to the email
-    @GetMapping("/activate/{code}")
-    public Customer activateAccount(@PathVariable ("code") String code)
+    @GetMapping("/activate")
+    public ResponseEntity<String> activateAccount(@RequestBody String code)
             throws AccountNotFoundException, URISyntaxException {
-        return restTemplate.getForObject("http://localhost:8081/customer/"+customerService.verifyCode(code), Customer.class);
+        customerService.verifyCode(code);
+        return ResponseEntity.ok().body("Your Account successfully activated");
     }
+
 
 //    resend activation code
 //    new activation code will send to the email
     @PutMapping("/resend-code")
     public ResponseEntity<String> resendActivationCode(@RequestBody RegistrationRequest registrationRequest) throws AccountNotFoundException {
         customerService.resendActivationCode(registrationRequest);
-        return ResponseEntity.ok().body("Resend Code");
+        return ResponseEntity.ok().body("Your account activation code have resend");
     }
+
 
 //    finish new account creation
 //    add missing data
 //    use FinishRequestDto
-    @PutMapping("/finish/{username}")
+    @PutMapping("/finish/")
     public ResponseEntity<String> finishAccount(
-            @RequestBody FinishRequest finishRequest,
-            @PathVariable ("username") String username)
+            @RequestBody FinishRequest finishRequest)
             throws AccountNotFoundException{
-        customerService.finishAccount(finishRequest, username);
-        return new ResponseEntity<>(HttpStatus.OK);
+        customerService.finishAccount(finishRequest);
+        return ResponseEntity.ok().body("Your account creation success");
     }
 
 
@@ -74,7 +74,7 @@ public class AccountController {
     @PostMapping("/reset-password/init")
     public ResponseEntity<String> requestPasswordReset(@RequestBody String custEmail){
         customerService.passwordResetEmail(custEmail);
-        return ResponseEntity.ok().body("Key send to email");
+        return ResponseEntity.ok().body("Key have send to your email");
     }
 
 
@@ -84,7 +84,7 @@ public class AccountController {
     @PutMapping("/reset-password/finish")
     public ResponseEntity<String> finishPasswordReset(@RequestBody ResetPasswordRequest resetPasswordRequest) {
         customerService.finishPasswordReset(resetPasswordRequest);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().body("Password reset wsa success");
     }
 
 }
