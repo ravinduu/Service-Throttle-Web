@@ -1,5 +1,6 @@
 package com.servicethrottle.stuaaservice.services;
 
+import com.servicethrottle.stuaaservice.dto.EditRequest;
 import com.servicethrottle.stuaaservice.dto.FinishRequest;
 import com.servicethrottle.stuaaservice.dto.RegistrationRequest;
 import com.servicethrottle.stuaaservice.dto.ResetPasswordRequest;
@@ -122,8 +123,8 @@ public class CustomerService {
         return username;
     }
 
-    public void finishAccount(FinishRequest finishRequest, String username) throws AccountNotFoundException {
-        Customer customer = getCustomer(username);
+    public void finishAccount(FinishRequest finishRequest) throws AccountNotFoundException {
+        Customer customer = getCustomer(finishRequest.getCustUsername());
         if (!customer.isActivated()) throw new AccountNotActivatedException();
         else {
             customer.setCustFirstName(finishRequest.getCustFirstName());
@@ -206,4 +207,37 @@ public class CustomerService {
 //        send new code to email
         //mailService.sendActivationEmail(activationCode);
     }
+
+    public void editCustomer(EditRequest editRequest) throws AccountNotFoundException {
+        String newUsername = editRequest.getCustUsername();
+        String newEmail = editRequest.getCustEmail();
+        Optional<Customer> customerExist;
+
+//        check if the new username is already used
+        customerExist = customerRepository.findOneByCustUsername(newUsername);
+        if (customerExist.isPresent() && customerExist.get().getCustId() != editRequest.getCustId()){
+            throw new UsernameAlreadyUsedException();
+        }
+//        check is the new email is already used
+        customerExist = customerRepository.findOneByCustEmail(newEmail);
+        if (customerExist.isPresent() && customerExist.get().getCustId() != editRequest.getCustId()){
+            throw new EmailAlreadyUsedException();
+        }
+
+        String username = newUsername; //this should get by jwt auth from auth server
+        Customer customer = getCustomer(username);
+
+//        update new details
+        customer.setCustUsername(editRequest.getCustUsername());
+        customer.setCustFirstName(editRequest.getCustFirstName());
+        customer.setCustLastName(editRequest.getCustLastName());
+        customer.setCustAddress(editRequest.getCustAddress());
+        customer.setCustPhoneNumber(editRequest.getCustPhoneNumber());
+        customer.setCustEmail(editRequest.getCustEmail());
+
+//        save new details
+        customerRepository.save(customer);
+    }
+
+
 }

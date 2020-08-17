@@ -1,5 +1,6 @@
 package com.servicethrottle.stuaaservice.controllers;
 
+import com.servicethrottle.stuaaservice.dto.EditRequest;
 import com.servicethrottle.stuaaservice.models.Customer;
 import com.servicethrottle.stuaaservice.services.CustomerService;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,6 @@ public class CustomerController {
         return customerService.getCustomer(username);
     }
 
-
 //    get all customers
 //    this method only access by admins
     @GetMapping("/all")
@@ -41,7 +41,14 @@ public class CustomerController {
     @DeleteMapping("/delete/{username}")
     public ResponseEntity<String> deleteCustomer(@PathVariable ("username") String username) throws AccountNotFoundException {
         customerService.deleteCustomer(username);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().body(username+" was successfully deleted");
     }
 
+//    edit details of the current customer
+//    param is edit request dto
+    @PutMapping("/edit")
+    public ResponseEntity<String> editCustomer(@RequestBody EditRequest editRequest) throws AccountNotFoundException {
+        customerService.editCustomer(editRequest);
+        return ResponseEntity.ok().body(editRequest.getCustUsername()+" was successfully updated");
+    }
 }
