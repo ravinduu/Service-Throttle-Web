@@ -16,6 +16,9 @@ public class AuthController {
         this.authService = authService;
     }
 
+//    login
+//    use Login request dto
+//    outputs are jwt and username
     @PostMapping("/login")
     public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) throws Exception, UsernameOrPasswordInvalidException {
         try {

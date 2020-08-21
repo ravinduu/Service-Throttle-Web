@@ -1,5 +1,7 @@
 package com.servicethrottle.stauthapigateway.dto;
 
+//class for login request
+//username and password
 public class LoginRequest {
     private String username;
     private String password;

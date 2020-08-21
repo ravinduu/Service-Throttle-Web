@@ -21,13 +21,17 @@ public class AuthService {
         this.jwtProvider = jwtProvider;
     }
 
+//    login
     public AuthenticationResponse login(LoginRequest loginRequest) throws Exception {
+//        use username and pwd authentication
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(), loginRequest.getPassword()
         ));
 
+//        save data in contex
         SecurityContextHolder.getContext().setAuthentication(authenticate);
 
+//        get jwt
         String jwtToken = jwtProvider.generateToken(authenticate);
 
         return new AuthenticationResponse(jwtToken,loginRequest.getUsername());

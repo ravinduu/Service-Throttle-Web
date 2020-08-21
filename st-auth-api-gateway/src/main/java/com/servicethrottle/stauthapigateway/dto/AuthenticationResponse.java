@@ -1,5 +1,7 @@
 package com.servicethrottle.stauthapigateway.dto;
 
+//class for auth response
+//jwt and username
 public class AuthenticationResponse {
     private String jwtToken;
     private String username;

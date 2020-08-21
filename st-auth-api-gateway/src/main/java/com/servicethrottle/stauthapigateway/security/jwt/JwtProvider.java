@@ -17,6 +17,7 @@ public class JwtProvider {
     private final String SECRET_KEY = "secret";
     private final int jwtExpirationInMillis = 1000 * 60 * 60 * 10;
 
+//    jwt generation using authentication
     public String generateToken(Authentication authentication) throws Exception {
         User principal = (User) authentication.getPrincipal();
         Map<String, Object> claims = new HashMap<>();
@@ -30,6 +31,7 @@ public class JwtProvider {
                 .compact();
     }
 
+//    jwt generation using username
     public String generateTokenWithUserName(String username) throws Exception {
         return Jwts.builder()
                 .setSubject(username)
