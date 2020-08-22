@@ -20,11 +20,6 @@ public class LoginService {
         loginRepository.save(newLogin);
     }
 
-    public Login authorizeLogin(LoginRequest loginRequest) {
-        Login login = loginRepository.findOneByUsername(loginRequest.getUsername()).get();
-        return login;
-    }
-
     public void deleteLogin(Customer customer) {
         Login login = loginRepository.findOneByUsername(customer.getCustUsername()).get();
         loginRepository.delete(login);
