@@ -1,9 +1,6 @@
 package com.servicethrottle.stuaaservice.services;
 
-import com.servicethrottle.stuaaservice.dto.EditRequest;
-import com.servicethrottle.stuaaservice.dto.FinishRequest;
-import com.servicethrottle.stuaaservice.dto.RegistrationRequest;
-import com.servicethrottle.stuaaservice.dto.ResetPasswordRequest;
+import com.servicethrottle.stuaaservice.dto.*;
 import com.servicethrottle.stuaaservice.exceptions.*;
 import com.servicethrottle.stuaaservice.models.ActivationCode;
 import com.servicethrottle.stuaaservice.models.Customer;
@@ -12,17 +9,22 @@ import com.servicethrottle.stuaaservice.models.PasswordResetKey;
 import com.servicethrottle.stuaaservice.repositories.ActivationCodeRepository;
 import com.servicethrottle.stuaaservice.repositories.CustomerRepository;
 
-import com.servicethrottle.stuaaservice.repositories.LoginRepository;
 import com.servicethrottle.stuaaservice.repositories.PasswordResetRepository;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import javax.security.auth.login.AccountNotFoundException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 
 //
 @Service
@@ -41,18 +43,21 @@ public class CustomerService {
 
     private final PasswordResetRepository passwordResetRepository;
 
+    private final RestTemplate restTemplate;
+
     public CustomerService(CustomerRepository customerRepository,
                            PasswordEncoder passwordEncoder,
                            ActivationCodeRepository activationCodeRepository,
                            LoginService loginService,
                            MailService mailService,
-                           PasswordResetRepository passwordResetRepository) {
+                           PasswordResetRepository passwordResetRepository, RestTemplate restTemplate) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
         this.activationCodeRepository = activationCodeRepository;
         this.loginService = loginService;
         this.mailService = mailService;
         this.passwordResetRepository = passwordResetRepository;
+        this.restTemplate = restTemplate;
     }
 
 
@@ -96,7 +101,7 @@ public class CustomerService {
         //mailService.sendActivationEmail(activationCode);
     }
 
-    private void activateAccount(ActivationCode activationCode) throws AccountNotFoundException {
+    private AuthenticationResponse activateAccount(ActivationCode activationCode) throws AccountNotFoundException, URISyntaxException {
         Customer customer = customerRepository
                 .findOneByCustUsername(activationCode
                         .getCustomer()
@@ -110,17 +115,38 @@ public class CustomerService {
         newLogin.setUsername(customer.getCustUsername());
 //        save customer username and encrypted password in separate table
         loginService.createLogin(newLogin);
+        System.out.println(newLogin);
 
+//        save updated user
         customerRepository.save(customer);
+        System.out.println(customer);
+
+//        HttpHeaders headers = new HttpHeaders(); // *** had to fix ***
+//        headers.
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        HttpEntity<Login> request = new HttpEntity<>(newLogin);
+//        AuthenticationResponse authenticationResponse = restTemplate.exchange("http://localhost:8080/st/login", HttpMethod.POST, request, new ParameterizedTypeReference<List<AuthenticationResponse>>() { });
+
+//        get authentication token from auth-gateway server from rest call
+//        AuthenticationResponse authenticationResponse = restTemplate.postForObject("http://ST-AUTH-API-GATEWAY/st/login", newLogin, AuthenticationResponse.class);
+
+        String message = restTemplate.getForObject("http://ST-AUTH-API-GATEWAY/st/hello",String.class);
+//        URI uri = new URI("http://localhost:8080/st/login");
+
+
+        AuthenticationResponse authenticationResponse = restTemplate.postForObject("http://localhost:8080/st/login", newLogin, AuthenticationResponse.class);
+//        AuthenticationResponse authenticationResponse = new AuthenticationResponse(null,null);
+        System.out.println(message);
+        return authenticationResponse;
     }
 
-    public String verifyCode(String code) throws AccountNotFoundException {
+    public AuthenticationResponse verifyCode(String code) throws AccountNotFoundException, URISyntaxException {
         Optional<ActivationCode> activationCode = activationCodeRepository.findByActivationCode(code);
         String username = activationCode.get().getCustomer().getCustUsername();
 //        check the code is correct or not
-        activateAccount(activationCode.orElseThrow(() -> new InvalidActivationCodeException()));
+        AuthenticationResponse authenticationResponse = activateAccount(activationCode.orElseThrow(() -> new InvalidActivationCodeException()));
         activationCode.ifPresent(activationCode1 -> activationCodeRepository.deleteById(activationCode1.getId()));
-        return username;
+        return authenticationResponse;
     }
 
     public void finishAccount(FinishRequest finishRequest) throws AccountNotFoundException {

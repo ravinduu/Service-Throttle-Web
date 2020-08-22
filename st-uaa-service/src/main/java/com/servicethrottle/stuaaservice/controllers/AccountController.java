@@ -1,5 +1,6 @@
 package com.servicethrottle.stuaaservice.controllers;
 
+import com.servicethrottle.stuaaservice.dto.AuthenticationResponse;
 import com.servicethrottle.stuaaservice.dto.FinishRequest;
 import com.servicethrottle.stuaaservice.dto.RegistrationRequest;
 import com.servicethrottle.stuaaservice.dto.ResetPasswordRequest;
@@ -41,10 +42,9 @@ public class AccountController {
 //    activateAccount method if for activate, verify the account of  newly added customer using the verification code
 //    verification code send to the email
     @GetMapping("/activate")
-    public ResponseEntity<String> activateAccount(@RequestBody String code)
+    public ResponseEntity<AuthenticationResponse> activateAccount(@RequestBody String code)
             throws AccountNotFoundException, URISyntaxException {
-        customerService.verifyCode(code);
-        return ResponseEntity.ok().body("Your Account successfully activated");
+        return ResponseEntity.ok().body(customerService.verifyCode(code));
     }
 
 
