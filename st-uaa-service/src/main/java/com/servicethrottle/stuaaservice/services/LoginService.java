@@ -1,6 +1,5 @@
 package com.servicethrottle.stuaaservice.services;
 
-import com.servicethrottle.stuaaservice.dto.LoginRequest;
 import com.servicethrottle.stuaaservice.models.Customer;
 import com.servicethrottle.stuaaservice.models.Login;
 import com.servicethrottle.stuaaservice.repositories.LoginRepository;
