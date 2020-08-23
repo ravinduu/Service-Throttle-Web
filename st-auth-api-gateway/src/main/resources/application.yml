@@ -26,3 +26,8 @@ eureka:
       defaultZone: http://localhost:8761/eureka
     instance:
       preferIpAddress: true
+
+zuul:
+  routes:
+  host:
+    socket-timeout-millis: 30000
