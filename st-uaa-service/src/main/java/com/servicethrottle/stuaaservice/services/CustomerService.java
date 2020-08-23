@@ -115,28 +115,13 @@ public class CustomerService {
         newLogin.setUsername(customer.getCustUsername());
 //        save customer username and encrypted password in separate table
         loginService.createLogin(newLogin);
-        System.out.println(newLogin);
 
 //        save updated user
         customerRepository.save(customer);
-        System.out.println(customer);
 
-//        HttpHeaders headers = new HttpHeaders(); // *** had to fix ***
-//        headers.
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        HttpEntity<Login> request = new HttpEntity<>(newLogin);
-//        AuthenticationResponse authenticationResponse = restTemplate.exchange("http://localhost:8080/st/login", HttpMethod.POST, request, new ParameterizedTypeReference<List<AuthenticationResponse>>() { });
+//        get jwt by username from gateway microservices
+        AuthenticationResponse authenticationResponse = restTemplate.getForObject("http://ST-AUTH-API-GATEWAY/st/login/"+newLogin.getUsername(),AuthenticationResponse.class);
 
-//        get authentication token from auth-gateway server from rest call
-//        AuthenticationResponse authenticationResponse = restTemplate.postForObject("http://ST-AUTH-API-GATEWAY/st/login", newLogin, AuthenticationResponse.class);
-
-        String message = restTemplate.getForObject("http://ST-AUTH-API-GATEWAY/st/hello",String.class);
-//        URI uri = new URI("http://localhost:8080/st/login");
-
-
-        AuthenticationResponse authenticationResponse = restTemplate.postForObject("http://localhost:8080/st/login", newLogin, AuthenticationResponse.class);
-//        AuthenticationResponse authenticationResponse = new AuthenticationResponse(null,null);
-        System.out.println(message);
         return authenticationResponse;
     }
 

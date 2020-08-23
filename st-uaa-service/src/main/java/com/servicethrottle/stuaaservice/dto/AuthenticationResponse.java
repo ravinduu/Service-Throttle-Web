@@ -11,6 +11,9 @@ public class AuthenticationResponse {
         this.username = username;
     }
 
+    public AuthenticationResponse() {
+    }
+
     public String getJwtToken() {
         return jwtToken;
     }
