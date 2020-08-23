@@ -28,6 +28,11 @@ public class AuthController {
         }
     }
 
+    @GetMapping("/login/{username}")
+    public AuthenticationResponse login(@PathVariable ("username") String username) throws Exception {
+        return authService.login(username);
+    }
+
     @GetMapping("/hello")
     public String hello(){
         return "Hello";

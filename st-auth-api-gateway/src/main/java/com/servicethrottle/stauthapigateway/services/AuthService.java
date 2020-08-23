@@ -36,4 +36,10 @@ public class AuthService {
 
         return new AuthenticationResponse(jwtToken,loginRequest.getUsername());
     }
+
+    public AuthenticationResponse login(String username) throws Exception {
+//        Authentication authentication = authenticationManager.authenticate(new Username)
+        String jwtToken = jwtProvider.generateTokenWithUserName(username);
+        return new AuthenticationResponse(jwtToken,username);
+    }
 }
