@@ -57,6 +57,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<finalName>st-eureka-discovery-server</finalName>
 	</build>
 
 </project>
