@@ -1,6 +1,5 @@
 package com.servicethrottle.stuaaservice.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;

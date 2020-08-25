@@ -3,7 +3,6 @@ package com.servicethrottle.stuaaservice.controllers;
 import com.servicethrottle.stuaaservice.dto.EditRequest;
 import com.servicethrottle.stuaaservice.models.Customer;
 import com.servicethrottle.stuaaservice.services.CustomerService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

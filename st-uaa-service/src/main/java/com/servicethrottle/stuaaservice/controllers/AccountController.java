@@ -4,12 +4,10 @@ import com.servicethrottle.stuaaservice.dto.AuthenticationResponse;
 import com.servicethrottle.stuaaservice.dto.FinishRequest;
 import com.servicethrottle.stuaaservice.dto.RegistrationRequest;
 import com.servicethrottle.stuaaservice.dto.ResetPasswordRequest;
-import com.servicethrottle.stuaaservice.models.Customer;
 import com.servicethrottle.stuaaservice.services.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.net.URISyntaxException;

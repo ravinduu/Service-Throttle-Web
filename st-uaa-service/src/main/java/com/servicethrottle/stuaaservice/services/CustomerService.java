@@ -10,15 +10,12 @@ import com.servicethrottle.stuaaservice.repositories.ActivationCodeRepository;
 import com.servicethrottle.stuaaservice.repositories.CustomerRepository;
 
 import com.servicethrottle.stuaaservice.repositories.PasswordResetRepository;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import javax.security.auth.login.AccountNotFoundException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.List;
@@ -101,7 +98,7 @@ public class CustomerService {
         //mailService.sendActivationEmail(activationCode);
     }
 
-    private AuthenticationResponse activateAccount(ActivationCode activationCode) throws AccountNotFoundException, URISyntaxException {
+    private AuthenticationResponse activateAccount(ActivationCode activationCode) throws AccountNotFoundException {
         Customer customer = customerRepository
                 .findOneByCustUsername(activationCode
                         .getCustomer()
