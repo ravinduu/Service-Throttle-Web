@@ -51,4 +51,12 @@ public class CustomerController {
         customerService.editCustomer(editRequest);
         return ResponseEntity.ok().body(editRequest.getCustUsername()+" was successfully updated");
     }
+
+//    deactivate existing customer
+//    access by ADMIN
+    @PutMapping("/deactivate/{username}")
+    public ResponseEntity<String> deactivateCustomer(@PathVariable ("username") String username) throws AccountNotFoundException {
+        customerService.deactivateCustomer(username);
+        return ResponseEntity.ok().body(username+" was temporarily deactivated");
+    }
 }

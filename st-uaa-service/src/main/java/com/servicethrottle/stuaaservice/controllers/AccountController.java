@@ -80,7 +80,7 @@ public class AccountController {
 
 //    password reset finish
 //    user ResetPasswordRequest DTO
-//    parameters are resetkey and newPassword
+//    parameters are reset key and newPassword
     @PutMapping("/reset-password/finish")
     public ResponseEntity<String> finishPasswordReset(@RequestBody ResetPasswordRequest resetPasswordRequest) {
         customerService.finishPasswordReset(resetPasswordRequest);

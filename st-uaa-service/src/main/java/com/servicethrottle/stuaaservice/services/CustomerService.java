@@ -251,4 +251,11 @@ public class CustomerService {
     }
 
 
+    public void deactivateCustomer(String username) throws AccountNotFoundException {
+//        get customer
+        Customer customer = getCustomer(username);
+//        deactivate and save
+        customer.setActivated(false);
+        customerRepository.save(customer);
+    }
 }
