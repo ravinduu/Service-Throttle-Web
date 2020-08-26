@@ -4,10 +4,16 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +24,22 @@ public class JwtProvider {
 
     private final String SECRET_KEY = "secret";
     private final int jwtExpirationInMillis = 1000 * 60 * 60 * 10;
+    private Key key;
+    private long tokenValidityInMilliseconds;
+
+
+    @PostConstruct
+    public void init() {
+        byte[] keyBytes;
+        String secret = SECRET_KEY;
+        if (!StringUtils.isEmpty(secret)) {
+            keyBytes = secret.getBytes(StandardCharsets.UTF_8);
+        } else {
+            keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        }
+        this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.tokenValidityInMilliseconds =1000 * 60 * 60 * 10;
+    }
 
 //    jwt generation using authentication
     public String generateToken(Authentication authentication) throws Exception {
@@ -28,7 +50,7 @@ public class JwtProvider {
                 .setClaims(claims)
                 .setSubject(principal.getUsername())
                 .setIssuedAt(Date.from(Instant.now()))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .signWith(SignatureAlgorithm.HS256, key)
                 .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationInMillis)))
                 .compact();
     }
@@ -38,7 +60,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(Date.from(Instant.now()))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .signWith(SignatureAlgorithm.HS256, key)
                 .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationInMillis)))
                 .compact();
     }
@@ -47,7 +69,7 @@ public class JwtProvider {
         if (validateToken(jwt)){
             Claims claims = Jwts
                     .parser()
-                    .setSigningKey(SECRET_KEY)
+                    .setSigningKey(key)
                     .parseClaimsJws(jwt)
                     .getBody();
 
@@ -59,7 +81,7 @@ public class JwtProvider {
     public boolean validateToken(String jwt) {
         try {
             Jwts.parser()
-                    .setSigningKey(SECRET_KEY)
+                    .setSigningKey(key)
                     .parseClaimsJws(jwt);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
