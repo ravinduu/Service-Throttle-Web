@@ -1,5 +1,7 @@
 package com.servicethrottle.stauthapigateway.security.jwt;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.Authentication;
@@ -39,5 +41,30 @@ public class JwtProvider {
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationInMillis)))
                 .compact();
+    }
+
+    public String getAuthentication(String jwt){
+        if (validateToken(jwt)){
+            Claims claims = Jwts
+                    .parser()
+                    .setSigningKey(SECRET_KEY)
+                    .parseClaimsJws(jwt)
+                    .getBody();
+
+            return claims.getSubject();
+        }
+        return null;
+    }
+
+    public boolean validateToken(String jwt) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(SECRET_KEY)
+                    .parseClaimsJws(jwt);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+//            throw new RuntimeException(e);
+        }
+        return false;
     }
 }

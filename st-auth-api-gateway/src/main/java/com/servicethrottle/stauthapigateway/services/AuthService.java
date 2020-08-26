@@ -28,7 +28,7 @@ public class AuthService {
                 loginRequest.getUsername(), loginRequest.getPassword()
         ));
 
-//        save data in contex
+//        save data in context
         SecurityContextHolder.getContext().setAuthentication(authenticate);
 
 //        get jwt

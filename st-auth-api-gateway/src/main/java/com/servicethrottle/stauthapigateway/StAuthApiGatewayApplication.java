@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @SpringBootApplication
 @EnableWebSecurity
 @EnableEurekaClient
-@EnableZuulProxy
 public class StAuthApiGatewayApplication {
 
 	public static void main(String[] args) {
