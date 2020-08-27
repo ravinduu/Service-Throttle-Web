@@ -31,12 +31,13 @@ public class JwtProvider {
     @PostConstruct
     public void init() {
         byte[] keyBytes;
-        String secret = SECRET_KEY;
-        if (!StringUtils.isEmpty(secret)) {
-            keyBytes = secret.getBytes(StandardCharsets.UTF_8);
-        } else {
-            keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-        }
+//        String secret = SECRET_KEY;
+//        if (!StringUtils.isEmpty(secret)) {
+//            keyBytes = secret.getBytes(StandardCharsets.UTF_8);
+//        } else {
+//            keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+//        }
+        keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.tokenValidityInMilliseconds =1000 * 60 * 60 * 10;
     }
