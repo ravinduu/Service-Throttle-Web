@@ -94,7 +94,13 @@
 			<scope>runtime</scope>
 			<version>0.10.5</version>
 		</dependency>
-    </dependencies>
+
+		<!--		javax-->
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+		</dependency>
+	</dependencies>
 
 	<dependencyManagement>
 		<dependencies>
