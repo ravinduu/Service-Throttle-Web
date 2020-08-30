@@ -1,0 +1,9 @@
+version: '3.8'
+
+services: 
+    st-eureka-discovery-server:
+        build: ./st-eureka-discovery-server
+        image: ravdsn/st-eureka-discovery-server-docker:v1.0
+        ports: 
+            - '8761:8761'
+        container_name: st-eureka-discovery-server
