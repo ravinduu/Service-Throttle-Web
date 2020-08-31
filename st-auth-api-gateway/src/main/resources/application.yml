@@ -29,5 +29,10 @@ eureka:
 
 zuul:
   routes:
+    st-uaa-service:
+      paths:
+        - /account/**
+        - /customer/**
+      serviceId: ST-UAA-SERVICE
   host:
     socket-timeout-millis: 30000
