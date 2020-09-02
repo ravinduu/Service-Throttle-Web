@@ -2,6 +2,7 @@ package com.servicethrottle.stauthapigateway.services;
 
 import com.servicethrottle.stauthapigateway.dto.AuthenticationResponse;
 import com.servicethrottle.stauthapigateway.dto.LoginRequest;
+import com.servicethrottle.stauthapigateway.security.SecurityUtils;
 import com.servicethrottle.stauthapigateway.security.jwt.JwtProvider;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,10 +16,12 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     private final JwtProvider jwtProvider;
+    private final SecurityUtils securityUtils;
 
-    public AuthService(AuthenticationManager authenticationManager, JwtProvider jwtProvider) {
+    public AuthService(AuthenticationManager authenticationManager, JwtProvider jwtProvider, SecurityUtils securityUtils) {
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
+        this.securityUtils = securityUtils;
     }
 
 //    login
@@ -41,5 +44,9 @@ public class AuthService {
 //        Authentication authentication = authenticationManager.authenticate(new Username)
         String jwtToken = jwtProvider.generateTokenWithUserName(username);
         return new AuthenticationResponse(jwtToken,username);
+    }
+
+    public String getCurrentUser() {
+        return securityUtils.getCurrentUser();
     }
 }

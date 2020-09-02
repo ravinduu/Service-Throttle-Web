@@ -33,8 +33,8 @@ public class AuthController {
         return authService.login(username);
     }
 
-    @GetMapping("/hello")
+    @GetMapping("/getCurrentUser")
     public String hello(){
-        return "Hello";
+        return authService.getCurrentUser();
     }
 }
