@@ -28,16 +28,17 @@ public class JwtProvider {
     private Key key;
 
 
-    private Key init() {
-        byte[] keyBytes;
-        String secret = SECRET_KEY;
-        if (!StringUtils.isEmpty(secret)) {
-            keyBytes = secret.getBytes(StandardCharsets.UTF_8);
-        } else {
-            keyBytes = Decoders.BASE64.decode(secret);
-        }
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
+//    @PostConstruct
+//    private void init() {
+//        byte[] keyBytes;
+//        String secret = SECRET_KEY;
+//        if (!StringUtils.isEmpty(secret)) {
+//            keyBytes = secret.getBytes(StandardCharsets.UTF_8);
+//        } else {
+//            keyBytes = Decoders.BASE64.decode(secret);
+//        }
+//        key = Keys.hmacShaKeyFor(keyBytes);
+//    }
 
 //    jwt generation using authentication
     public String generateToken(Authentication authentication) throws Exception {
