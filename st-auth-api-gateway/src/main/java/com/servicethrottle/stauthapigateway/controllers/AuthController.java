@@ -3,6 +3,7 @@ package com.servicethrottle.stauthapigateway.controllers;
 import com.servicethrottle.stauthapigateway.dto.AuthenticationResponse;
 import com.servicethrottle.stauthapigateway.dto.LoginRequest;
 import com.servicethrottle.stauthapigateway.exceptions.UsernameOrPasswordInvalidException;
+import com.servicethrottle.stauthapigateway.models.Customer;
 import com.servicethrottle.stauthapigateway.services.AuthService;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,8 @@ public class AuthController {
     }
 
     @GetMapping("/getCurrentUser")
-    public String hello(){
+    public Customer getCurrentUser(){
         return authService.getCurrentUser();
+
     }
 }
