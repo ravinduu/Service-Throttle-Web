@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Login {
@@ -22,6 +25,8 @@ public class Login {
     @Size(min = 8)
     @Column(nullable = false)
     private String password;
+
+    private final HashSet<Authority> authorities = new HashSet<>();
 
     public long getId() {
         return id;
@@ -47,12 +52,37 @@ public class Login {
         this.password = password;
     }
 
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Login login = (Login) o;
+        return id == login.id &&
+                Objects.equals(username, login.username) &&
+                Objects.equals(password, login.password) &&
+                Objects.equals(authorities, login.authorities);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, authorities);
+    }
+
     @Override
     public String toString() {
         return "Login{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", authorities=" + authorities +
                 '}';
     }
 }
