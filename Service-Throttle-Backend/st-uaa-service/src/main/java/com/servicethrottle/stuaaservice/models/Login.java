@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 public class Login {
@@ -26,7 +26,9 @@ public class Login {
     @Column(nullable = false)
     private String password;
 
-    private final HashSet<Authority> authorities = new HashSet<>();
+    @JsonIgnore
+    @ManyToMany(fetch = LAZY)
+    private Set<Authority> authorities = new HashSet<>();
 
     public long getId() {
         return id;
