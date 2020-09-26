@@ -1,10 +1,9 @@
 package com.servicethrottle.stuaaservice.controllers;
 
-import com.servicethrottle.stuaaservice.dto.AuthenticationResponse;
-import com.servicethrottle.stuaaservice.dto.FinishRequest;
-import com.servicethrottle.stuaaservice.dto.RegistrationRequest;
-import com.servicethrottle.stuaaservice.dto.ResetPasswordRequest;
+import com.servicethrottle.stuaaservice.dto.*;
+import com.servicethrottle.stuaaservice.exceptions.UsernameOrPasswordInvalidException;
 import com.servicethrottle.stuaaservice.services.CustomerService;
+import com.servicethrottle.stuaaservice.services.LoginService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +19,11 @@ import java.net.URISyntaxException;
 public class AccountController {
 
     private final CustomerService customerService;
+    private final LoginService loginService;
 
-    public AccountController(CustomerService customerService) {
+    public AccountController(CustomerService customerService, LoginService loginService) {
         this.customerService = customerService;
+        this.loginService = loginService;
     }
 
 
@@ -83,6 +84,18 @@ public class AccountController {
     public ResponseEntity<String> finishPasswordReset(@RequestBody ResetPasswordRequest resetPasswordRequest) {
         customerService.finishPasswordReset(resetPasswordRequest);
         return ResponseEntity.ok().body("Password reset wsa success");
+    }
+
+//    login
+//    use Login request dto
+//    outputs are jwt and username
+    @PostMapping("/login")
+    public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) throws Exception, UsernameOrPasswordInvalidException {
+        try {
+            return loginService.login(loginRequest);
+        }catch (Exception e){
+            throw new UsernameOrPasswordInvalidException(e);
+        }
     }
 
 }
