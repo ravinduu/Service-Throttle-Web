@@ -117,7 +117,7 @@ public class CustomerService {
         customerRepository.save(customer);
 
 //        get jwt by username from gateway microservices
-        AuthenticationResponse authenticationResponse = restTemplate.getForObject("http://ST-AUTH-API-GATEWAY/st/login/"+newLogin.getUsername(),AuthenticationResponse.class);
+        AuthenticationResponse authenticationResponse = new AuthenticationResponse("fhksdhfk","sjdhjshjsh");
 
         return authenticationResponse;
     }
