@@ -4,12 +4,11 @@ import com.servicethrottle.stuaaservice.dto.*;
 import com.servicethrottle.stuaaservice.exceptions.UsernameOrPasswordInvalidException;
 import com.servicethrottle.stuaaservice.services.CustomerService;
 import com.servicethrottle.stuaaservice.services.LoginService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
-import java.net.URISyntaxException;
+import javax.security.auth.login.LoginException;
 
 //REST controller for managing creation of customer accounts as well as
 //        verification new account and reset password
@@ -32,9 +31,8 @@ public class AccountController {
 //    can access by anyone
 //    inputs are username, password and email, RegistrationRequest DTO
     @PostMapping("/register")
-    public ResponseEntity<String> registerAccount(@RequestBody RegistrationRequest registrationRequest){
-        customerService.registerUser(registrationRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<String> registerAccount(@RequestBody RegistrationRequest registrationRequest) throws Exception {
+        return ResponseEntity.ok().body(customerService.registerUser(registrationRequest));
     }
 
 
@@ -42,7 +40,7 @@ public class AccountController {
 //    verification code send to the email
     @GetMapping("/activate")
     public ResponseEntity<AuthenticationResponse> activateAccount(@RequestBody String code)
-            throws AccountNotFoundException, URISyntaxException {
+            throws Exception {
         return ResponseEntity.ok().body(customerService.verifyCode(code));
     }
 
@@ -62,7 +60,7 @@ public class AccountController {
     @PutMapping("/finish/")
     public ResponseEntity<String> finishAccount(
             @RequestBody FinishRequest finishRequest)
-            throws AccountNotFoundException{
+            throws LoginException {
         customerService.finishAccount(finishRequest);
         return ResponseEntity.ok().body("Your account creation success");
     }
@@ -98,4 +96,8 @@ public class AccountController {
         }
     }
 
+    @GetMapping("/g")
+    public String g(){
+        return customerService.g();
+    }
 }

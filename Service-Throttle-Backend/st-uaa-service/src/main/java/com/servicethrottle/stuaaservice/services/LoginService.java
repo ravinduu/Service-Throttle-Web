@@ -43,10 +43,16 @@ public class LoginService {
         ));
 //        save data in context
         SecurityContextHolder.getContext().setAuthentication(authenticate);
-
 //        get jwt
         String jwtToken = jwtProvider.generateToken(authenticate);
-
         return new AuthenticationResponse(jwtToken,loginRequest.getUsername());
     }
+
+    public AuthenticationResponse login(String username) throws Exception {
+//        Authentication authentication = authenticationManager.authenticate(new Username)
+        String jwtToken = jwtProvider.generateTokenWithUserName(username);
+        return new AuthenticationResponse(jwtToken,username);
+    }
+
+
 }

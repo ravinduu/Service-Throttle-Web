@@ -1,6 +1,7 @@
 package com.servicethrottle.stuaaservice.configurations;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
@@ -16,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
 
-    public SecurityConfiguration(UserDetailsService userDetailsService) {
+    public SecurityConfiguration(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
@@ -33,14 +34,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
+                .antMatchers("/account/login").permitAll()
+                .antMatchers("/account/g").permitAll()
                 .antMatchers("/account/register").permitAll()
-                .antMatchers("/account/activate/**").permitAll()
+                .antMatchers("/account/activate").permitAll()
                 .antMatchers("/account/resend-code").permitAll()
-                .antMatchers("/customer/**").permitAll()
-                .antMatchers("/**").permitAll()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/account/finish/**").permitAll()
-                .antMatchers("/account/reset-password/init/**").permitAll()
+                .antMatchers("/account/reset-password/init").permitAll()
                 .antMatchers("/account/reset-password/finish").permitAll()
                 .anyRequest().authenticated();
     }
