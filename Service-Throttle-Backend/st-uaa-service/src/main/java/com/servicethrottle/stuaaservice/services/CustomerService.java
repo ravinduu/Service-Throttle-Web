@@ -10,13 +10,14 @@ import com.servicethrottle.stuaaservice.repositories.ActivationCodeRepository;
 import com.servicethrottle.stuaaservice.repositories.CustomerRepository;
 
 import com.servicethrottle.stuaaservice.repositories.PasswordResetRepository;
+import com.servicethrottle.stuaaservice.security.SecurityUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import javax.security.auth.login.AccountNotFoundException;
-import java.net.URISyntaxException;
+import javax.security.auth.login.LoginException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -40,26 +41,29 @@ public class CustomerService {
 
     private final PasswordResetRepository passwordResetRepository;
 
-    private final RestTemplate restTemplate;
+    private final SecurityUtils securityUtils;
+
+
+
 
     public CustomerService(CustomerRepository customerRepository,
                            PasswordEncoder passwordEncoder,
                            ActivationCodeRepository activationCodeRepository,
                            LoginService loginService,
                            MailService mailService,
-                           PasswordResetRepository passwordResetRepository, RestTemplate restTemplate) {
+                           PasswordResetRepository passwordResetRepository, SecurityUtils securityUtils) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
         this.activationCodeRepository = activationCodeRepository;
         this.loginService = loginService;
         this.mailService = mailService;
         this.passwordResetRepository = passwordResetRepository;
-        this.restTemplate = restTemplate;
+        this.securityUtils = securityUtils;
     }
 
 
 
-    public Customer registerUser(RegistrationRequest registrationRequest) {
+    public String registerUser(RegistrationRequest registrationRequest) throws Exception {
         customerRepository.findOneByCustUsername(registrationRequest
                 .getCustUsername())
                 .ifPresent(customer -> {
@@ -78,16 +82,21 @@ public class CustomerService {
         customer.setActivated(false);
         customer.setCreated(Instant.now());
         customerRepository.save(customer);
+
+//        get jwt
+        AuthenticationResponse authenticationResponse = loginService
+                .login(/*new LoginRequest(*/registrationRequest.getCustUsername()
+                        /*,registrationRequest.getCustPassword())*/);
 //        new customer get verification code
-        this.generateActivationCode(customer);
-        return customer;
+        return this.generateActivationCode(customer).getActivationCode();
+//        return new AccountRegistrationResponse(authenticationResponse, activationCode);
     }
 
     private String encodePassword(String password){
         return passwordEncoder.encode(password);
     }
 
-    private void generateActivationCode(Customer customer) {
+    private ActivationCode generateActivationCode(Customer customer) {
         String code = UUID.randomUUID().toString();
 //        activation code and customer details save in ActivationCode table
         ActivationCode activationCode = new ActivationCode();
@@ -96,9 +105,10 @@ public class CustomerService {
         activationCodeRepository.save(activationCode);
 //        verification code will send to the customer email
         //mailService.sendActivationEmail(activationCode);
+        return activationCode;
     }
 
-    private AuthenticationResponse activateAccount(ActivationCode activationCode) throws AccountNotFoundException {
+    private AuthenticationResponse activateAccount(ActivationCode activationCode) throws Exception {
         Customer customer = customerRepository
                 .findOneByCustUsername(activationCode
                         .getCustomer()
@@ -117,12 +127,12 @@ public class CustomerService {
         customerRepository.save(customer);
 
 //        get jwt by username from gateway microservices
-        AuthenticationResponse authenticationResponse = restTemplate.getForObject("http://ST-AUTH-API-GATEWAY/st/login/"+newLogin.getUsername(),AuthenticationResponse.class);
+        AuthenticationResponse authenticationResponse = loginService.login(customer.getCustUsername());
 
         return authenticationResponse;
     }
 
-    public AuthenticationResponse verifyCode(String code) throws AccountNotFoundException, URISyntaxException {
+    public AuthenticationResponse verifyCode(String code) throws Exception {
         Optional<ActivationCode> activationCode = activationCodeRepository.findByActivationCode(code);
         String username = activationCode.get().getCustomer().getCustUsername();
 //        check the code is correct or not
@@ -131,8 +141,11 @@ public class CustomerService {
         return authenticationResponse;
     }
 
-    public void finishAccount(FinishRequest finishRequest) throws AccountNotFoundException {
+    public void finishAccount(FinishRequest finishRequest) throws LoginException {
         Customer customer = getCustomer(finishRequest.getCustUsername());
+        String currentCustomer = securityUtils.getCurrentUser();
+        if (currentCustomer.equals(customer.getCustUsername())) throw new LoginException();
+
         if (!customer.isActivated()) throw new AccountNotActivatedException();
         else {
             customer.setCustFirstName(finishRequest.getCustFirstName());
@@ -254,5 +267,9 @@ public class CustomerService {
 //        deactivate and save
         customer.setActivated(false);
         customerRepository.save(customer);
+    }
+
+    public String g() {
+        return securityUtils.getCurrentUser();
     }
 }

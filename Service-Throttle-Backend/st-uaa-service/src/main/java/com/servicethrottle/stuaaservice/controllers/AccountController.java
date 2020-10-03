@@ -1,16 +1,14 @@
 package com.servicethrottle.stuaaservice.controllers;
 
-import com.servicethrottle.stuaaservice.dto.AuthenticationResponse;
-import com.servicethrottle.stuaaservice.dto.FinishRequest;
-import com.servicethrottle.stuaaservice.dto.RegistrationRequest;
-import com.servicethrottle.stuaaservice.dto.ResetPasswordRequest;
+import com.servicethrottle.stuaaservice.dto.*;
+import com.servicethrottle.stuaaservice.exceptions.UsernameOrPasswordInvalidException;
 import com.servicethrottle.stuaaservice.services.CustomerService;
-import org.springframework.http.HttpStatus;
+import com.servicethrottle.stuaaservice.services.LoginService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
-import java.net.URISyntaxException;
+import javax.security.auth.login.LoginException;
 
 //REST controller for managing creation of customer accounts as well as
 //        verification new account and reset password
@@ -20,9 +18,11 @@ import java.net.URISyntaxException;
 public class AccountController {
 
     private final CustomerService customerService;
+    private final LoginService loginService;
 
-    public AccountController(CustomerService customerService) {
+    public AccountController(CustomerService customerService, LoginService loginService) {
         this.customerService = customerService;
+        this.loginService = loginService;
     }
 
 
@@ -31,9 +31,8 @@ public class AccountController {
 //    can access by anyone
 //    inputs are username, password and email, RegistrationRequest DTO
     @PostMapping("/register")
-    public ResponseEntity<String> registerAccount(@RequestBody RegistrationRequest registrationRequest){
-        customerService.registerUser(registrationRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<String> registerAccount(@RequestBody RegistrationRequest registrationRequest) throws Exception {
+        return ResponseEntity.ok().body(customerService.registerUser(registrationRequest));
     }
 
 
@@ -41,7 +40,7 @@ public class AccountController {
 //    verification code send to the email
     @GetMapping("/activate")
     public ResponseEntity<AuthenticationResponse> activateAccount(@RequestBody String code)
-            throws AccountNotFoundException, URISyntaxException {
+            throws Exception {
         return ResponseEntity.ok().body(customerService.verifyCode(code));
     }
 
@@ -61,7 +60,7 @@ public class AccountController {
     @PutMapping("/finish/")
     public ResponseEntity<String> finishAccount(
             @RequestBody FinishRequest finishRequest)
-            throws AccountNotFoundException{
+            throws LoginException {
         customerService.finishAccount(finishRequest);
         return ResponseEntity.ok().body("Your account creation success");
     }
@@ -85,4 +84,20 @@ public class AccountController {
         return ResponseEntity.ok().body("Password reset wsa success");
     }
 
+//    login
+//    use Login request dto
+//    outputs are jwt and username
+    @PostMapping("/login")
+    public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) throws Exception, UsernameOrPasswordInvalidException {
+        try {
+            return loginService.login(loginRequest);
+        }catch (Exception e){
+            throw new UsernameOrPasswordInvalidException(e);
+        }
+    }
+
+    @GetMapping("/g")
+    public String g(){
+        return customerService.g();
+    }
 }
