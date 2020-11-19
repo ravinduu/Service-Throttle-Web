@@ -144,7 +144,7 @@ public class CustomerService {
     public void finishAccount(FinishRequest finishRequest) throws LoginException {
         Customer customer = getCustomer(finishRequest.getCustUsername());
         String currentCustomer = securityUtils.getCurrentUser();
-        if (currentCustomer.equals(customer.getCustUsername())) throw new LoginException();
+        if (!currentCustomer.equals(customer.getCustUsername())) throw new LoginException();
 
         if (!customer.isActivated()) throw new AccountNotActivatedException();
         else {
