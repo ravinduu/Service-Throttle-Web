@@ -28,7 +28,7 @@ public class Login {
 
     @JsonIgnore
     @ManyToMany(fetch = LAZY)
-    private Set<Authority> authorities = new HashSet<>();
+    private Set<UserRole> authorities = new HashSet<>();
 
     public long getId() {
         return id;
@@ -54,11 +54,11 @@ public class Login {
         this.password = password;
     }
 
-    public Set<Authority> getAuthorities() {
+    public Set<UserRole> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(Set<Authority> authorities) {
+    public void setAuthorities(Set<UserRole> authorities) {
         this.authorities = authorities;
     }
 

@@ -60,7 +60,7 @@ public class User implements Serializable {
     @JsonIgnore
     @ManyToMany
     @JoinTable
-    private Set<Authority> authorities = new HashSet<>();
+    private Set<UserRole> authorities = new HashSet<>();
 
     public long getUserId() {
         return userId;
@@ -142,11 +142,11 @@ public class User implements Serializable {
         this.activated = activated;
     }
 
-    public Set<Authority> getAuthorities() {
+    public Set<UserRole> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(Set<Authority> authorities) {
+    public void setAuthorities(Set<UserRole> authorities) {
         this.authorities = authorities;
     }
 

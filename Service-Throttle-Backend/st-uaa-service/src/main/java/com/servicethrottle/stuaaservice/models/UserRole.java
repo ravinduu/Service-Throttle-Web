@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-public class Authority implements Serializable {
+public class UserRole implements Serializable {
 
     @Id
     @NotNull
@@ -17,7 +17,7 @@ public class Authority implements Serializable {
     @Column(length = 50)
     private String name;
 
-    public Authority() {
+    public UserRole() {
     }
 
     public String getName() {
@@ -32,8 +32,8 @@ public class Authority implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Authority authority = (Authority) o;
-        return Objects.equals(name, authority.name);
+        UserRole role = (UserRole) o;
+        return Objects.equals(name, role.name);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class Authority implements Serializable {
 
     @Override
     public String toString() {
-        return "Authority{" +
+        return "UserRole{" +
                 "name='" + name + '\'' +
                 '}';
     }

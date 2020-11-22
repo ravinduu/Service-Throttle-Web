@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -35,10 +37,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 true,
                 true,
                 true,
-                getAuthorities("USER"));
+                getAuthorities(login));
     }
 
-    private Collection<? extends GrantedAuthority> getAuthorities(String role){
-        return Collections.singletonList(new SimpleGrantedAuthority(role));
+    private Collection<? extends GrantedAuthority> getAuthorities(Login login){
+        Set authorities = new HashSet<>();
+                login.getAuthorities().forEach(role -> {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+                });
+                return authorities;
     }
 }
