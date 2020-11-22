@@ -1,6 +1,13 @@
 package com.servicethrottle.servicethrottlebackend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -11,8 +18,13 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
+import static javax.persistence.FetchType.LAZY;
+
+@MappedSuperclass
 @Table(name = "st_user")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,11 +32,11 @@ public class User implements Serializable {
 
     @Size(max = 50)
     @Column(length = 50)
-    private String firstName;
+    private String firstname;
 
     @Size(max = 50)
     @Column(length = 50)
-    private String lastName;
+    private String lastname;
 
     @Size(min = 9, max = 12)
     @Column(length = 12, unique = true)
@@ -57,9 +69,13 @@ public class User implements Serializable {
     @Column(nullable = false)
     private boolean activated = false;
 
-    @JsonIgnore
-    @ManyToMany
-    @JoinTable
+    @ManyToMany(fetch = LAZY)
+    @Fetch(FetchMode.SELECT)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinTable(
+            name = "users_authorities",
+            joinColumns = @JoinColumn( name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn( name = "authority_id", referencedColumnName = "id"))
     private Set<Authority> authorities = new HashSet<>();
 
 }
