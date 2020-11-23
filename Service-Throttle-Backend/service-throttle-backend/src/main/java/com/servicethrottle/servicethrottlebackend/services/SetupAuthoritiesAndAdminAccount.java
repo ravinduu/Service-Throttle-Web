@@ -2,10 +2,13 @@ package com.servicethrottle.servicethrottlebackend.services;
 
 import com.servicethrottle.servicethrottlebackend.models.Admin;
 import com.servicethrottle.servicethrottlebackend.models.Authority;
+import com.servicethrottle.servicethrottlebackend.models.Customer;
+import com.servicethrottle.servicethrottlebackend.models.UserAuthenticationCredentials;
 import com.servicethrottle.servicethrottlebackend.models.enums.AuthorityType;
 import com.servicethrottle.servicethrottlebackend.repositories.AdminRepository;
 import com.servicethrottle.servicethrottlebackend.repositories.AuthorityRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.servicethrottle.servicethrottlebackend.repositories.CustomerRepository;
+import com.servicethrottle.servicethrottlebackend.repositories.UserAuthenticationCredentialsRepository;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -21,10 +24,14 @@ public class SetupAuthoritiesAndAdminAccount implements ApplicationListener<Cont
     private boolean alreadySetup = false;
     private final AdminRepository adminRepository;
     private final AuthorityRepository authorityRepository;
+    private final UserAuthenticationCredentialsRepository UACRepo;
+    private final CustomerRepository customerRepository;
 
-    public SetupAuthoritiesAndAdminAccount(AdminRepository adminRepository, AuthorityRepository authorityRepository) {
+    public SetupAuthoritiesAndAdminAccount(AdminRepository adminRepository, AuthorityRepository authorityRepository, UserAuthenticationCredentialsRepository UACRepo, CustomerRepository customerRepository) {
         this.adminRepository = adminRepository;
         this.authorityRepository = authorityRepository;
+        this.UACRepo = UACRepo;
+        this.customerRepository = customerRepository;
     }
 
     @Override
@@ -37,17 +44,38 @@ public class SetupAuthoritiesAndAdminAccount implements ApplicationListener<Cont
         Authority customerAuthority = createAuthorityIfNotFound(CUSTOMER);
 
         Admin superAdmin = new Admin();
+        UserAuthenticationCredentials UAC = new UserAuthenticationCredentials();
 
         superAdmin.setUsername("admin");
-        superAdmin.setPassword("admin");
         superAdmin.setEmail("admin@admin.com");
-        Set<Authority> superAdminAuthorities = superAdmin.getAuthorities();
+        Set<Authority> superAdminAuthorities = UAC.getAuthorities();
         superAdminAuthorities.add(adminAuthority);
-        superAdmin.setAuthorities(superAdminAuthorities);
+        superAdminAuthorities.add(adminAuthority);
         superAdmin.setSuperAdmin(true);
         superAdmin.setActivated(true);
 
+        UAC.setUsername("admin");
+        UAC.setPassword("admin");
+        UAC.setAuthorities(superAdminAuthorities);
+
+        UACRepo.save(UAC);
         adminRepository.save(superAdmin);
+
+        Customer newCustomer = new Customer();
+        UserAuthenticationCredentials UACOne = new UserAuthenticationCredentials();
+        newCustomer.setUsername("customer");
+        newCustomer.setEmail("customer@customer.com");
+
+        Set<Authority> customerAuthorities = UACOne.getAuthorities();
+        customerAuthorities.add(customerAuthority);
+        newCustomer.setActivated(true);
+
+        UACOne.setUsername("customer");
+        UACOne.setPassword("customer");
+        UACOne.setAuthorities(customerAuthorities);
+        customerRepository.save(newCustomer);
+        UACRepo.save(UACOne);
+
         alreadySetup = true;
 
     }

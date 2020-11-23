@@ -47,11 +47,11 @@ public class User implements Serializable {
     @Column(length = 100, unique = true)
     private String username;
 
-    @JsonIgnore
-    @NotNull
-    @Size(min = 8)
-    @Column(nullable = false)
-    private String password;
+//    @JsonIgnore
+//    @NotNull
+//    @Size(min = 8)
+//    @Column(nullable = false)
+//    private String password;
 
     @NotNull
     @Email
@@ -69,13 +69,13 @@ public class User implements Serializable {
     @Column(nullable = false)
     private boolean activated = false;
 
-    @ManyToMany(fetch = LAZY)
-    @Fetch(FetchMode.SELECT)
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @JoinTable(
-            name = "users_authorities",
-            joinColumns = @JoinColumn( name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn( name = "authority_id", referencedColumnName = "id"))
-    private Set<Authority> authorities = new HashSet<>();
+//    @ManyToMany(fetch = LAZY)
+//    @Fetch(FetchMode.SELECT)
+//    @LazyCollection(LazyCollectionOption.FALSE)
+//    @JoinTable(
+//            name = "users_authorities",
+//            joinColumns = @JoinColumn( name = "user_id", referencedColumnName = "id"),
+//            inverseJoinColumns = @JoinColumn( name = "authority_id", referencedColumnName = "id"))
+//    private Set<Authority> authorities = new HashSet<>();
 
 }

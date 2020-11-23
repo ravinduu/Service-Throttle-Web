@@ -11,8 +11,7 @@ import javax.persistence.Table;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "st_admin")
-public class Admin extends User  {
-
-    private boolean isSuperAdmin = false;
+@Table(name = "st_customer")
+public class Customer extends User {
+    private int points = 0;
 }
