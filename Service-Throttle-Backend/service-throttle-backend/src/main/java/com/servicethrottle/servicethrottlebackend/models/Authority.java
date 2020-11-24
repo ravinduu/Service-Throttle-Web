@@ -23,8 +23,6 @@ public class Authority implements Serializable {
 
     @Size(max = 50)
     @Column(length = 50)
-    private AuthorityType authority;
-
-
+    private String authority;
 
 }
