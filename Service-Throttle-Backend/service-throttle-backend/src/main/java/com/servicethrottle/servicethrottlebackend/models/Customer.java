@@ -13,5 +13,5 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Table(name = "st_customer")
 public class Customer extends User {
-    private int points = 0;
+    private int loyaltyPoints = 0;
 }
