@@ -47,12 +47,6 @@ public class User implements Serializable {
     @Column(length = 100, unique = true)
     private String username;
 
-//    @JsonIgnore
-//    @NotNull
-//    @Size(min = 8)
-//    @Column(nullable = false)
-//    private String password;
-
     @NotNull
     @Email
     @Size(min = 5, max = 254)
