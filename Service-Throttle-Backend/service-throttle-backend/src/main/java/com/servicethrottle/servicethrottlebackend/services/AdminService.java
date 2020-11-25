@@ -1,10 +1,11 @@
 package com.servicethrottle.servicethrottlebackend.services;
 
+import com.servicethrottle.servicethrottlebackend.exceptions.EmailAlreadyExistException;
 import com.servicethrottle.servicethrottlebackend.models.Admin;
 import com.servicethrottle.servicethrottlebackend.repositories.AdminRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.time.Instant;
 
 @Service
 public class AdminService {
@@ -15,12 +16,20 @@ public class AdminService {
     }
 
     public int registerAdmin(String username, String email) {
-        Admin admin = new Admin();
 
+        adminRepository.findOneByEmail(email).ifPresent(
+                adminExist -> {
+                    throw new EmailAlreadyExistException();
+                }
+        );
+
+        Admin admin = new Admin();
         admin.setUsername(username);
         admin.setEmail(email);
-
+//        admin.setActivated(false);
+        admin.setCreated(Instant.now());
         adminRepository.save(admin);
-        return 0;
+
+        return 1;
     }
 }

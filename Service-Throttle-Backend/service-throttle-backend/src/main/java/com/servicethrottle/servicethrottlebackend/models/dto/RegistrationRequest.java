@@ -15,17 +15,16 @@ import javax.validation.constraints.Size;
 public class RegistrationRequest {
     @NotNull
     @Size(min = 5, max = 100)
-    private String username = "customerByREG";
+    private String username;
 
-    @JsonIgnore
     @NotNull
     @Size(min = 8)
-    private String password = "customer";
+    private String password;
 
     @NotNull
     @Email
     @Size(min = 5, max = 254)
-    private String email = "customer";
+    private String email;
 
     @NotNull
     private String accountType = "customerAccount";

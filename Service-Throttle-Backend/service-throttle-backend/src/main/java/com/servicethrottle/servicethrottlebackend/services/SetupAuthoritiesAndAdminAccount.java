@@ -3,11 +3,11 @@ package com.servicethrottle.servicethrottlebackend.services;
 import com.servicethrottle.servicethrottlebackend.models.Admin;
 import com.servicethrottle.servicethrottlebackend.models.Authority;
 import com.servicethrottle.servicethrottlebackend.models.UserAuthenticationCredentials;
-import com.servicethrottle.servicethrottlebackend.models.dto.RegistrationRequest;
 import com.servicethrottle.servicethrottlebackend.repositories.AdminRepository;
 import com.servicethrottle.servicethrottlebackend.repositories.UserAuthenticationCredentialsRepository;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -23,17 +23,18 @@ public class SetupAuthoritiesAndAdminAccount implements ApplicationListener<Cont
 
     private final AdminRepository adminRepository;
     private final AuthorityService authorityService;
-    private final UserAccountService userAccountService;
+
+    private final PasswordEncoder passwordEncoder;
 
 
     public SetupAuthoritiesAndAdminAccount(AdminRepository adminRepository,
                                            AuthorityService authorityService,
                                            UserAuthenticationCredentialsRepository UACRepo,
-                                           UserAccountService userAccountService) {
+                                           PasswordEncoder passwordEncoder) {
         this.adminRepository = adminRepository;
         this.authorityService = authorityService;
         this.UACRepo = UACRepo;
-        this.userAccountService = userAccountService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -51,23 +52,26 @@ public class SetupAuthoritiesAndAdminAccount implements ApplicationListener<Cont
         superAdmin.setUsername("admin");
         superAdmin.setEmail("admin@admin.com");
         superAdmin.setSuperAdmin(true);
-        superAdmin.setActivated(true);
+//        superAdmin.setActivated(true);
 
         UAC.setUsername("admin");
-        UAC.setPassword("admin");
+        UAC.setPassword(encodePassword("admin"));
         Set<Authority> superAdminAuthorities = UAC.getAuthorities();
         superAdminAuthorities.add(adminAuthority);
         superAdminAuthorities.add(supervisorAuthority);
         superAdminAuthorities.add(mobileMechanicAuthority);
         superAdminAuthorities.add(customerAuthority);
         UAC.setAuthorities(superAdminAuthorities);
+        UAC.setActivated(true);
 
         UACRepo.save(UAC);
         adminRepository.save(superAdmin);
 
-        RegistrationRequest registrationRequest = new RegistrationRequest();
-        userAccountService.registerUser(registrationRequest);
         alreadySetup = true;
+    }
+
+    private String encodePassword(String password){
+        return passwordEncoder.encode(password);
     }
 
 }

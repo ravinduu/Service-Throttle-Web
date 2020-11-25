@@ -59,9 +59,6 @@ public class User implements Serializable {
 
     private Instant created;
 
-    @NotNull
-    @Column(nullable = false)
-    private boolean activated = false;
 
 //    @ManyToMany(fetch = LAZY)
 //    @Fetch(FetchMode.SELECT)

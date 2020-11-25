@@ -40,6 +40,10 @@ public class UserAuthenticationCredentials implements Serializable {
     @Column(nullable = false)
     private String password;
 
+    @NotNull
+    @Column(nullable = false)
+    private boolean activated = false;
+
     @ManyToMany(fetch = LAZY)
     @Fetch(FetchMode.SELECT)
     @LazyCollection(LazyCollectionOption.FALSE)
