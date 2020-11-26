@@ -1,6 +1,8 @@
 package com.servicethrottle.servicethrottlebackend.configurations;
 
-import lombok.AllArgsConstructor;
+import com.servicethrottle.servicethrottlebackend.security.jwt.JWTFilter;
+import com.servicethrottle.servicethrottlebackend.security.jwt.JWTProvider;
+import com.servicethrottle.servicethrottlebackend.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -10,17 +12,25 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import static com.servicethrottle.servicethrottlebackend.models.enums.AuthorityType.CUSTOMER;
 
 @EnableWebSecurity
 public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
+    private final JWTProvider jwtProvider;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
-    public SecurityConfigurations(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
+    public SecurityConfigurations(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, JWTProvider jwtProvider, UserDetailsServiceImpl userDetailsServiceImpl) {
         this.userDetailsService = userDetailsService;
+        this.jwtProvider = jwtProvider;
+        this.userDetailsServiceImpl = userDetailsServiceImpl;
     }
 
     @Autowired
@@ -35,10 +45,15 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
         http
                 .csrf()
                 .disable()
+                .addFilter(new UsernamePasswordAuthenticationFilter())
+                .addFilterAfter(new JWTFilter(jwtProvider,userDetailsServiceImpl), UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authorizeRequests()
-                .antMatchers("/st/account/login").permitAll()
+                .antMatchers("/st/login").permitAll()
                 .antMatchers("/st/account/register").permitAll()
                 .antMatchers("/st/account/activate").permitAll()
+                .antMatchers("/st/hello").hasAuthority("ROLE_" + CUSTOMER.getAuthorityType().toUpperCase())
                 .anyRequest().authenticated();
     }
 
