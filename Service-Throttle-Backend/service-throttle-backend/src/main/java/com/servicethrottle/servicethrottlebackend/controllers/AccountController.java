@@ -1,20 +1,17 @@
 package com.servicethrottle.servicethrottlebackend.controllers;
 
-import com.servicethrottle.servicethrottlebackend.models.dto.LoginRequest;
 import com.servicethrottle.servicethrottlebackend.models.dto.RegistrationRequest;
 import com.servicethrottle.servicethrottlebackend.services.UserAccountService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/st/account")
+@AllArgsConstructor
 public class AccountController {
 
     private final UserAccountService userAccountService;
-
-    public AccountController(UserAccountService userAccountService) {
-        this.userAccountService = userAccountService;
-    }
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody RegistrationRequest registrationRequest) throws Exception {
@@ -27,11 +24,6 @@ public class AccountController {
     public ResponseEntity<String> activateAccount(@RequestBody String code)
             throws Exception {
         return ResponseEntity.ok().body(userAccountService.activateUser(code));
-    }
-
-    @GetMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) throws Exception {
-        return ResponseEntity.ok().body(userAccountService.login(loginRequest));
     }
 
 }

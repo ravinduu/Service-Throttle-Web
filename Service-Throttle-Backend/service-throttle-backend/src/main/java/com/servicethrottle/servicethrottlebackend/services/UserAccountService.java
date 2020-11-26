@@ -9,7 +9,7 @@ import com.servicethrottle.servicethrottlebackend.models.dto.RegistrationRequest
 import com.servicethrottle.servicethrottlebackend.repositories.ActivationCodeRepository;
 import com.servicethrottle.servicethrottlebackend.repositories.AuthorityRepository;
 import com.servicethrottle.servicethrottlebackend.repositories.UserAuthenticationCredentialsRepository;
-import com.servicethrottle.servicethrottlebackend.security.jwt.JwtProvider;
+import com.servicethrottle.servicethrottlebackend.security.jwt.JWTProvider;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,7 +37,7 @@ public class UserAccountService {
     private final AdminService adminService;
     private final AuthorityService authorityService;
     private final CustomerService customerService;
-    private final JwtProvider jwtProvider;
+    private final JWTProvider jwtProvider;
 
     private final AuthenticationManager authenticationManager;
 
@@ -47,7 +47,7 @@ public class UserAccountService {
     public UserAccountService(UserAuthenticationCredentialsRepository userAuthenticationCredentialsRepository,
                               AuthorityRepository authorityRepository,
                               ActivationCodeRepository activationCodeRepository, AdminService adminService, AuthorityService authorityService,
-                              CustomerService customerService, JwtProvider jwtProvider, AuthenticationManager authenticationManager,
+                              CustomerService customerService, JWTProvider jwtProvider, AuthenticationManager authenticationManager,
                               PasswordEncoder passwordEncoder) {
         this.userAuthenticationCredentialsRepository = userAuthenticationCredentialsRepository;
         this.authorityRepository = authorityRepository;
@@ -138,17 +138,4 @@ public class UserAccountService {
         return "Activated";
     }
 
-    public String login(LoginRequest loginRequest) throws Exception {
-        System.out.println(loginRequest);
-        String username = loginRequest.getUsername();
-        String password = loginRequest.getPassword();
-//        use username and pwd authentication
-        Authentication authenticate = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        System.out.println("auth"+ authenticate);
-//        save data in context
-        SecurityContextHolder.getContext().setAuthentication(authenticate);
-
-        return jwtProvider.generateToken(authenticate);
-    }
 }
