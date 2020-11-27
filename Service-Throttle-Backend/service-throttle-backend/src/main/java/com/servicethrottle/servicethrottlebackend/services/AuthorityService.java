@@ -5,6 +5,9 @@ import com.servicethrottle.servicethrottlebackend.repositories.AuthorityReposito
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AuthorityService {
     private final AuthorityRepository authorityRepository;
@@ -23,5 +26,10 @@ public class AuthorityService {
             authorityRepository.save(authority);
         }
         return authority;
+    }
+
+    public List<String> getAllAuthorities() {
+
+        return authorityRepository.findAll().stream().map(Authority::getAuthority).collect(Collectors.toList());
     }
 }
