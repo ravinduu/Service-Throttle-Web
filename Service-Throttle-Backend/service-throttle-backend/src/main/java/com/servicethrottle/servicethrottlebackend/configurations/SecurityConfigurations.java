@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.servicethrottle.servicethrottlebackend.models.enums.AuthorityType.ADMIN;
 import static com.servicethrottle.servicethrottlebackend.models.enums.AuthorityType.CUSTOMER;
 
 @EnableWebSecurity
@@ -54,6 +55,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 .antMatchers("/st/account/register").permitAll()
                 .antMatchers("/st/account/activate").permitAll()
                 .antMatchers("/st/hello").hasAuthority("ROLE_" + CUSTOMER.getAuthorityType().toUpperCase())
+//                .antMatchers("/st/users").hasAuthority("ROLE_" + ADMIN.getAuthorityType().toUpperCase())
                 .anyRequest().authenticated();
     }
 
