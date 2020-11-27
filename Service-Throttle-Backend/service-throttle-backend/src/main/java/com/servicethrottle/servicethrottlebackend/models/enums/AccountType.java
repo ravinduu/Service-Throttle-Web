@@ -1,10 +1,10 @@
 package com.servicethrottle.servicethrottlebackend.models.enums;
 
 public enum AccountType {
-    ADMIN_ACCOUNT("adminAccount"),
-    SUPERVISOR_ACCOUNT("supervisorAccount"),
-    MOBILE_MECHANIC_ACCOUNT("mobileMechanicAccount"),
-    CUSTOMER_ACCOUNT("customerAccount");
+    ADMIN_ACCOUNT("admin_account"),
+    SUPERVISOR_ACCOUNT("supervisor_account"),
+    MOBILE_MECHANIC_ACCOUNT("mobile_mechanic_account"),
+    CUSTOMER_ACCOUNT("customer_account");
 
     private final String accountType;
 

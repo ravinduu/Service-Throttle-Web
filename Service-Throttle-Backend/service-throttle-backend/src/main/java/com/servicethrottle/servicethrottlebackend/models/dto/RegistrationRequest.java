@@ -27,7 +27,7 @@ public class RegistrationRequest {
     private String email;
 
     @NotNull
-    private String accountType = "customerAccount";
+    private String accountType;
 
 
 }

@@ -1,12 +1,11 @@
 package com.servicethrottle.servicethrottlebackend.services;
 
 import com.servicethrottle.servicethrottlebackend.exceptions.UserNotActivatedException;
-import com.servicethrottle.servicethrottlebackend.models.UserAuthenticationCredentials;
-import com.servicethrottle.servicethrottlebackend.repositories.UserAuthenticationCredentialsRepository;
+import com.servicethrottle.servicethrottlebackend.models.UserCredentials;
+import com.servicethrottle.servicethrottlebackend.repositories.UserCredentialsRepository;
 import lombok.SneakyThrows;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,10 +19,10 @@ import java.util.Set;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final UserAuthenticationCredentialsRepository userAuthenticationCredentialsRepository;
+    private final UserCredentialsRepository userCredentialsRepository;
 
-    public UserDetailsServiceImpl(UserAuthenticationCredentialsRepository userAuthenticationCredentialsRepository) {
-        this.userAuthenticationCredentialsRepository = userAuthenticationCredentialsRepository;
+    public UserDetailsServiceImpl(UserCredentialsRepository userCredentialsRepository) {
+        this.userCredentialsRepository = userCredentialsRepository;
     }
 
     @SneakyThrows
@@ -33,31 +32,31 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         String lowerCaseUsername = username.toLowerCase(Locale.ENGLISH);
 
-        return  userAuthenticationCredentialsRepository
+        return  userCredentialsRepository
                 .findOneByUsername(lowerCaseUsername)
                 .map(userAuthenticationCredentials -> createSpringSecurityUser(lowerCaseUsername, userAuthenticationCredentials))
                 .orElseThrow(() -> new UsernameNotFoundException("User "+lowerCaseUsername+" was not found !!"));
     }
 
     @SneakyThrows
-    private org.springframework.security.core.userdetails.User createSpringSecurityUser(String lowerCaseUsername, UserAuthenticationCredentials userAuthenticationCredentials) {
-        if(!userAuthenticationCredentials.isActivated()) {
+    private org.springframework.security.core.userdetails.User createSpringSecurityUser(String lowerCaseUsername, UserCredentials userCredentials) {
+        if(!userCredentials.isActivated()) {
             throw new UserNotActivatedException();
         }
 
         return new org.springframework.security.core.userdetails.User(
-                userAuthenticationCredentials.getUsername(),
-                userAuthenticationCredentials.getPassword(),
-                userAuthenticationCredentials.isActivated(),
+                userCredentials.getUsername(),
+                userCredentials.getPassword(),
+                userCredentials.isActivated(),
                 true,
                 true,
-                true,
-                getAuthorities(userAuthenticationCredentials));
+                !userCredentials.isLocked(),
+                getAuthorities(userCredentials));
     }
 
-    private Collection<? extends GrantedAuthority> getAuthorities(UserAuthenticationCredentials userAuthenticationCredentials){
+    private Collection<? extends GrantedAuthority> getAuthorities(UserCredentials userCredentials){
         Set authorities = new HashSet<>();
-                userAuthenticationCredentials.getAuthorities().forEach(role -> {
+                userCredentials.getAuthorities().forEach(role -> {
                     authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getAuthority().toUpperCase()));
                 });
                 return authorities;

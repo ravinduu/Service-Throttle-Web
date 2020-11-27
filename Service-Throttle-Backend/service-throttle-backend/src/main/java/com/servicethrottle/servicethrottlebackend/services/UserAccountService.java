@@ -1,23 +1,21 @@
 package com.servicethrottle.servicethrottlebackend.services;
 
+import com.servicethrottle.servicethrottlebackend.exceptions.AccountResourceException;
 import com.servicethrottle.servicethrottlebackend.exceptions.UsernameAlreadyExistException;
 import com.servicethrottle.servicethrottlebackend.models.ActivationCode;
 import com.servicethrottle.servicethrottlebackend.models.Authority;
-import com.servicethrottle.servicethrottlebackend.models.UserAuthenticationCredentials;
-import com.servicethrottle.servicethrottlebackend.models.dto.LoginRequest;
+import com.servicethrottle.servicethrottlebackend.models.UserCredentials;
 import com.servicethrottle.servicethrottlebackend.models.dto.RegistrationRequest;
 import com.servicethrottle.servicethrottlebackend.repositories.ActivationCodeRepository;
 import com.servicethrottle.servicethrottlebackend.repositories.AuthorityRepository;
-import com.servicethrottle.servicethrottlebackend.repositories.UserAuthenticationCredentialsRepository;
+import com.servicethrottle.servicethrottlebackend.repositories.UserCredentialsRepository;
 import com.servicethrottle.servicethrottlebackend.security.jwt.JWTProvider;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
@@ -30,7 +28,7 @@ import static com.servicethrottle.servicethrottlebackend.models.enums.AuthorityT
 @Transactional
 public class UserAccountService {
 
-    private final UserAuthenticationCredentialsRepository userAuthenticationCredentialsRepository;
+    private final UserCredentialsRepository userCredentialsRepository;
     private final AuthorityRepository authorityRepository;
     private final ActivationCodeRepository activationCodeRepository ;
 
@@ -44,12 +42,12 @@ public class UserAccountService {
     private final PasswordEncoder passwordEncoder;
 
 
-    public UserAccountService(UserAuthenticationCredentialsRepository userAuthenticationCredentialsRepository,
+    public UserAccountService(UserCredentialsRepository userCredentialsRepository,
                               AuthorityRepository authorityRepository,
                               ActivationCodeRepository activationCodeRepository, AdminService adminService, AuthorityService authorityService,
                               CustomerService customerService, JWTProvider jwtProvider, AuthenticationManager authenticationManager,
                               PasswordEncoder passwordEncoder) {
-        this.userAuthenticationCredentialsRepository = userAuthenticationCredentialsRepository;
+        this.userCredentialsRepository = userCredentialsRepository;
         this.authorityRepository = authorityRepository;
         this.activationCodeRepository = activationCodeRepository;
         this.adminService = adminService;
@@ -70,29 +68,32 @@ public class UserAccountService {
 
         if (username.equals("") || email.equals("") || encodedPassword.equals("")) return "Error";
 
-        userAuthenticationCredentialsRepository.findOneByUsername(username)
+        userCredentialsRepository.findOneByUsername(username)
                 .ifPresent( userExist -> {
                     throw new UsernameAlreadyExistException();
                 }
         );
 
-        UserAuthenticationCredentials userAuthenticationCredentials = new UserAuthenticationCredentials();
-        userAuthenticationCredentials.setUsername(username);
-        userAuthenticationCredentials.setPassword(encodedPassword);
-        Set<Authority> userAuthority = userAuthenticationCredentials.getAuthorities();
+        UserCredentials userCredentials = new UserCredentials();
+        userCredentials.setUsername(username);
+        userCredentials.setPassword(encodedPassword);
+
+        Set<Authority> userAuthority = userCredentials.getAuthorities();
 
         if (accountType.equals(ADMIN_ACCOUNT.getAccountType())){
+            userCredentials.setAccountType(ADMIN_ACCOUNT.getAccountType());
             userAuthority.add(authorityService.createAuthorityIfNotFound(ADMIN.getAuthorityType()));
             response = adminService.registerAdmin(username, email);
         }
         else if (accountType.equals(CUSTOMER_ACCOUNT.getAccountType())){
+            userCredentials.setAccountType(CUSTOMER_ACCOUNT.getAccountType());
             userAuthority.add(authorityService.createAuthorityIfNotFound(CUSTOMER.getAuthorityType()));
             response = customerService.registerCustomer(username, email);
         }
 
-        userAuthenticationCredentials.setActivated(false);
-        generateActivationCode(userAuthenticationCredentials);
-        userAuthenticationCredentialsRepository.save(userAuthenticationCredentials);
+//        userCredentials.setActivated(false);
+        generateActivationCode(userCredentials);
+        userCredentialsRepository.save(userCredentials);
 //        return login(username, registrationRequest.getPassword());
 //        System.out.println(login(new LoginRequest(username,registrationRequest.getPassword())));
         return "bla bla bla";
@@ -103,7 +104,7 @@ public class UserAccountService {
         return passwordEncoder.encode(password);
     }
 
-    private ActivationCode generateActivationCode(UserAuthenticationCredentials userAuthenticationCredentials) {
+    private ActivationCode generateActivationCode(UserCredentials userCredentials) {
         Random random = new Random();
 
         String code = String.format("%04d", random.nextInt(10000));
@@ -115,7 +116,7 @@ public class UserAccountService {
 //        activation code and customer details save in ActivationCode table
         ActivationCode activationCode = new ActivationCode();
         activationCode.setActivationCode(code);
-        activationCode.setUserAuthenticationCredentials(userAuthenticationCredentials);
+        activationCode.setUserCredentials(userCredentials);
         activationCodeRepository.save(activationCode);
 //        verification code will send to the customer email
 //        mailService.sendActivationEmail(activationCode);
@@ -124,17 +125,38 @@ public class UserAccountService {
 
     public String activateUser(String code) {
 
-        ActivationCode activationCode = activationCodeRepository.findOneByActivationCode(code).get();
-        Long id = activationCode.getUserAuthenticationCredentials().getId();
+        Optional<ActivationCode> activationCode = activationCodeRepository.findOneByActivationCode(code);
 
-        userAuthenticationCredentialsRepository.findById(id).ifPresent(
-                userAuthenticationCredentials -> {
-                    userAuthenticationCredentials.setActivated(true);
-                    userAuthenticationCredentialsRepository.save(userAuthenticationCredentials);
+        if (!activationCode.isPresent()) {
+            throw new AccountResourceException("No user was found for this activation code");
+        }
+
+        activationCode.map(
+                activationCode1 -> {
+                    userCredentialsRepository.findById(activationCode.get().getUserCredentials().getId()).map(
+                            userCredentials -> {
+                                userCredentials.setActivated(true);
+                                userCredentials.setLocked(false);
+                                userCredentialsRepository.save(userCredentials);
+                                activationCodeRepository.delete(activationCode1);
+                                return "Activated";
+                            }
+                    );
+                    return "No user was found for this activation code";
                 }
         );
-
-        activationCodeRepository.delete(activationCode);
+//
+//
+//
+//        userCredentialsRepository.findById(id).ifPresent(
+//                userAuthenticationCredentials -> {
+//                    userAuthenticationCredentials.setActivated(true);
+//                    userAuthenticationCredentials.setLocked(false);
+//                    userCredentialsRepository.save(userAuthenticationCredentials);
+//                }
+//        );
+//
+//        activationCodeRepository.delete(activationCode);
         return "Activated";
     }
 

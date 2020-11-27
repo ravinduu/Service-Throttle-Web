@@ -26,5 +26,5 @@ public class ActivationCode implements Serializable {
     private String activationCode;
 
     @OneToOne(fetch = LAZY)
-    private UserAuthenticationCredentials userAuthenticationCredentials;
+    private UserCredentials userCredentials;
 }

@@ -1,6 +1,7 @@
 package com.servicethrottle.servicethrottlebackend.controllers;
 
 import com.servicethrottle.servicethrottlebackend.models.dto.LoginRequest;
+import com.servicethrottle.servicethrottlebackend.security.SecurityUtils;
 import com.servicethrottle.servicethrottlebackend.services.JWTAuthService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,7 +37,7 @@ public class JWTAuthController {
 
     @GetMapping("/hello")
     public String hello(){
-        System.out.println("It works");
-        return "HELLO";
+
+        return SecurityUtils.getCurrentUsername().get() + "HELLO";
     }
 }

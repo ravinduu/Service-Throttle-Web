@@ -22,8 +22,8 @@ import static javax.persistence.FetchType.LAZY;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "st_user_authentication_credentials")
-public class UserAuthenticationCredentials implements Serializable {
+@Table(name = "st_user_credentials")
+public class UserCredentials implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,11 +44,20 @@ public class UserAuthenticationCredentials implements Serializable {
     @Column(nullable = false)
     private boolean activated = false;
 
+    @NotNull
+    @Column(nullable = false)
+    private boolean locked = false;
+
+    @NotNull
+    @Size(min = 8)
+    @Column(nullable = false)
+    private String accountType;
+
     @ManyToMany(fetch = LAZY)
     @Fetch(FetchMode.SELECT)
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
-            name = "st_user_authentication_credentials_auth",
+            name = "st_user_authority",
             joinColumns = @JoinColumn( name = "st_user_authentication_credentials_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn( name = "authority_id", referencedColumnName = "id"))
     private Set<Authority> authorities = new HashSet<>();
