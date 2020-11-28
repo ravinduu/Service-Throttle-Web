@@ -59,14 +59,4 @@ public class User implements Serializable {
 
     private Instant created;
 
-
-//    @ManyToMany(fetch = LAZY)
-//    @Fetch(FetchMode.SELECT)
-//    @LazyCollection(LazyCollectionOption.FALSE)
-//    @JoinTable(
-//            name = "users_authorities",
-//            joinColumns = @JoinColumn( name = "user_id", referencedColumnName = "id"),
-//            inverseJoinColumns = @JoinColumn( name = "authority_id", referencedColumnName = "id"))
-//    private Set<Authority> authorities = new HashSet<>();
-
 }
