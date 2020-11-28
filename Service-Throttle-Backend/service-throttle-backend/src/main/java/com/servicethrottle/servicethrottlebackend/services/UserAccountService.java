@@ -7,10 +7,8 @@ import com.servicethrottle.servicethrottlebackend.models.Authority;
 import com.servicethrottle.servicethrottlebackend.models.UserCredentials;
 import com.servicethrottle.servicethrottlebackend.models.dto.RegistrationRequestDto;
 import com.servicethrottle.servicethrottlebackend.repositories.ActivationCodeRepository;
-import com.servicethrottle.servicethrottlebackend.repositories.AuthorityRepository;
 import com.servicethrottle.servicethrottlebackend.repositories.UserCredentialsRepository;
-import com.servicethrottle.servicethrottlebackend.security.jwt.JWTProvider;
-import org.springframework.security.authentication.AuthenticationManager;
+import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,47 +17,28 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
-import static com.servicethrottle.servicethrottlebackend.models.enums.AccountType.ADMIN_ACCOUNT;
-import static com.servicethrottle.servicethrottlebackend.models.enums.AccountType.CUSTOMER_ACCOUNT;
-import static com.servicethrottle.servicethrottlebackend.models.enums.AuthorityType.ADMIN;
-import static com.servicethrottle.servicethrottlebackend.models.enums.AuthorityType.CUSTOMER;
+import static com.servicethrottle.servicethrottlebackend.models.enums.AccountType.*;
+import static com.servicethrottle.servicethrottlebackend.models.enums.AuthorityType.*;
 
 @Service
+@AllArgsConstructor
 @Transactional
 public class UserAccountService {
 
     private final UserCredentialsRepository userCredentialsRepository;
-    private final AuthorityRepository authorityRepository;
     private final ActivationCodeRepository activationCodeRepository ;
 
     private final AdminService adminService;
     private final AuthorityService authorityService;
     private final CustomerService customerService;
-    private final JWTProvider jwtProvider;
-
-    private final AuthenticationManager authenticationManager;
+    private final SupervisorService supervisorService;
+    private final MobileMechanicService mobileMechanicService;
 
     private final PasswordEncoder passwordEncoder;
 
 
-    public UserAccountService(UserCredentialsRepository userCredentialsRepository,
-                              AuthorityRepository authorityRepository,
-                              ActivationCodeRepository activationCodeRepository, AdminService adminService, AuthorityService authorityService,
-                              CustomerService customerService, JWTProvider jwtProvider, AuthenticationManager authenticationManager,
-                              PasswordEncoder passwordEncoder) {
-        this.userCredentialsRepository = userCredentialsRepository;
-        this.authorityRepository = authorityRepository;
-        this.activationCodeRepository = activationCodeRepository;
-        this.adminService = adminService;
-        this.authorityService = authorityService;
-        this.customerService = customerService;
-        this.jwtProvider = jwtProvider;
-        this.authenticationManager = authenticationManager;
-        this.passwordEncoder = passwordEncoder;
-    }
-
     public String registerUser(RegistrationRequestDto registrationRequestDto) throws Exception {
-        int response = 0;
+        boolean success = false;
 
         String username = registrationRequestDto.getUsername();
         String email = registrationRequestDto.getEmail();
@@ -68,35 +47,37 @@ public class UserAccountService {
 
         if (username.equals("") || email.equals("") || encodedPassword.equals("")) return "Error";
 
-        userCredentialsRepository.findOneByUsername(username)
-                .ifPresent( userExist -> {
-                    throw new UsernameAlreadyExistException();
-                }
-        );
+        if(isUniqueUsername(username)){
 
-        UserCredentials userCredentials = new UserCredentials();
-        userCredentials.setUsername(username);
-        userCredentials.setPassword(encodedPassword);
+            UserCredentials userCredentials = new UserCredentials();
+            userCredentials.setUsername(username);
+            userCredentials.setPassword(encodedPassword);
+            Set<Authority> userAuthority = userCredentials.getAuthorities();
 
-        Set<Authority> userAuthority = userCredentials.getAuthorities();
-
-        if (accountType.equals(ADMIN_ACCOUNT.getAccountType())){
-            userCredentials.setAccountType(ADMIN_ACCOUNT.getAccountType());
-            userAuthority.add(authorityService.createAuthorityIfNotFound(ADMIN.getAuthorityType()));
-            response = adminService.registerAdmin(username, email);
-        }
-        else if (accountType.equals(CUSTOMER_ACCOUNT.getAccountType())){
-            userCredentials.setAccountType(CUSTOMER_ACCOUNT.getAccountType());
-            userAuthority.add(authorityService.createAuthorityIfNotFound(CUSTOMER.getAuthorityType()));
-            response = customerService.registerCustomer(username, email);
-        }
+            if (accountType.equals(SUPERVISOR_ACCOUNT.getAccountType())){
+                userCredentials.setAccountType(SUPERVISOR_ACCOUNT.getAccountType());
+                userAuthority.add(authorityService.createAuthorityIfNotFound(MOBILE_MECHANIC.getAuthorityType()));
+                success = supervisorService.registerSupervisor(username, email);
+            }
+            else if (accountType.equals(CUSTOMER_ACCOUNT.getAccountType())){
+                userCredentials.setAccountType(CUSTOMER_ACCOUNT.getAccountType());
+                userAuthority.add(authorityService.createAuthorityIfNotFound(CUSTOMER.getAuthorityType()));
+                success = customerService.registerCustomer(username, email);
+            }
+            else if (accountType.equals(MOBILE_MECHANIC_ACCOUNT.getAccountType())){
+                userCredentials.setAccountType(MOBILE_MECHANIC_ACCOUNT.getAccountType());
+                userAuthority.add(authorityService.createAuthorityIfNotFound(MOBILE_MECHANIC.getAuthorityType()));
+                success = mobileMechanicService.registerMobileMechanic(username, email);
+            }
 
 //        userCredentials.setActivated(false);
-        generateActivationCode(userCredentials);
-        userCredentialsRepository.save(userCredentials);
-//        return login(username, registrationRequestDto.getPassword());
-//        System.out.println(login(new LoginRequestDto(username,registrationRequestDto.getPassword())));
-        return "bla bla bla";
+            if (!success) return "Something goes wrong !!";
+
+            generateActivationCode(userCredentials);
+            userCredentialsRepository.save(userCredentials);
+            return "Success";
+        }
+        return "Something goes wrong !!";
     }
 
 
@@ -145,19 +126,57 @@ public class UserAccountService {
                     return "No user was found for this activation code";
                 }
         );
-//
-//
-//
-//        userCredentialsRepository.findById(id).ifPresent(
-//                userAuthenticationCredentials -> {
-//                    userAuthenticationCredentials.setActivated(true);
-//                    userAuthenticationCredentials.setLocked(false);
-//                    userCredentialsRepository.save(userAuthenticationCredentials);
-//                }
-//        );
-//
-//        activationCodeRepository.delete(activationCode);
         return "Activated";
     }
 
+    public String registerAdmin(RegistrationRequestDto registrationRequestDto) {
+        boolean success = false;
+
+        String username = registrationRequestDto.getUsername();
+        String email = registrationRequestDto.getEmail();
+        String encodedPassword = encodePassword(registrationRequestDto.getPassword());
+        String accountType = registrationRequestDto.getAccountType();
+
+        if(isUniqueUsername(username)){
+            UserCredentials userCredentials = new UserCredentials();
+            userCredentials.setUsername(username);
+            userCredentials.setPassword(encodedPassword);
+            userCredentials.setActivated(true);
+            userCredentials.setLocked(false);
+            Set<Authority> userAuthority = userCredentials.getAuthorities();
+
+            userCredentials.setAccountType(ADMIN_ACCOUNT.getAccountType());
+            userAuthority.add(authorityService.createAuthorityIfNotFound(ADMIN.getAuthorityType()));
+
+            if(adminService.registerAdmin(username, email)){
+                userCredentialsRepository.save(userCredentials);
+                return "Success";
+            }
+        }
+        return "Something goes wrong !!";
+    }
+
+    private boolean isUniqueUsername(String username){
+        userCredentialsRepository.findOneByUsername(username)
+                .ifPresent( userExist -> {
+                            throw new UsernameAlreadyExistException();
+                        }
+                );
+
+        return true;
+    }
+
+    public void deleteUser(String username) {
+        userCredentialsRepository.findOneByUsername(username).ifPresent(
+                userExist -> {
+                    if(userExist.getAccountType().equals(ADMIN_ACCOUNT.getAccountType())) adminService.deleteAdmin(userExist.getUsername());
+                    else if(userExist.getAccountType().equals(SUPERVISOR_ACCOUNT.getAccountType())) supervisorService.deleteSupervisor(userExist.getUsername());
+                    else if(userExist.getAccountType().equals(MOBILE_MECHANIC_ACCOUNT.getAccountType())) mobileMechanicService.deleteMobileMechanic(userExist.getUsername());
+                    else if(userExist.getAccountType().equals(CUSTOMER_ACCOUNT.getAccountType())) customerService.deleteCustomer(userExist.getUsername());
+
+                    userCredentialsRepository.delete(userExist);
+                }
+
+        );
+    }
 }

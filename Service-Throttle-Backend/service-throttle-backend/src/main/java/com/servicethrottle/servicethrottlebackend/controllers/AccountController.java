@@ -5,6 +5,7 @@ import com.servicethrottle.servicethrottlebackend.services.UserAccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,6 +21,13 @@ public class AccountController {
         return ResponseEntity.ok().body(userAccountService.registerUser(registrationRequestDto));
     }
 
+    @PostMapping("/register/admin")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<String> registerAdmin(@RequestBody RegistrationRequestDto registrationRequestDto) throws Exception {
+        return ResponseEntity.ok().body(userAccountService.registerAdmin(registrationRequestDto));
+    }
+
 //    activateAccount method if for activate, verify the account of  newly added customer using the verification code
 //    verification code send to the email
     @GetMapping("/activate")
@@ -28,5 +36,13 @@ public class AccountController {
             throws Exception {
         return ResponseEntity.ok().body(userAccountService.activateUser(code));
     }
+
+    @DeleteMapping("/delete/{username}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<Void> deleteUser(@PathVariable String username){
+        userAccountService.deleteUser(username);
+        return ResponseEntity.noContent().build();
+    }
+
 
 }
