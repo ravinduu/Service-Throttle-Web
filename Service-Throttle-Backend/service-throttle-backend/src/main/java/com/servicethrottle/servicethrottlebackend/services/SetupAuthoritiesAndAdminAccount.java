@@ -11,6 +11,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.Set;
 
 import static com.servicethrottle.servicethrottlebackend.models.enums.AccountType.*;
@@ -54,7 +55,7 @@ public class SetupAuthoritiesAndAdminAccount implements ApplicationListener<Cont
         superAdmin.setUsername("admin");
         superAdmin.setEmail("admin@admin.com");
         superAdmin.setSuperAdmin(true);
-//        superAdmin.setActivated(true);
+        superAdmin.setCreated(Instant.now());
 
         UAC.setUsername("admin");
         UAC.setPassword(encodePassword("admin"));

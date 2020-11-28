@@ -16,4 +16,3 @@ spring:
         dialate: org.hibernate.dialect.MySQL5InnoDBDialate
     hibernate:
       ddl-auto: create
-    generate-ddl: false
