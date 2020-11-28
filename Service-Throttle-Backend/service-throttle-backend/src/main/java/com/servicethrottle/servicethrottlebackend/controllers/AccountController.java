@@ -1,6 +1,6 @@
 package com.servicethrottle.servicethrottlebackend.controllers;
 
-import com.servicethrottle.servicethrottlebackend.models.dto.RegistrationRequest;
+import com.servicethrottle.servicethrottlebackend.models.dto.RegistrationRequestDto;
 import com.servicethrottle.servicethrottlebackend.services.UserAccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,8 +16,8 @@ public class AccountController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> registerUser(@RequestBody RegistrationRequest registrationRequest) throws Exception {
-        return ResponseEntity.ok().body(userAccountService.registerUser(registrationRequest));
+    public ResponseEntity<String> registerUser(@RequestBody RegistrationRequestDto registrationRequestDto) throws Exception {
+        return ResponseEntity.ok().body(userAccountService.registerUser(registrationRequestDto));
     }
 
 //    activateAccount method if for activate, verify the account of  newly added customer using the verification code

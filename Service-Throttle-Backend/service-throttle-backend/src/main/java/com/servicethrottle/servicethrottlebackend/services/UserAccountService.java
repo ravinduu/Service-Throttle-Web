@@ -5,7 +5,7 @@ import com.servicethrottle.servicethrottlebackend.exceptions.UsernameAlreadyExis
 import com.servicethrottle.servicethrottlebackend.models.ActivationCode;
 import com.servicethrottle.servicethrottlebackend.models.Authority;
 import com.servicethrottle.servicethrottlebackend.models.UserCredentials;
-import com.servicethrottle.servicethrottlebackend.models.dto.RegistrationRequest;
+import com.servicethrottle.servicethrottlebackend.models.dto.RegistrationRequestDto;
 import com.servicethrottle.servicethrottlebackend.repositories.ActivationCodeRepository;
 import com.servicethrottle.servicethrottlebackend.repositories.AuthorityRepository;
 import com.servicethrottle.servicethrottlebackend.repositories.UserCredentialsRepository;
@@ -58,13 +58,13 @@ public class UserAccountService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public String registerUser(RegistrationRequest registrationRequest) throws Exception {
+    public String registerUser(RegistrationRequestDto registrationRequestDto) throws Exception {
         int response = 0;
 
-        String username = registrationRequest.getUsername();
-        String email = registrationRequest.getEmail();
-        String encodedPassword = encodePassword(registrationRequest.getPassword());
-        String accountType = registrationRequest.getAccountType();
+        String username = registrationRequestDto.getUsername();
+        String email = registrationRequestDto.getEmail();
+        String encodedPassword = encodePassword(registrationRequestDto.getPassword());
+        String accountType = registrationRequestDto.getAccountType();
 
         if (username.equals("") || email.equals("") || encodedPassword.equals("")) return "Error";
 
@@ -94,8 +94,8 @@ public class UserAccountService {
 //        userCredentials.setActivated(false);
         generateActivationCode(userCredentials);
         userCredentialsRepository.save(userCredentials);
-//        return login(username, registrationRequest.getPassword());
-//        System.out.println(login(new LoginRequest(username,registrationRequest.getPassword())));
+//        return login(username, registrationRequestDto.getPassword());
+//        System.out.println(login(new LoginRequestDto(username,registrationRequestDto.getPassword())));
         return "bla bla bla";
     }
 

@@ -1,6 +1,6 @@
 package com.servicethrottle.servicethrottlebackend.controllers;
 
-import com.servicethrottle.servicethrottlebackend.models.dto.LoginRequest;
+import com.servicethrottle.servicethrottlebackend.models.dto.LoginRequestDto;
 import com.servicethrottle.servicethrottlebackend.security.SecurityUtils;
 import com.servicethrottle.servicethrottlebackend.services.JWTAuthService;
 import lombok.AllArgsConstructor;
@@ -21,8 +21,8 @@ public class JWTAuthController {
     private JWTAuthService jwtAuthService;
 
     @GetMapping("/login")
-    public ResponseEntity<JWTToken> login(@RequestBody LoginRequest loginRequest) throws Exception {
-        String jwtToken = jwtAuthService.login(loginRequest);
+    public ResponseEntity<JWTToken> login(@RequestBody LoginRequestDto loginRequestDto) throws Exception {
+        String jwtToken = jwtAuthService.login(loginRequestDto);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Bearer " + jwtToken);
         return ResponseEntity.ok().body(new JWTToken(jwtToken));
