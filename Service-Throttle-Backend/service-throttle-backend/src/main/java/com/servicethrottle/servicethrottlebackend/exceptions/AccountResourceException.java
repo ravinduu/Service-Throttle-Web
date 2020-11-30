@@ -1,6 +1,8 @@
 package com.servicethrottle.servicethrottlebackend.exceptions;
 
-public class AccountResourceException extends RuntimeException{
+import javax.security.auth.login.LoginException;
+
+public class AccountResourceException extends LoginException {
     public AccountResourceException(String s) {
     }
 }

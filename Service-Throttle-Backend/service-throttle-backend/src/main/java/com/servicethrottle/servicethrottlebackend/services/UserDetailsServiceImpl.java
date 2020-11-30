@@ -1,5 +1,6 @@
 package com.servicethrottle.servicethrottlebackend.services;
 
+import com.servicethrottle.servicethrottlebackend.exceptions.UserAlreadyLockedException;
 import com.servicethrottle.servicethrottlebackend.exceptions.UserNotActivatedException;
 import com.servicethrottle.servicethrottlebackend.models.UserCredentials;
 import com.servicethrottle.servicethrottlebackend.repositories.UserCredentialsRepository;
@@ -42,6 +43,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private org.springframework.security.core.userdetails.User createSpringSecurityUser(String lowerCaseUsername, UserCredentials userCredentials) {
         if(!userCredentials.isActivated()) {
             throw new UserNotActivatedException();
+        }
+        if(userCredentials.isLocked()) {
+            throw new UserAlreadyLockedException(lowerCaseUsername+" have locked !!");
         }
 
         return new org.springframework.security.core.userdetails.User(
