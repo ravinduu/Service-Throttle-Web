@@ -5,6 +5,7 @@ import com.servicethrottle.servicethrottlebackend.models.Supervisor;
 import com.servicethrottle.servicethrottlebackend.models.dto.UserDetailsDto;
 import com.servicethrottle.servicethrottlebackend.repositories.SupervisorRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,5 +47,12 @@ public class SupervisorService {
         supervisorRepository.findOneByUsername(username).ifPresent(
                 supervisor -> supervisorRepository.delete(supervisor)
         );
+    }
+
+    public UserDetailsDto getSupervisor(String username) {
+            supervisorRepository.findOneByUsername(username).ifPresent(
+                    UserDetailsDto::new
+            );
+            throw new UsernameNotFoundException("User could not be found");
     }
 }

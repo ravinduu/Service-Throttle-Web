@@ -1,14 +1,18 @@
 package com.servicethrottle.servicethrottlebackend.services;
 
 import com.servicethrottle.servicethrottlebackend.exceptions.AccountResourceException;
+import com.servicethrottle.servicethrottlebackend.exceptions.UserAlreadyLockedException;
 import com.servicethrottle.servicethrottlebackend.exceptions.UsernameAlreadyExistException;
 import com.servicethrottle.servicethrottlebackend.models.ActivationCode;
 import com.servicethrottle.servicethrottlebackend.models.Authority;
 import com.servicethrottle.servicethrottlebackend.models.UserCredentials;
 import com.servicethrottle.servicethrottlebackend.models.dto.RegistrationRequestDto;
+import com.servicethrottle.servicethrottlebackend.models.dto.UserDetailsDto;
 import com.servicethrottle.servicethrottlebackend.repositories.ActivationCodeRepository;
 import com.servicethrottle.servicethrottlebackend.repositories.UserCredentialsRepository;
+import com.servicethrottle.servicethrottlebackend.security.SecurityUtils;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,7 +108,7 @@ public class UserAccountService {
         return activationCode;
     }
 
-    public String activateUser(String code) {
+    public String activateUser(String code) throws AccountResourceException {
 
         Optional<ActivationCode> activationCode = activationCodeRepository.findOneByActivationCode(code);
 
@@ -166,6 +170,8 @@ public class UserAccountService {
         return true;
     }
 
+    //delete an existing user
+    //super admin accounts cannot delete
     public void deleteUser(String username) {
         userCredentialsRepository.findOneByUsername(username).ifPresent(
                 userExist -> {
@@ -178,5 +184,42 @@ public class UserAccountService {
                 }
 
         );
+    }
+
+    public String lockUser(String username) {
+        userCredentialsRepository.findOneByUsername(username).ifPresent(
+                userExist -> {
+                    if (userExist.isLocked() == true) throw new UserAlreadyLockedException("User Already Locked");
+                    userExist.setLocked(true);
+                    userCredentialsRepository.save(userExist);
+                }
+        );
+        return "User "+username+" have locked !!";
+    }
+
+    public String unlockUser(String username) {
+        userCredentialsRepository.findOneByUsername(username).ifPresent(
+                userExist -> {
+                    if (userExist.isLocked() == false) throw new UserAlreadyLockedException("User Already Unlocked");
+                    userExist.setLocked(false);
+                    userCredentialsRepository.save(userExist);
+                }
+        );
+        return "User "+username+" have unlocked !!";
+    }
+
+    //method for get the current user
+    //by using security utils
+    @Transactional(readOnly = true)
+    public UserDetailsDto getUser() {
+        UserDetailsDto userDetailsDto = new UserDetailsDto();
+        String username = SecurityUtils.getCurrentUsername().orElseThrow(() -> new UsernameNotFoundException("User  was not found !!"));
+//implement this to all
+        UserCredentials userCredentials = userCredentialsRepository.findOneByUsername(username).get();
+
+        if (userCredentials.getAccountType().equals(ADMIN_ACCOUNT.getAccountType())) userDetailsDto = adminService.getAdmin(username);
+
+        return userDetailsDto;
+
     }
 }

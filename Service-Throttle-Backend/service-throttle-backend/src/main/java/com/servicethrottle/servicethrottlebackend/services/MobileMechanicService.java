@@ -6,6 +6,7 @@ import com.servicethrottle.servicethrottlebackend.models.MobileMechanic;
 import com.servicethrottle.servicethrottlebackend.models.dto.UserDetailsDto;
 import com.servicethrottle.servicethrottlebackend.repositories.MobileMechanicRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,5 +49,12 @@ public class MobileMechanicService {
         mobileMechanicRepository.findOneByUsername(username).ifPresent(
                 mobileMechanic -> mobileMechanicRepository.delete(mobileMechanic)
         );
+    }
+
+    public UserDetailsDto getMobileMechanic(String username) {
+        mobileMechanicRepository.findOneByUsername(username).ifPresent(
+                UserDetailsDto::new
+        );
+        throw new UsernameNotFoundException("User could not be found");
     }
 }

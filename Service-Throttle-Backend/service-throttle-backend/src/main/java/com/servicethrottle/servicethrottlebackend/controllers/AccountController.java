@@ -1,6 +1,7 @@
 package com.servicethrottle.servicethrottlebackend.controllers;
 
 import com.servicethrottle.servicethrottlebackend.models.dto.RegistrationRequestDto;
+import com.servicethrottle.servicethrottlebackend.models.dto.UserDetailsDto;
 import com.servicethrottle.servicethrottlebackend.services.UserAccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,7 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/st/account")
+@RequestMapping("/st")
 @AllArgsConstructor
 public class AccountController {
 
@@ -44,5 +45,23 @@ public class AccountController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/lock/{username}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<String> lockUser(@PathVariable String username){
+        return ResponseEntity.ok().body(userAccountService.lockUser(username));
+    }
+
+    @PutMapping("/unlock/{username}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<String> unlockUser(@PathVariable String username){
+        return ResponseEntity.ok().body(userAccountService.unlockUser(username));
+    }
+
+    //get the current user
+    @GetMapping("/account")
+    public UserDetailsDto getUser(){
+        return userAccountService.getUser();
+
+    }
 
 }

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,11 +45,17 @@ public class AdminService {
     }
 
     public void deleteAdmin(String username) {
+
         adminRepository.findOneByUsername(username).ifPresent(
                 admin -> {
                     if (admin.isSuperAdmin() == true) throw new SuperAdminException("Super Admin Accounts Cannot Delete !!");
                     adminRepository.delete(admin);
                 }
         );
+    }
+
+    @Transactional(readOnly = true)
+    public UserDetailsDto getAdmin(String username) {
+        return new UserDetailsDto(adminRepository.findOneByUsername(username).get());
     }
 }

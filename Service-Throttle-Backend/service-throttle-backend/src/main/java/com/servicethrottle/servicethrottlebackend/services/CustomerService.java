@@ -5,6 +5,7 @@ import com.servicethrottle.servicethrottlebackend.models.Customer;
 import com.servicethrottle.servicethrottlebackend.models.dto.UserDetailsDto;
 import com.servicethrottle.servicethrottlebackend.repositories.CustomerRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,5 +48,12 @@ public class CustomerService {
         customerRepository.findOneByUsername(username).ifPresent(
                 customer -> customerRepository.delete(customer)
         );
+    }
+
+    public Customer getCustomer(String username) {
+        customerRepository.findOneByUsername(username).ifPresent(
+                UserDetailsDto::new
+        );
+        throw new UsernameNotFoundException("User could not be found");
     }
 }
