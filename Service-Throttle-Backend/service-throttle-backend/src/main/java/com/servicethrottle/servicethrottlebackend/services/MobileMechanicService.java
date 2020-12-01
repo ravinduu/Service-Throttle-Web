@@ -52,9 +52,6 @@ public class MobileMechanicService {
     }
 
     public UserDetailsDto getMobileMechanic(String username) {
-        mobileMechanicRepository.findOneByUsername(username).ifPresent(
-                UserDetailsDto::new
-        );
-        throw new UsernameNotFoundException("User could not be found");
+        return new UserDetailsDto(mobileMechanicRepository.findOneByUsername(username).get());
     }
 }

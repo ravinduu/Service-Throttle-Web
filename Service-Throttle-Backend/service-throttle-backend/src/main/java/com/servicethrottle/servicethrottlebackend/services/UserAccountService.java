@@ -214,11 +214,13 @@ public class UserAccountService {
     public UserDetailsDto getUser() {
         UserDetailsDto userDetailsDto = new UserDetailsDto();
         String username = SecurityUtils.getCurrentUsername().orElseThrow(() -> new UsernameNotFoundException("User  was not found !!"));
-//implement this to all
+
         UserCredentials userCredentials = userCredentialsRepository.findOneByUsername(username).get();
 
         if (userCredentials.getAccountType().equals(ADMIN_ACCOUNT.getAccountType())) userDetailsDto = adminService.getAdmin(username);
-
+        else if (userCredentials.getAccountType().equals(SUPERVISOR_ACCOUNT.getAccountType())) userDetailsDto = supervisorService.getSupervisor(username);
+        else if (userCredentials.getAccountType().equals(MOBILE_MECHANIC_ACCOUNT.getAccountType())) userDetailsDto = mobileMechanicService.getMobileMechanic(username);
+        else if (userCredentials.getAccountType().equals(CUSTOMER_ACCOUNT.getAccountType())) userDetailsDto = customerService.getCustomer(username);
         return userDetailsDto;
 
     }

@@ -50,10 +50,7 @@ public class CustomerService {
         );
     }
 
-    public Customer getCustomer(String username) {
-        customerRepository.findOneByUsername(username).ifPresent(
-                UserDetailsDto::new
-        );
-        throw new UsernameNotFoundException("User could not be found");
+    public UserDetailsDto getCustomer(String username) {
+        return new UserDetailsDto(customerRepository.findOneByUsername(username).get());
     }
 }

@@ -50,9 +50,6 @@ public class SupervisorService {
     }
 
     public UserDetailsDto getSupervisor(String username) {
-            supervisorRepository.findOneByUsername(username).ifPresent(
-                    UserDetailsDto::new
-            );
-            throw new UsernameNotFoundException("User could not be found");
+        return new UserDetailsDto(supervisorRepository.findOneByUsername(username).get());
     }
 }
