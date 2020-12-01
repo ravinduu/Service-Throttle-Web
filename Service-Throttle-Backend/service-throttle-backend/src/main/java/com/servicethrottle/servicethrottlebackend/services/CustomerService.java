@@ -2,8 +2,10 @@ package com.servicethrottle.servicethrottlebackend.services;
 
 import com.servicethrottle.servicethrottlebackend.exceptions.EmailAlreadyExistException;
 import com.servicethrottle.servicethrottlebackend.models.Customer;
+import com.servicethrottle.servicethrottlebackend.models.Supervisor;
 import com.servicethrottle.servicethrottlebackend.models.dto.UserDetailsDto;
 import com.servicethrottle.servicethrottlebackend.repositories.CustomerRepository;
+import com.servicethrottle.servicethrottlebackend.security.SecurityUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,5 +55,27 @@ public class CustomerService {
 
     public UserDetailsDto getCustomer(String username) {
         return new UserDetailsDto(customerRepository.findOneByUsername(username).get());
+    }
+
+    public void updateCustomer(UserDetailsDto userDetailsDto) {
+        Optional<Customer> existingCustomer = customerRepository.findOneByEmail(userDetailsDto.getEmail());
+        if (existingCustomer.isPresent() && !existingCustomer.get().getUsername().toLowerCase().equals(userDetailsDto.getUsername().toLowerCase())) {
+            throw new EmailAlreadyExistException();
+        }
+
+        SecurityUtils.getCurrentUsername()
+                .flatMap(customerRepository::findOneByUsername)
+                .ifPresent(
+                        customer -> {
+                            customer.setFirstname(userDetailsDto.getFirstname());
+                            customer.setLastname(userDetailsDto.getLastname());
+                            if (userDetailsDto.getEmail() != null){
+                                customer.setEmail(userDetailsDto.getEmail());
+                            }
+                            customer.setPhoneNumber(userDetailsDto.getPhoneNumber());
+                            customer.setAddress(userDetailsDto.getAddress());
+                            customerRepository.save(customer);
+                        }
+                );
     }
 }

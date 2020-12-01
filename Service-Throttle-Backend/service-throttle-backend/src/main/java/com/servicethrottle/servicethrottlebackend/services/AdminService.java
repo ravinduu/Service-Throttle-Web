@@ -5,6 +5,7 @@ import com.servicethrottle.servicethrottlebackend.exceptions.SuperAdminException
 import com.servicethrottle.servicethrottlebackend.models.Admin;
 import com.servicethrottle.servicethrottlebackend.models.dto.UserDetailsDto;
 import com.servicethrottle.servicethrottlebackend.repositories.AdminRepository;
+import com.servicethrottle.servicethrottlebackend.security.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,5 +58,26 @@ public class AdminService {
     @Transactional(readOnly = true)
     public UserDetailsDto getAdmin(String username) {
         return new UserDetailsDto(adminRepository.findOneByUsername(username).get());
+    }
+
+    public void updateAdmin(UserDetailsDto userDetailsDto) {
+        Optional<Admin> existingAdmin = adminRepository.findOneByEmail(userDetailsDto.getEmail());
+        if (existingAdmin.isPresent() && !existingAdmin.get().getUsername().toLowerCase().equals(userDetailsDto.getUsername().toLowerCase())){
+            throw new EmailAlreadyExistException();
+        }
+
+        SecurityUtils
+                .getCurrentUsername()
+                .flatMap(adminRepository::findOneByUsername)
+                .ifPresent(admin -> {
+                    admin.setFirstname(userDetailsDto.getFirstname());
+                    admin.setLastname(userDetailsDto.getLastname());
+                    if (userDetailsDto.getEmail() != null){
+                        admin.setEmail(userDetailsDto.getEmail());
+                    }
+                    admin.setPhoneNumber(userDetailsDto.getPhoneNumber());
+                    admin.setAddress(userDetailsDto.getAddress());
+                    adminRepository.save(admin);
+                });
     }
 }

@@ -1,11 +1,13 @@
 package com.servicethrottle.servicethrottlebackend.services;
 
 import com.servicethrottle.servicethrottlebackend.exceptions.AccountResourceException;
+import com.servicethrottle.servicethrottlebackend.exceptions.InvalidPasswordException;
 import com.servicethrottle.servicethrottlebackend.exceptions.UserAlreadyLockedException;
 import com.servicethrottle.servicethrottlebackend.exceptions.UsernameAlreadyExistException;
 import com.servicethrottle.servicethrottlebackend.models.ActivationCode;
 import com.servicethrottle.servicethrottlebackend.models.Authority;
 import com.servicethrottle.servicethrottlebackend.models.UserCredentials;
+import com.servicethrottle.servicethrottlebackend.models.dto.PasswordResetDto;
 import com.servicethrottle.servicethrottlebackend.models.dto.RegistrationRequestDto;
 import com.servicethrottle.servicethrottlebackend.models.dto.UserDetailsDto;
 import com.servicethrottle.servicethrottlebackend.repositories.ActivationCodeRepository;
@@ -170,8 +172,7 @@ public class UserAccountService {
         return true;
     }
 
-    //delete an existing user
-    //super admin accounts cannot delete
+
     public void deleteUser(String username) {
         userCredentialsRepository.findOneByUsername(username).ifPresent(
                 userExist -> {
@@ -208,8 +209,7 @@ public class UserAccountService {
         return "User "+username+" have unlocked !!";
     }
 
-    //method for get the current user
-    //by using security utils
+
     @Transactional(readOnly = true)
     public UserDetailsDto getUser() {
         UserDetailsDto userDetailsDto = new UserDetailsDto();
@@ -223,5 +223,38 @@ public class UserAccountService {
         else if (userCredentials.getAccountType().equals(CUSTOMER_ACCOUNT.getAccountType())) userDetailsDto = customerService.getCustomer(username);
         return userDetailsDto;
 
+    }
+
+    public String updateUser(UserDetailsDto userDetailsDto) throws AccountResourceException {
+        String username = SecurityUtils.getCurrentUsername().orElseThrow(() -> new UsernameNotFoundException("User  was not found !!"));
+
+        Optional<UserCredentials> userCredentials = userCredentialsRepository.findOneByUsername(username);
+        if (!userCredentials.isPresent()) throw new AccountResourceException("User could not be found");
+
+        userCredentials.map(userExist -> {
+            if (userExist.getAccountType().equals(ADMIN_ACCOUNT.getAccountType())) adminService.updateAdmin(userDetailsDto);
+            else if (userExist.getAccountType().equals(SUPERVISOR_ACCOUNT.getAccountType())) supervisorService.updateSupervisor(userDetailsDto);
+            else if (userExist.getAccountType().equals(MOBILE_MECHANIC_ACCOUNT.getAccountType())) mobileMechanicService.updateMobileMechanic(userDetailsDto);
+            else if (userExist.getAccountType().equals(CUSTOMER_ACCOUNT.getAccountType())) customerService.updateCustomer(userDetailsDto);
+
+            return "User Details Updated Successfully";
+        });
+
+        return "Something Went Wrong !!";
+    }
+
+    public String resetPassword(PasswordResetDto passwordResetDto) {
+       SecurityUtils.getCurrentUsername()
+               .flatMap(userCredentialsRepository::findOneByUsername)
+               .map(user -> {
+                   String currentPassword = user.getPassword();
+                   if (!passwordEncoder.matches(passwordResetDto.getOldPassword(),currentPassword)){
+                       throw new InvalidPasswordException();
+                   }
+                   user.setPassword(passwordEncoder.encode(passwordResetDto.getNewPassword()));
+                   currentPassword = null;
+                   return "password change successfully ";
+               });
+       return "Something went wrong !!";
     }
 }

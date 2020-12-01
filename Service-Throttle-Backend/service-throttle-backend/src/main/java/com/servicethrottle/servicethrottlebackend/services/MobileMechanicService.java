@@ -3,8 +3,10 @@ package com.servicethrottle.servicethrottlebackend.services;
 import com.servicethrottle.servicethrottlebackend.exceptions.EmailAlreadyExistException;
 import com.servicethrottle.servicethrottlebackend.models.Customer;
 import com.servicethrottle.servicethrottlebackend.models.MobileMechanic;
+import com.servicethrottle.servicethrottlebackend.models.Supervisor;
 import com.servicethrottle.servicethrottlebackend.models.dto.UserDetailsDto;
 import com.servicethrottle.servicethrottlebackend.repositories.MobileMechanicRepository;
+import com.servicethrottle.servicethrottlebackend.security.SecurityUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,5 +56,27 @@ public class MobileMechanicService {
 
     public UserDetailsDto getMobileMechanic(String username) {
         return new UserDetailsDto(mobileMechanicRepository.findOneByUsername(username).get());
+    }
+
+    public void updateMobileMechanic(UserDetailsDto userDetailsDto) {
+        Optional<MobileMechanic> existingMM = mobileMechanicRepository.findOneByEmail(userDetailsDto.getEmail());
+        if (existingMM.isPresent() && !existingMM.get().getUsername().toLowerCase().equals(userDetailsDto.getUsername().toLowerCase())) {
+            throw new EmailAlreadyExistException();
+        }
+
+        SecurityUtils.getCurrentUsername()
+                .flatMap(mobileMechanicRepository::findOneByUsername)
+                .ifPresent(
+                        mm -> {
+                            mm.setFirstname(userDetailsDto.getFirstname());
+                            mm.setLastname(userDetailsDto.getLastname());
+                            if (userDetailsDto.getEmail() != null){
+                                mm.setEmail(userDetailsDto.getEmail());
+                            }
+                            mm.setPhoneNumber(userDetailsDto.getPhoneNumber());
+                            mm.setAddress(userDetailsDto.getAddress());
+                            mobileMechanicRepository.save(mm);
+                        }
+                );
     }
 }
