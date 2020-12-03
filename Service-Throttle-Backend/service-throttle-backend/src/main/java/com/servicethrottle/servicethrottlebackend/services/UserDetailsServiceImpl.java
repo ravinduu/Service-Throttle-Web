@@ -1,9 +1,11 @@
 package com.servicethrottle.servicethrottlebackend.services;
 
 import com.servicethrottle.servicethrottlebackend.exceptions.UserAlreadyLockedException;
+import com.servicethrottle.servicethrottlebackend.exceptions.UserAlreadyLoggedIn;
 import com.servicethrottle.servicethrottlebackend.exceptions.UserNotActivatedException;
 import com.servicethrottle.servicethrottlebackend.models.UserCredentials;
 import com.servicethrottle.servicethrottlebackend.repositories.UserCredentialsRepository;
+import com.servicethrottle.servicethrottlebackend.security.SecurityUtils;
 import lombok.SneakyThrows;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,7 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         String lowerCaseUsername = username.toLowerCase(Locale.ENGLISH);
-
+        if (SecurityUtils.getCurrentUsername().isPresent()) throw new UserAlreadyLoggedIn("Already Logged in");
         return  userCredentialsRepository
                 .findOneByUsername(lowerCaseUsername)
                 .map(userAuthenticationCredentials -> createSpringSecurityUser(lowerCaseUsername, userAuthenticationCredentials))
