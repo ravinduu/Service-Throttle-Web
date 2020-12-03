@@ -1,5 +1,6 @@
 package com.servicethrottle.servicethrottlebackend.services;
 
+import com.servicethrottle.servicethrottlebackend.models.dto.AuthenticationResponseDto;
 import com.servicethrottle.servicethrottlebackend.models.dto.LoginRequestDto;
 import com.servicethrottle.servicethrottlebackend.security.jwt.JWTProvider;
 import lombok.AllArgsConstructor;
@@ -16,12 +17,19 @@ public class JWTAuthService {
     private AuthenticationManager authenticationManager;
     private JWTProvider jwtProvider;
 
-    public String login(LoginRequestDto loginRequestDto) throws Exception {
+    public AuthenticationResponseDto login(LoginRequestDto loginRequestDto) throws Exception {
+        AuthenticationResponseDto authenticationResponseDto = new AuthenticationResponseDto();
         Authentication authenticate = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword()));
-        System.out.println("auth "+ authenticate);
+
         SecurityContextHolder.getContext().setAuthentication(authenticate);
 
-        return jwtProvider.generateToken(authenticate);
+        String JWTToken = jwtProvider.generateToken(authenticate);
+
+        authenticationResponseDto.setJWTToken(JWTToken);
+        authenticationResponseDto.setUsername(loginRequestDto.getUsername());
+
+
+        return authenticationResponseDto;
     }
 }

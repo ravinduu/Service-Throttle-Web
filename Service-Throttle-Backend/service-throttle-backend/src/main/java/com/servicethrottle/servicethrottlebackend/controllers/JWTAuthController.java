@@ -1,5 +1,6 @@
 package com.servicethrottle.servicethrottlebackend.controllers;
 
+import com.servicethrottle.servicethrottlebackend.models.dto.AuthenticationResponseDto;
 import com.servicethrottle.servicethrottlebackend.models.dto.LoginRequestDto;
 import com.servicethrottle.servicethrottlebackend.security.SecurityUtils;
 import com.servicethrottle.servicethrottlebackend.services.JWTAuthService;
@@ -20,20 +21,22 @@ public class JWTAuthController {
 
     private JWTAuthService jwtAuthService;
 
+    /**
+     * login a user
+     *
+     * parameter LoginRequestDto - username and password
+     * throws 40X if user credentials are wrong, user is locked or user is not activated
+     * return {authenticationResponseDto} details of customer
+     * */
     @GetMapping("/login")
-    public ResponseEntity<JWTToken> login(@RequestBody LoginRequestDto loginRequestDto) throws Exception {
-        String jwtToken = jwtAuthService.login(loginRequestDto);
+    public ResponseEntity<AuthenticationResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) throws Exception {
+
+        AuthenticationResponseDto authenticationResponseDto = jwtAuthService.login(loginRequestDto);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Authorization", "Bearer " + jwtToken);
-        return ResponseEntity.ok().body(new JWTToken(jwtToken));
+        httpHeaders.add("Authorization", "Bearer " + authenticationResponseDto.getJWTToken());
+        return ResponseEntity.ok().body(authenticationResponseDto);
     }
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    private static class JWTToken {
-        private String jwtToken;
-    }
 
     @GetMapping("/hello")
     public String hello(){
