@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -28,10 +29,19 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
     private final JWTProvider jwtProvider;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
 
+
     public SecurityConfigurations(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, JWTProvider jwtProvider, UserDetailsServiceImpl userDetailsServiceImpl) {
         this.userDetailsService = userDetailsService;
         this.jwtProvider = jwtProvider;
         this.userDetailsServiceImpl = userDetailsServiceImpl;
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                .antMatchers("/v2/api-docs",
+                "/swagger-resources/**",
+                "/swagger-ui.html");
     }
 
     @Autowired
@@ -55,7 +65,6 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 .antMatchers("/st/register").permitAll()
                 .antMatchers("/st/activate").permitAll()
                 .antMatchers("/st/hello").hasAuthority("ROLE_" + CUSTOMER.getAuthorityType().toUpperCase())
-//                .antMatchers("/st/users").hasAuthority("ROLE_" + ADMIN.getAuthorityType().toUpperCase())
                 .anyRequest().authenticated();
     }
 
