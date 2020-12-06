@@ -14,21 +14,21 @@ import java.util.UUID;
 @Transactional
 public class RefreshTokenService {
 
-    public final RefreshTokenRepository refreshTokenRepository;
-    public RefreshToken generateRefreshToken() {
-        RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setToken(UUID.randomUUID().toString());
-        refreshToken.setCreatedDate(Instant.now());
-
-        return refreshTokenRepository.save(refreshToken);
-    }
-
-    void validateRefreshToken(String token) {
-        refreshTokenRepository.findByToken(token)
-                .orElseThrow(() -> new SpringRedditException("Invalid refresh Token"));
-    }
-
-    public void deleteRefreshToken(String token) {
-        refreshTokenRepository.deleteByToken(token);
-    }
+//    public final RefreshTokenRepository refreshTokenRepository;
+//    public RefreshToken generateRefreshToken() {
+//        RefreshToken refreshToken = new RefreshToken();
+//        refreshToken.setToken(UUID.randomUUID().toString());
+//        refreshToken.setCreatedDate(Instant.now());
+//
+//        return refreshTokenRepository.save(refreshToken);
+//    }
+//
+//    void validateRefreshToken(String token) {
+//        refreshTokenRepository.findByToken(token)
+//                .orElseThrow(() -> new SpringRedditException("Invalid refresh Token"));
+//    }
+//
+//    public void deleteRefreshToken(String token) {
+//        refreshTokenRepository.deleteByToken(token);
+//    }
 }

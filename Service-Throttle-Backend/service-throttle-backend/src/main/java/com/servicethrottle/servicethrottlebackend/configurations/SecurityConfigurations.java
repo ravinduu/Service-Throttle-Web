@@ -18,6 +18,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 import static com.servicethrottle.servicethrottlebackend.models.enums.AuthorityType.ADMIN;
 import static com.servicethrottle.servicethrottlebackend.models.enums.AuthorityType.CUSTOMER;
@@ -56,6 +61,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
         http
                 .csrf()
                 .disable()
+                .cors().and()
                 .addFilter(new UsernamePasswordAuthenticationFilter())
                 .addFilterAfter(new JWTFilter(jwtProvider,userDetailsServiceImpl), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -64,11 +70,9 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 .antMatchers("/st/login").permitAll()
                 .antMatchers("/st/register").permitAll()
                 .antMatchers("/st/activate").permitAll()
-                .antMatchers("/st/hello").hasAuthority("ROLE_" + CUSTOMER.getAuthorityType().toUpperCase())
+                .antMatchers("/st/hello").permitAll()
                 .anyRequest().authenticated();
     }
-
-
 
     @Bean
     protected PasswordEncoder passwordEncoder(){

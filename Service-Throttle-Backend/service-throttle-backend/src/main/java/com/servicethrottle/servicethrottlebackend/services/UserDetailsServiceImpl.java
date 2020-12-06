@@ -34,7 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         String lowerCaseUsername = username.toLowerCase(Locale.ENGLISH);
-        if (SecurityUtils.getCurrentUsername().isPresent()) throw new UserAlreadyLoggedIn("Already Logged in");
+//        if (SecurityUtils.getCurrentUsername().isPresent()) throw new UserAlreadyLoggedIn("Already Logged in");
         return  userCredentialsRepository
                 .findOneByUsername(lowerCaseUsername)
                 .map(userAuthenticationCredentials -> createSpringSecurityUser(lowerCaseUsername, userAuthenticationCredentials))
