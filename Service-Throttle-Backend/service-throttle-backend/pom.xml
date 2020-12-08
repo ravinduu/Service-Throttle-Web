@@ -124,6 +124,7 @@
                 </configuration>
             </plugin>
         </plugins>
+		<finalName>service-throttle-backend</finalName>
 	</build>
 
 </project>

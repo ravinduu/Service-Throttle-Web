@@ -1,9 +1,9 @@
 version: '3.8'
 
 services: 
-    st-eureka-discovery-server:
-        build: ./st-eureka-discovery-server
-        image: ravdsn/st-eureka-discovery-server-docker:v1.0
+    service-throttle-backend:
+        build: ./Service-Throttle-Backend/service-throttle-backend
+        image: ravdsn/service-throttle-backend:v1.0
         ports: 
-            - '8761:8761'
-        container_name: st-eureka-discovery-server
+            - '8081:8081'
+        container_name: service-throttle-backend
