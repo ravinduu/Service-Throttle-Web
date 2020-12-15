@@ -1,0 +1,34 @@
+.login {
+  flex: 0.2;
+  border: 1.5px solid #03254c;
+  margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 400px;
+  height: 500px;
+  justify-content: center;
+  text-align: center;
+}
+
+.login__text {
+  color: #1167b1;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.login__inputs {
+  width: 300px;
+  padding: 10px;
+}
+
+.login > hr {
+  border: 1px solid #03254c;
+  width: 90%;
+  margin: 10px auto;
+}
+
+.login__buttons {
+  width: 90%;
+  height: 50px;
+  margin: 10px auto;
+}
