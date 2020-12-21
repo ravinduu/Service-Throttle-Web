@@ -28,5 +28,8 @@ public class Vehicle implements Serializable {
     @OneToOne(fetch = LAZY)
     private VehicleModel vehicleModel;
 
+    @OneToOne(fetch = LAZY)
+    private VehicleEngine vehicleEngine;
+
 
 }
