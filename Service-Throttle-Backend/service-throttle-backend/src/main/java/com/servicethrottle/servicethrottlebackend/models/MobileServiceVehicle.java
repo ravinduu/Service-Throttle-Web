@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MobileServiceVehicles extends Vehicle {
+public class MobileServiceVehicle extends Vehicle {
 
     private long capacity;
 }

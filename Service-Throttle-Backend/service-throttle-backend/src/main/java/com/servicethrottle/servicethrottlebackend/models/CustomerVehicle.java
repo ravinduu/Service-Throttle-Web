@@ -4,8 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "st_customer_vehicle")
@@ -13,5 +14,8 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerVehicle extends Vehicle {
-    private long bla;
+    @ManyToOne
+    @JoinColumn(name = "st_customer_id", nullable = false)
+    private Customer customer;
+
 }
