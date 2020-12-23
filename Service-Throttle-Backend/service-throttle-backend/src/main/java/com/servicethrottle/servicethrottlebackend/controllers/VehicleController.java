@@ -57,7 +57,7 @@ public class VehicleController {
      * only for ADMIN
      * parameter is username of the customer
      * */
-    @GetMapping("customer_vehicle/{username}")
+    @GetMapping("customer_vehicle/by_user/{username}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<CustomerVehicle> getCustomerVehicles(@PathVariable String username){
         return vehicleService.getCustomerVehicles(username);
