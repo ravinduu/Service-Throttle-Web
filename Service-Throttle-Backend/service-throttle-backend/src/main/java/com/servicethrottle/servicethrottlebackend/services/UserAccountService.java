@@ -220,7 +220,7 @@ public class UserAccountService {
         if (userCredentials.getAccountType().equals(ADMIN_ACCOUNT.getAccountType())) userDetailsDto = adminService.getAdmin(username);
         else if (userCredentials.getAccountType().equals(SUPERVISOR_ACCOUNT.getAccountType())) userDetailsDto = supervisorService.getSupervisor(username);
         else if (userCredentials.getAccountType().equals(MOBILE_MECHANIC_ACCOUNT.getAccountType())) userDetailsDto = mobileMechanicService.getMobileMechanic(username);
-        else if (userCredentials.getAccountType().equals(CUSTOMER_ACCOUNT.getAccountType())) userDetailsDto = customerService.getCustomer(username);
+        else if (userCredentials.getAccountType().equals(CUSTOMER_ACCOUNT.getAccountType())) userDetailsDto = new UserDetailsDto(customerService.getCustomer(username));
         return userDetailsDto;
 
     }

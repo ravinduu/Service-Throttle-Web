@@ -53,8 +53,8 @@ public class CustomerService {
         );
     }
 
-    public UserDetailsDto getCustomer(String username) {
-        return new UserDetailsDto(customerRepository.findOneByUsername(username).get());
+    public Customer getCustomer(String username) {
+        return customerRepository.findOneByUsername(username).get();
     }
 
     public void updateCustomer(UserDetailsDto userDetailsDto) {
@@ -77,5 +77,12 @@ public class CustomerService {
                             customerRepository.save(customer);
                         }
                 );
+    }
+
+    public Customer getCurrentCustomer(){
+        Customer customer = SecurityUtils.getCurrentUsername()
+                .flatMap(customerRepository::findOneByUsername).get();
+        if (customer != null) return customer;
+         throw new UsernameNotFoundException("User Not Found!!");
     }
 }

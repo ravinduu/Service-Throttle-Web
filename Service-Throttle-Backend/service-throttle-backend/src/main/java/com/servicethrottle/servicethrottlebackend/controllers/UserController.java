@@ -1,5 +1,6 @@
 package com.servicethrottle.servicethrottlebackend.controllers;
 
+import com.servicethrottle.servicethrottlebackend.models.Customer;
 import com.servicethrottle.servicethrottlebackend.models.MobileMechanic;
 import com.servicethrottle.servicethrottlebackend.models.Supervisor;
 import com.servicethrottle.servicethrottlebackend.models.UserCredentials;
@@ -18,7 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/st")
 @AllArgsConstructor
-@CrossOrigin("http://localhost:3000")
 public class UserController {
 
     private final UserService userService;
@@ -112,7 +112,7 @@ public class UserController {
      * */
     @GetMapping("/user/customer/{username}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_SUPERVISOR','ROLE_MOBILEMECHANIC')")
-    public ResponseEntity<UserDetailsDto> getCustomer(@PathVariable String username){
+    public ResponseEntity<Customer> getCustomer(@PathVariable String username){
         return ResponseEntity.ok().body(customerService.getCustomer(username));
     }
 
