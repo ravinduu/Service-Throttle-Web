@@ -16,6 +16,12 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @CrossOrigin("http://localhost:3000")
 public class JWTAuthController {
+
+    /**
+     * TO-DO
+     * implement logout function
+     * */
+
     private final Logger log = LoggerFactory.getLogger(JWTAuthController.class);
     private JWTAuthService jwtAuthService;
 

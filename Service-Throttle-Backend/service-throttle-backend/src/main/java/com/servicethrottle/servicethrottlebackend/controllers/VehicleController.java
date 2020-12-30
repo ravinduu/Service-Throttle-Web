@@ -11,11 +11,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/st")
 @AllArgsConstructor
 @CrossOrigin("http://localhost:3000")
 public class VehicleController {
+
+    /**
+     * TO-DO
+     * implement remove cust vehicle
+     * change methods use id as parameter to path var
+     * edit api use "_" to "-"
+     *
+     * */
 
     private final VehicleService vehicleService;
 

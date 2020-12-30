@@ -21,6 +21,11 @@ import java.util.List;
 @AllArgsConstructor
 public class UserController {
 
+    /**
+     * TO-DO
+     * implement remove user by himself (delete account)
+     * */
+
     private final UserService userService;
     private final AuthorityService authorityService;
     private final AdminService adminService;
