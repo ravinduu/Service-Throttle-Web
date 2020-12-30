@@ -99,7 +99,7 @@ public class UserController {
      * */
     @GetMapping("/user/mobile-mechanic/{username}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_SUPERVISOR','ROLE_MOBILEMECHANIC','ROLE_CUSTOMER')")
-    public ResponseEntity<UserDetailsDto> getMobileMechanic(@PathVariable String username){
+    public ResponseEntity<MobileMechanic> getMobileMechanic(@PathVariable String username){
         return ResponseEntity.ok().body(mobileMechanicService.getMobileMechanic(username));
     }
 

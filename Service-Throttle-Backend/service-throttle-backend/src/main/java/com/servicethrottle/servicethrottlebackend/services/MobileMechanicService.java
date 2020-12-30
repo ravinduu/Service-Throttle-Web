@@ -54,8 +54,8 @@ public class MobileMechanicService {
         );
     }
 
-    public UserDetailsDto getMobileMechanic(String username) {
-        return new UserDetailsDto(mobileMechanicRepository.findOneByUsername(username).get());
+    public MobileMechanic getMobileMechanic(String username) {
+        return mobileMechanicRepository.findOneByUsername(username).get();
     }
 
     public void updateMobileMechanic(UserDetailsDto userDetailsDto) {

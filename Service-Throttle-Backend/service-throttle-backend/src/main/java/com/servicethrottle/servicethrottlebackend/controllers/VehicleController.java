@@ -1,7 +1,9 @@
 package com.servicethrottle.servicethrottlebackend.controllers;
 
 import com.servicethrottle.servicethrottlebackend.models.CustomerVehicle;
+import com.servicethrottle.servicethrottlebackend.models.MobileServiceVehicle;
 import com.servicethrottle.servicethrottlebackend.models.dto.CustomerVehicleDto;
+import com.servicethrottle.servicethrottlebackend.models.dto.MobileServiceVehicleDto;
 import com.servicethrottle.servicethrottlebackend.services.VehicleService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -75,4 +77,97 @@ public class VehicleController {
         return vehicleService.getMyCustomerVehicles();
     }
 
+
+    /**
+     * add a new service vehicle for company
+     *
+     * only access by ADMIN
+     * parameter MobileServiceVehicleDto is the information of the service vehicle
+     * */
+    @PostMapping("mobile-service-vehicle/add")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public MobileServiceVehicle addMobileServiceVehicle(MobileServiceVehicleDto mobileServiceVehicleDto){
+        return vehicleService.addMobileServiceVehicle(mobileServiceVehicleDto);
+    }
+
+    /**
+     * add mechanic to a service vehicle of company
+     *
+     * only access by ADMIN
+     *
+     * */
+    @PutMapping("mobile-service-vehicle/add-mobile-mechanic")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public MobileServiceVehicle addMechanicToMobileServiceVehicle(long mobileServiceVehicleId,String mobileMechanicUsername){
+        return vehicleService.addMechanicToMobileServiceVehicle(mobileServiceVehicleId, mobileMechanicUsername);
+    }
+
+    /**
+     * remove mechanic from a service vehicle of company
+     *
+     * only access by ADMIN
+     *
+     * */
+    @PutMapping("mobile-service-vehicle/remove-mobile-mechanic/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public MobileServiceVehicle removeMechanicOfMobileServiceVehicle(@PathVariable long id){
+        return vehicleService.removeMechanicOfMobileServiceVehicle(id);
+    }
+
+    /**
+     * change mechanic from service vehicle of company
+     *
+     * only access by ADMIN
+     *
+     * */
+    @PutMapping("mobile-service-vehicle/change-mobile-mechanic")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public MobileServiceVehicle changeMechanicOfMobileServiceVehicle(long mobileServiceVehicleId,String mobileMechanicUsername){
+        return vehicleService.changeMechanicOfMobileServiceVehicle(mobileServiceVehicleId, mobileMechanicUsername);
+    }
+
+    /**
+     * update details of a service vehicle of company
+     *
+     * only access by ADMIN
+     * MobileServiceVehicleDto is the new data of the service vehicle
+     * */
+    @PutMapping("mobile-service-vehicle/update")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public MobileServiceVehicle updateMobileServiceVehicle(MobileServiceVehicleDto mobileServiceVehicleDto){
+        return vehicleService.updateMobileServiceVehicle(mobileServiceVehicleDto);
+    }
+
+    /**
+     * get service vehicle of company by id
+     *
+     * only access by ADMIN
+     * */
+    @GetMapping("mobile-service-vehicle/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public MobileServiceVehicle getMobileServiceVehicle(@PathVariable long id){
+        return vehicleService.getMobileServiceVehicle(id);
+    }
+
+    /**
+     * get all service vehicles of company
+     *
+     * only access by ADMIN
+     * */
+    @GetMapping("mobile-service-vehicle/all")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public List<MobileServiceVehicle> getAllMobileServiceVehicle(){
+        return vehicleService.getAllMobileServiceVehicle();
+    }
+
+    /**
+     * remove a service vehicle of company
+     *
+     * only access by ADMIN
+     * */
+    @DeleteMapping("mobile-service-vehicle/remove/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public int removeMobileServiceVehicle(@PathVariable long id){
+        return vehicleService.removeMobileServiceVehicle(id);
+    }
 }
