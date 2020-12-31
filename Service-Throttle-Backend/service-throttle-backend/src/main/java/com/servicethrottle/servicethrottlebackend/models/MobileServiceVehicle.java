@@ -17,7 +17,7 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor
 public class MobileServiceVehicle extends Vehicle {
 
-    private long capacity;
+    private double capacity;
 
     @OneToOne(fetch = LAZY)
     private MobileMechanic mobileMechanic;

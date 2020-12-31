@@ -1,17 +1,17 @@
 package com.servicethrottle.servicethrottlebackend.services;
 
 import com.servicethrottle.servicethrottlebackend.exceptions.CustomerVehicleNotFound;
-import com.servicethrottle.servicethrottlebackend.models.Customer;
-import com.servicethrottle.servicethrottlebackend.models.CustomerVehicle;
-import com.servicethrottle.servicethrottlebackend.models.MobileMechanic;
-import com.servicethrottle.servicethrottlebackend.models.MobileServiceVehicle;
+import com.servicethrottle.servicethrottlebackend.models.*;
 import com.servicethrottle.servicethrottlebackend.models.dto.CustomerVehicleDto;
 import com.servicethrottle.servicethrottlebackend.models.dto.MobileServiceVehicleDto;
+import com.servicethrottle.servicethrottlebackend.models.dto.VehicleMakeDto;
 import com.servicethrottle.servicethrottlebackend.repositories.CustomerVehicleRepository;
 import com.servicethrottle.servicethrottlebackend.repositories.MobileServiceVehicleRepository;
+import com.servicethrottle.servicethrottlebackend.repositories.VehicleMakeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +26,7 @@ public class VehicleService {
 
     private final CustomerVehicleRepository customerVehicleRepository;
     private final MobileServiceVehicleRepository mobileServiceVehicleRepository;
+    private final VehicleMakeRepository vehicleMakeRepository;
 
 
     public CustomerVehicle addCustomerVehicle(CustomerVehicleDto customerVehicleDto){
@@ -160,6 +161,43 @@ public class VehicleService {
                 mobileServiceVehicleRepository.delete(mobileServiceVehicle1);
                 return 1;
             });
+        }
+        return 0;
+    }
+
+    public VehicleMake addVehicleMake(VehicleMakeDto vehicleMakeDto) {
+        VehicleMake vehicleMake = new VehicleMake();
+        vehicleMake.setMake(vehicleMakeDto.getMake());
+        vehicleMakeRepository.save(vehicleMake);
+        return vehicleMake;
+    }
+
+    public List<VehicleMake> getAllVehicleMake() {
+        return vehicleMakeRepository.findAll().stream().collect(Collectors.toList());
+    }
+
+    public VehicleMake getVehicleMake(long vehicleMakeId) {
+       Optional<VehicleMake> vehicleMake = vehicleMakeRepository.findById(vehicleMakeId);
+
+       if(vehicleMake.isPresent()){
+           return vehicleMake.get();
+       }
+
+       return new VehicleMake();
+    }
+
+    public VehicleMake updateVehicleMake(long id, VehicleMakeDto vehicleMakeDto) {
+        VehicleMake vehicleMake = getVehicleMake(id);
+        vehicleMake.setMake(vehicleMakeDto.getMake());
+        vehicleMakeRepository.save(vehicleMake);
+        return vehicleMake;
+    }
+
+    public int deleteVehicleMake(long id) {
+        VehicleMake vehicleMakeToDelete = getVehicleMake(id);
+        if(vehicleMakeToDelete.getMake() != null){
+            vehicleMakeRepository.delete(vehicleMakeToDelete);
+            return 1;
         }
         return 0;
     }
