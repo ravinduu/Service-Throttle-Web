@@ -1,11 +1,15 @@
 package com.servicethrottle.servicethrottlebackend.controllers;
 
+import com.servicethrottle.servicethrottlebackend.exceptions.VehicleMakeDosentExist;
 import com.servicethrottle.servicethrottlebackend.models.CustomerVehicle;
 import com.servicethrottle.servicethrottlebackend.models.MobileServiceVehicle;
 import com.servicethrottle.servicethrottlebackend.models.VehicleMake;
+import com.servicethrottle.servicethrottlebackend.models.VehicleModel;
 import com.servicethrottle.servicethrottlebackend.models.dto.CustomerVehicleDto;
 import com.servicethrottle.servicethrottlebackend.models.dto.MobileServiceVehicleDto;
 import com.servicethrottle.servicethrottlebackend.models.dto.VehicleMakeDto;
+import com.servicethrottle.servicethrottlebackend.models.dto.VehicleModelDto;
+import com.servicethrottle.servicethrottlebackend.repositories.VehicleModelDosentExist;
 import com.servicethrottle.servicethrottlebackend.services.VehicleService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,9 +27,9 @@ public class VehicleController {
     /**
      * TO-DO
      * implement remove cust vehicle
-     * change methods use id as parameter to path var
+     * change methods use id as parameter to path variable
      * edit api use "_" to "-"
-     * CRUD vehicle model, engine
+     * CRUD vehicle engine
      * */
 
     private final VehicleService vehicleService;
@@ -212,7 +216,7 @@ public class VehicleController {
      * */
     @GetMapping("make/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public VehicleMake getVehicleMake(@PathVariable long id){
+    public VehicleMake getVehicleMake(@PathVariable long id) throws VehicleMakeDosentExist {
         return vehicleService.getVehicleMake(id);
     }
 
@@ -225,7 +229,7 @@ public class VehicleController {
      * */
     @PutMapping("make/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public VehicleMake updateVehicleMake(@PathVariable long id, VehicleMakeDto vehicleMakeDto){
+    public VehicleMake updateVehicleMake(@PathVariable long id, VehicleMakeDto vehicleMakeDto) throws VehicleMakeDosentExist {
         return vehicleService.updateVehicleMake(id, vehicleMakeDto);
     }
 
@@ -238,7 +242,84 @@ public class VehicleController {
      * */
     @DeleteMapping("make/remove/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public int deleteVehicleMake(@PathVariable long id){
+    public int deleteVehicleMake(@PathVariable long id) throws VehicleMakeDosentExist {
         return vehicleService.deleteVehicleMake(id);
     }
+
+
+    /**
+     * add a new vehicle model
+     *
+     * only access by ADMIN
+     * parameter {@link VehicleModelDto} is information about vehicle make and model
+     * return {@link VehicleModel}
+     * */
+    @PutMapping("model/add")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public VehicleModel addVehicleModel(VehicleModelDto vehicleModelDto){
+        return vehicleService.addVehicleModel(vehicleModelDto);
+    }
+
+    /**
+     * get all available vehicle models as list
+     *
+     * */
+    @GetMapping("model/all")
+    public List<VehicleModel> getAllVehicleModel(){
+        return vehicleService.getAllVehicleModel();
+    }
+
+    /**
+     * get a available vehicle model by id
+     *
+     * parameter is the id of the specific model
+     * return {@link VehicleModel}
+     * */
+    @GetMapping("model/{id}")
+    public VehicleModel getVehicleModel(@PathVariable long id) throws VehicleModelDosentExist {
+        return vehicleService. getVehicleModel(id);
+    }
+
+    /**
+     * get all available vehicle models by vehicle make
+     *
+     *  parameter makeId is the id of specific vehicle make
+     *  return {@link VehicleModel}
+     *
+     * */
+    @GetMapping("model/by-make/{makeId}")
+    public List<VehicleModel> getAllVehicleModelByMake(@PathVariable long makeId) throws VehicleModelDosentExist, VehicleMakeDosentExist {
+        return vehicleService.getAllVehicleModelByMake(makeId);
+
+    }
+
+    /**
+     *  update a vehicle model by its id
+     *
+     *  only for ADMIN
+     *  parameters id is the modelId of which wants to edit, {@link VehicleModelDto} are the new info about model
+     *  return updated {@link VehicleModel}
+     *
+     * */
+    @PutMapping("model/update/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public VehicleModel updateVehicleModel(@PathVariable long id, VehicleModelDto vehicleModelDto) throws VehicleModelDosentExist {
+        return vehicleService.updateVehicleModel(id, vehicleModelDto);
+    }
+
+    /**
+     * delete a vehicle model by its id
+     *
+     *  only for ADMIN
+     *  parameters id is the modelId of which wants to delete
+     *  return 1 if the process is success or 0 if error
+     *
+     * */
+    @DeleteMapping("model/delete/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public int deleteVehicleModel(@PathVariable long id) throws VehicleModelDosentExist {
+        return vehicleService.deleteVehicleModel(id);
+    }
+
+
 }

@@ -1,17 +1,16 @@
 package com.servicethrottle.servicethrottlebackend.services;
 
 import com.servicethrottle.servicethrottlebackend.exceptions.CustomerVehicleNotFound;
+import com.servicethrottle.servicethrottlebackend.exceptions.VehicleMakeDosentExist;
 import com.servicethrottle.servicethrottlebackend.models.*;
 import com.servicethrottle.servicethrottlebackend.models.dto.CustomerVehicleDto;
 import com.servicethrottle.servicethrottlebackend.models.dto.MobileServiceVehicleDto;
 import com.servicethrottle.servicethrottlebackend.models.dto.VehicleMakeDto;
-import com.servicethrottle.servicethrottlebackend.repositories.CustomerVehicleRepository;
-import com.servicethrottle.servicethrottlebackend.repositories.MobileServiceVehicleRepository;
-import com.servicethrottle.servicethrottlebackend.repositories.VehicleMakeRepository;
+import com.servicethrottle.servicethrottlebackend.models.dto.VehicleModelDto;
+import com.servicethrottle.servicethrottlebackend.repositories.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +26,7 @@ public class VehicleService {
     private final CustomerVehicleRepository customerVehicleRepository;
     private final MobileServiceVehicleRepository mobileServiceVehicleRepository;
     private final VehicleMakeRepository vehicleMakeRepository;
+    private final VehicleModelRepository vehicleModelRepository;
 
 
     public CustomerVehicle addCustomerVehicle(CustomerVehicleDto customerVehicleDto){
@@ -172,31 +172,81 @@ public class VehicleService {
         return vehicleMake;
     }
 
+    @Transactional(readOnly = true)
     public List<VehicleMake> getAllVehicleMake() {
         return vehicleMakeRepository.findAll().stream().collect(Collectors.toList());
     }
 
-    public VehicleMake getVehicleMake(long vehicleMakeId) {
+    @Transactional(readOnly = true)
+    public VehicleMake getVehicleMake(long vehicleMakeId) throws VehicleMakeDosentExist {
        Optional<VehicleMake> vehicleMake = vehicleMakeRepository.findById(vehicleMakeId);
 
        if(vehicleMake.isPresent()){
            return vehicleMake.get();
        }
-
-       return new VehicleMake();
+       throw new VehicleMakeDosentExist("No Vehicle make for id : "+vehicleMakeId);
     }
 
-    public VehicleMake updateVehicleMake(long id, VehicleMakeDto vehicleMakeDto) {
+    public VehicleMake updateVehicleMake(long id, VehicleMakeDto vehicleMakeDto) throws VehicleMakeDosentExist {
         VehicleMake vehicleMake = getVehicleMake(id);
         vehicleMake.setMake(vehicleMakeDto.getMake());
         vehicleMakeRepository.save(vehicleMake);
         return vehicleMake;
     }
 
-    public int deleteVehicleMake(long id) {
+    public int deleteVehicleMake(long id) throws VehicleMakeDosentExist {
         VehicleMake vehicleMakeToDelete = getVehicleMake(id);
         if(vehicleMakeToDelete.getMake() != null){
             vehicleMakeRepository.delete(vehicleMakeToDelete);
+            return 1;
+        }
+        return 0;
+    }
+
+    public VehicleModel addVehicleModel(VehicleModelDto vehicleModelDto) {
+        VehicleModel vehicleModel = new VehicleModel();
+        vehicleModel.setVehicleMake(vehicleModelDto.getVehicleMake());
+        vehicleModel.setModel(vehicleModelDto.getModel());
+        vehicleModelRepository.save(vehicleModel);
+        return vehicleModel;
+    }
+
+    public List<VehicleModel> getAllVehicleModel() {
+        return vehicleModelRepository.findAll().stream().collect(Collectors.toList());
+    }
+
+    public VehicleModel getVehicleModel(long id) throws VehicleModelDosentExist {
+        Optional<VehicleModel> vehicleModels = vehicleModelRepository.findById(id);
+        if (vehicleModels.isPresent()) {
+            return vehicleModels.get();
+
+        }
+
+        throw new VehicleModelDosentExist("No Vehicle make for id : "+id);
+    }
+
+    public List<VehicleModel> getAllVehicleModelByMake(long makeId) throws VehicleMakeDosentExist, VehicleModelDosentExist {
+        VehicleMake vehicleMake = getVehicleMake(makeId);
+        Optional<VehicleModel> vehicleModels = vehicleModelRepository.findAllByVehicleMake(vehicleMake);
+
+        if (vehicleModels.isPresent()) return vehicleModels.stream().collect(Collectors.toList());
+
+        throw new VehicleModelDosentExist("Vehicle models doesn't exist for "+ vehicleMake.getMake().name());
+    }
+
+    public VehicleModel updateVehicleModel(long id, VehicleModelDto vehicleModelDto) throws VehicleModelDosentExist {
+        VehicleModel vehicleModelToUpdate = getVehicleModel(id);
+
+        vehicleModelToUpdate.setVehicleMake(vehicleModelDto.getVehicleMake());
+        vehicleModelDto.setModel(vehicleModelDto.getModel());
+        vehicleModelRepository.save(vehicleModelToUpdate);
+        return vehicleModelToUpdate;
+    }
+
+    public int deleteVehicleModel(long id) throws VehicleModelDosentExist {
+        VehicleModel vehicleModelToDelete = getVehicleModel(id);
+        if (vehicleModelToDelete != null) {
+            vehicleModelRepository.delete(vehicleModelToDelete);
             return 1;
         }
         return 0;
