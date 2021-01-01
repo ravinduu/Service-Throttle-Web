@@ -28,7 +28,6 @@ public class VehicleController {
      * TO-DO
      * implement remove cust vehicle
      * change methods use id as parameter to path variable
-     * edit api use "_" to "-"
      * CRUD vehicle engine
      * */
 
@@ -41,7 +40,7 @@ public class VehicleController {
      * parameter CustomerVehicleDto is the information of the customer car
      * get currentCustomer logged in
      * */
-    @PostMapping("customer_vehicle/add")
+    @PostMapping("customer-vehicle/add")
     public CustomerVehicle addCustomerVehicle(CustomerVehicleDto customerVehicleDto){
         return vehicleService.addCustomerVehicle(customerVehicleDto);
     }
@@ -51,7 +50,7 @@ public class VehicleController {
      *
      * only for ADMIN
      * */
-    @GetMapping("customer_vehicle")
+    @GetMapping("customer-vehicle")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<CustomerVehicle> getAllCustomerVehicles(){
         return vehicleService.getAllCustomerVehicles();
@@ -62,7 +61,7 @@ public class VehicleController {
      *
      * only for ADMIN
      * */
-    @GetMapping("customer_vehicle/{id}")
+    @GetMapping("customer-vehicle/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public CustomerVehicle getCustomerVehicle(@PathVariable Long id){
         return vehicleService.getCustomerVehicle(id);
@@ -74,7 +73,7 @@ public class VehicleController {
      * only for ADMIN
      * parameter is username of the customer
      * */
-    @GetMapping("customer_vehicle/by_user/{username}")
+    @GetMapping("customer-vehicle/by-user/{username}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<CustomerVehicle> getCustomerVehicles(@PathVariable String username){
         return vehicleService.getCustomerVehicles(username);
@@ -86,7 +85,7 @@ public class VehicleController {
      * only for ADMIN
      * parameter is username of the customer
      * */
-    @GetMapping("customer_vehicle/my_vehicles")
+    @GetMapping("customer-vehicle/my-vehicles")
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
     public List<CustomerVehicle> getMyCustomerVehicles(){
         return vehicleService.getMyCustomerVehicles();
