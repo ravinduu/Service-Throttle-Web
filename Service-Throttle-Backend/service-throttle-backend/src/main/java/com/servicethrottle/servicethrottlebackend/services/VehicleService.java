@@ -1,12 +1,10 @@
 package com.servicethrottle.servicethrottlebackend.services;
 
 import com.servicethrottle.servicethrottlebackend.exceptions.CustomerVehicleNotFound;
+import com.servicethrottle.servicethrottlebackend.exceptions.VehicleEngineDosentExist;
 import com.servicethrottle.servicethrottlebackend.exceptions.VehicleMakeDosentExist;
 import com.servicethrottle.servicethrottlebackend.models.*;
-import com.servicethrottle.servicethrottlebackend.models.dto.CustomerVehicleDto;
-import com.servicethrottle.servicethrottlebackend.models.dto.MobileServiceVehicleDto;
-import com.servicethrottle.servicethrottlebackend.models.dto.VehicleMakeDto;
-import com.servicethrottle.servicethrottlebackend.models.dto.VehicleModelDto;
+import com.servicethrottle.servicethrottlebackend.models.dto.*;
 import com.servicethrottle.servicethrottlebackend.repositories.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +25,7 @@ public class VehicleService {
     private final MobileServiceVehicleRepository mobileServiceVehicleRepository;
     private final VehicleMakeRepository vehicleMakeRepository;
     private final VehicleModelRepository vehicleModelRepository;
+    private final VehicleEngineRepository vehicleEngineRepository;
 
 
     public CustomerVehicle addCustomerVehicle(CustomerVehicleDto customerVehicleDto){
@@ -247,6 +246,42 @@ public class VehicleService {
         VehicleModel vehicleModelToDelete = getVehicleModel(id);
         if (vehicleModelToDelete != null) {
             vehicleModelRepository.delete(vehicleModelToDelete);
+            return 1;
+        }
+        return 0;
+    }
+
+    public VehicleEngine addVehicleEngine(VehicleEngineDto vehicleEngineDto) {
+        VehicleEngine vehicleEngine = new VehicleEngine();
+        vehicleEngine.setEngine(vehicleEngineDto.getEngine());
+        vehicleEngineRepository.save(vehicleEngine);
+        return vehicleEngine;
+    }
+
+    public List<VehicleEngine> getAllVehicleEngine() {
+        return vehicleEngineRepository.findAll().stream().collect(Collectors.toList());
+    }
+
+    public VehicleEngine getVehicleEngine(long id) throws VehicleEngineDosentExist {
+        Optional<VehicleEngine> vehicleEngine = vehicleEngineRepository.findById(id);
+
+        if (vehicleEngine.isPresent()) return vehicleEngine.get();
+
+        throw new VehicleEngineDosentExist("No Vehicle engine for id : "+id);
+    }
+
+    public VehicleEngine updateVehicleEngine(long id, VehicleEngineDto vehicleEngineDto) throws VehicleEngineDosentExist {
+        VehicleEngine vehicleEngineToUpdate = getVehicleEngine(id);
+        vehicleEngineDto.setEngine(vehicleEngineDto.getEngine());
+        vehicleEngineRepository.save(vehicleEngineToUpdate);
+        return vehicleEngineToUpdate;
+
+    }
+
+    public int deleteVehicleEngine(long id) throws VehicleEngineDosentExist {
+        VehicleEngine vehicleEngineToDelete = getVehicleEngine(id);
+        if (vehicleEngineToDelete == null){
+            vehicleEngineRepository.delete(vehicleEngineToDelete);
             return 1;
         }
         return 0;

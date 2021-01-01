@@ -1,14 +1,9 @@
 package com.servicethrottle.servicethrottlebackend.controllers;
 
+import com.servicethrottle.servicethrottlebackend.exceptions.VehicleEngineDosentExist;
 import com.servicethrottle.servicethrottlebackend.exceptions.VehicleMakeDosentExist;
-import com.servicethrottle.servicethrottlebackend.models.CustomerVehicle;
-import com.servicethrottle.servicethrottlebackend.models.MobileServiceVehicle;
-import com.servicethrottle.servicethrottlebackend.models.VehicleMake;
-import com.servicethrottle.servicethrottlebackend.models.VehicleModel;
-import com.servicethrottle.servicethrottlebackend.models.dto.CustomerVehicleDto;
-import com.servicethrottle.servicethrottlebackend.models.dto.MobileServiceVehicleDto;
-import com.servicethrottle.servicethrottlebackend.models.dto.VehicleMakeDto;
-import com.servicethrottle.servicethrottlebackend.models.dto.VehicleModelDto;
+import com.servicethrottle.servicethrottlebackend.models.*;
+import com.servicethrottle.servicethrottlebackend.models.dto.*;
 import com.servicethrottle.servicethrottlebackend.repositories.VehicleModelDosentExist;
 import com.servicethrottle.servicethrottlebackend.services.VehicleService;
 import lombok.AllArgsConstructor;
@@ -27,7 +22,6 @@ public class VehicleController {
     /**
      * TO-DO
      * implement remove cust vehicle
-     * CRUD vehicle engine
      * */
 
     private final VehicleService vehicleService;
@@ -319,5 +313,66 @@ public class VehicleController {
         return vehicleService.deleteVehicleModel(id);
     }
 
+    /**
+     * add a new vehicle engine type
+     *
+     * only access by ADMIN
+     * parameter {@link VehicleEngineDto} is information about vehicle make and model
+     * return {@link VehicleEngine}
+     * */
+    @PutMapping("engine/add")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public VehicleEngine addVehicleEngine(VehicleEngineDto vehicleEngineDto){
+        return vehicleService.addVehicleEngine(vehicleEngineDto);
+    }
+
+    /**
+     * get all available vehicle engines as list
+     *
+     * */
+    @GetMapping("engine/all")
+    public List<VehicleEngine> getAllVehicleEngine(){
+        return vehicleService.getAllVehicleEngine();
+    }
+
+    /**
+     * get a available vehicle engine by id
+     *
+     * parameter is the id of the specific model
+     * return {@link VehicleEngine}
+     * */
+    @GetMapping("engine/{id}")
+    public VehicleEngine getVehicleEngine(@PathVariable long id) throws VehicleEngineDosentExist {
+        return vehicleService.getVehicleEngine(id);
+    }
+
+
+    /**
+     *  update a vehicle engine type by its id
+     *
+     *  only for ADMIN
+     *  parameters id is the modelId of which wants to edit, {@link VehicleEngineDto} are the new info about model
+     *  return updated {@link VehicleEngine}
+     *
+     * */
+    @PutMapping("engine/update/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public VehicleEngine updateVehicleEngine(@PathVariable long id, VehicleEngineDto vehicleEngineDto) throws VehicleEngineDosentExist {
+        return vehicleService.updateVehicleEngine(id, vehicleEngineDto);
+    }
+
+    /**
+     * delete a vehicle engine type by its id
+     *
+     *  only for ADMIN
+     *  parameters id is the EngineId of which wants to delete
+     *  return 1 if the process is success or 0 if error
+     *
+     * */
+    @DeleteMapping("engine/delete/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public int deleteVehicleEngine(@PathVariable long id) throws VehicleEngineDosentExist {
+        return vehicleService.deleteVehicleEngine(id);
+    }
 
 }
