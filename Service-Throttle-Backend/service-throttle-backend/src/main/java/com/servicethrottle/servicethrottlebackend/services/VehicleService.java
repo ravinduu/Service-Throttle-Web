@@ -84,6 +84,15 @@ public class VehicleService {
         throw new UserNotLogIn("User not login");
     }
 
+    public int deleteMyVehicle(long id) {
+        CustomerVehicle customerVehicle = getMyVehicle(id);
+        if (customerVehicle != null){
+            customerVehicleRepository.delete(customerVehicle);
+            return 1;
+        }
+        return 0;
+    }
+
     public MobileServiceVehicle addMobileServiceVehicle(MobileServiceVehicleDto mobileServiceVehicleDto) {
         MobileServiceVehicle mobileServiceVehicle = new MobileServiceVehicle();
         mobileServiceVehicle.setYear(mobileServiceVehicleDto.getYear());

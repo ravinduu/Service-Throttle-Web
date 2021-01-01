@@ -19,11 +19,6 @@ import java.util.List;
 @CrossOrigin("http://localhost:3000")
 public class VehicleController {
 
-    /**
-     * TO-DO
-     * implement remove cust vehicle
-     * */
-
     private final VehicleService vehicleService;
 
     /**
@@ -73,10 +68,9 @@ public class VehicleController {
     }
 
     /**
-     * get all vehicles of a customer by username
+     * get all vehicles of a customer
      *
-     * only for ADMIN
-     * parameter is username of the customer
+     *return list of the {@link CustomerVehicle}
      * */
     @GetMapping("customer-vehicle/my-vehicles")
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
@@ -84,9 +78,30 @@ public class VehicleController {
         return vehicleService.getMyCustomerVehicles();
     }
 
+    /**
+     * get a vehicles of a customer by id
+     *
+     *
+     * parameter is id of the vehicle
+     * return {@link CustomerVehicle}
+     * */
     @GetMapping("customer-vehicle/my-vehicles/{id}")
+    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
     public CustomerVehicle getMyVehicle(@PathVariable long id){
         return vehicleService.getMyVehicle(id);
+    }
+
+    /**
+     * removes a vehicles of a customer by id
+     *
+     *
+     * parameter is id of the vehicle
+     * return 1 if the process is success or 0 if error
+     * */
+    @DeleteMapping("customer-vehicle/my-vehicles/{id}/remove")
+    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    public int deleteMyVehicle(@PathVariable long id){
+        return vehicleService.deleteMyVehicle(id);
     }
 
     /**
