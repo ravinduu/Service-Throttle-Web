@@ -27,7 +27,6 @@ public class VehicleController {
     /**
      * TO-DO
      * implement remove cust vehicle
-     * change methods use id as parameter to path variable
      * CRUD vehicle engine
      * */
 
@@ -110,10 +109,10 @@ public class VehicleController {
      * only access by ADMIN
      *
      * */
-    @PutMapping("mobile-service-vehicle/add-mobile-mechanic")
+    @PutMapping("mobile-service-vehicle/{id}/add-mobile-mechanic")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public MobileServiceVehicle addMechanicToMobileServiceVehicle(long mobileServiceVehicleId,String mobileMechanicUsername){
-        return vehicleService.addMechanicToMobileServiceVehicle(mobileServiceVehicleId, mobileMechanicUsername);
+    public MobileServiceVehicle addMechanicToMobileServiceVehicle(@PathVariable long id,String mobileMechanicUsername){
+        return vehicleService.addMechanicToMobileServiceVehicle(id, mobileMechanicUsername);
     }
 
     /**
@@ -134,10 +133,10 @@ public class VehicleController {
      * only access by ADMIN
      *
      * */
-    @PutMapping("mobile-service-vehicle/change-mobile-mechanic")
+    @PutMapping("mobile-service-vehicle/{id}/change-mobile-mechanic")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public MobileServiceVehicle changeMechanicOfMobileServiceVehicle(long mobileServiceVehicleId,String mobileMechanicUsername){
-        return vehicleService.changeMechanicOfMobileServiceVehicle(mobileServiceVehicleId, mobileMechanicUsername);
+    public MobileServiceVehicle changeMechanicOfMobileServiceVehicle(@PathVariable long id,String mobileMechanicUsername){
+        return vehicleService.changeMechanicOfMobileServiceVehicle(id, mobileMechanicUsername);
     }
 
     /**
