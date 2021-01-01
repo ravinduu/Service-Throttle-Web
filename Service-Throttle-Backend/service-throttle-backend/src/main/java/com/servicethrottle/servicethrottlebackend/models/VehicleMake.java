@@ -25,7 +25,7 @@ public class VehicleMake implements Serializable {
 
     @Size(max = 50)
     @Column(length = 50)
-    private Make make;
+    private String make;
 
 
 }

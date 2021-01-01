@@ -24,8 +24,9 @@ public class VehicleModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne(fetch = LAZY)
+    @ManyToOne
+    @JoinColumn(name = "vehicle_make_id", nullable = false)
     private VehicleMake vehicleMake;
 
-    private Model model;
+    private String model;
 }

@@ -1,13 +1,11 @@
 package com.servicethrottle.servicethrottlebackend.services;
 
-import com.servicethrottle.servicethrottlebackend.exceptions.CustomerVehicleNotFound;
-import com.servicethrottle.servicethrottlebackend.exceptions.UserNotLogIn;
-import com.servicethrottle.servicethrottlebackend.exceptions.VehicleEngineDosentExist;
-import com.servicethrottle.servicethrottlebackend.exceptions.VehicleMakeDosentExist;
+import com.servicethrottle.servicethrottlebackend.exceptions.*;
 import com.servicethrottle.servicethrottlebackend.models.*;
 import com.servicethrottle.servicethrottlebackend.models.dto.*;
 import com.servicethrottle.servicethrottlebackend.repositories.*;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +39,9 @@ public class VehicleService {
     @Transactional(readOnly = true)
     public List<CustomerVehicle> getCustomerVehicles(String username) {
         Customer customer = customerService.getCustomer(username);
+
+        if (customer.getId() == 0) throw new UsernameNotFoundException("No user with username : "+username);
+
         return customerVehicleRepository
                 .findAllByCustomer(customer)
                 .stream()
@@ -59,7 +60,7 @@ public class VehicleService {
     public CustomerVehicle getCustomerVehicle(Long id) {
         return customerVehicleRepository
                 .findById(id)
-                .orElseThrow(() -> new CustomerVehicleNotFound(id.toString()));
+                .orElseThrow(() -> new CustomerVehicleNotFound("No vehicle with id "+id.toString()));
     }
 
 
@@ -231,16 +232,19 @@ public class VehicleService {
 
     public VehicleModel addVehicleModel(VehicleModelDto vehicleModelDto) {
         VehicleModel vehicleModel = new VehicleModel();
-        vehicleModel.setVehicleMake(vehicleModelDto.getVehicleMake());
+        VehicleMake vehicleMake = getVehicleMake(vehicleModelDto.getVehicleMakeId());
+        vehicleModel.setVehicleMake(vehicleMake);
         vehicleModel.setModel(vehicleModelDto.getModel());
         vehicleModelRepository.save(vehicleModel);
         return vehicleModel;
     }
 
+    @Transactional(readOnly = true)
     public List<VehicleModel> getAllVehicleModel() {
         return vehicleModelRepository.findAll().stream().collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public VehicleModel getVehicleModel(long id) throws VehicleModelDosentExist {
         Optional<VehicleModel> vehicleModels = vehicleModelRepository.findById(id);
         if (vehicleModels.isPresent()) {
@@ -251,19 +255,23 @@ public class VehicleService {
         throw new VehicleModelDosentExist("No Vehicle make for id : "+id);
     }
 
+    @Transactional(readOnly = true)
     public List<VehicleModel> getAllVehicleModelByMake(long makeId) throws VehicleMakeDosentExist, VehicleModelDosentExist {
         VehicleMake vehicleMake = getVehicleMake(makeId);
-        Optional<VehicleModel> vehicleModels = vehicleModelRepository.findAllByVehicleMake(vehicleMake);
 
-        if (vehicleModels.isPresent()) return vehicleModels.stream().collect(Collectors.toList());
 
-        throw new VehicleModelDosentExist("Vehicle models doesn't exist for "+ vehicleMake.getMake().name());
+        List<VehicleModel> vehicleModels = vehicleModelRepository.findAllByVehicleMake(vehicleMake);
+        vehicleModels.stream().forEach(System.out::println);
+        if (!vehicleModels.isEmpty()) return vehicleModels.stream().collect(Collectors.toList());
+
+        throw new VehicleModelDosentExist("Vehicle models doesn't exist for "+ vehicleMake.getMake());
     }
 
     public VehicleModel updateVehicleModel(long id, VehicleModelDto vehicleModelDto) throws VehicleModelDosentExist {
         VehicleModel vehicleModelToUpdate = getVehicleModel(id);
 
-        vehicleModelToUpdate.setVehicleMake(vehicleModelDto.getVehicleMake());
+        VehicleMake vehicleMake = getVehicleMake(vehicleModelDto.getVehicleMakeId());
+        vehicleModelToUpdate.setVehicleMake(vehicleMake);
         vehicleModelDto.setModel(vehicleModelDto.getModel());
         vehicleModelRepository.save(vehicleModelToUpdate);
         return vehicleModelToUpdate;
@@ -299,7 +307,7 @@ public class VehicleService {
 
     public VehicleEngine updateVehicleEngine(long id, VehicleEngineDto vehicleEngineDto) throws VehicleEngineDosentExist {
         VehicleEngine vehicleEngineToUpdate = getVehicleEngine(id);
-        vehicleEngineDto.setEngine(vehicleEngineDto.getEngine());
+        vehicleEngineToUpdate.setEngine(vehicleEngineDto.getEngine());
         vehicleEngineRepository.save(vehicleEngineToUpdate);
         return vehicleEngineToUpdate;
 
@@ -307,7 +315,7 @@ public class VehicleService {
 
     public int deleteVehicleEngine(long id) throws VehicleEngineDosentExist {
         VehicleEngine vehicleEngineToDelete = getVehicleEngine(id);
-        if (vehicleEngineToDelete == null){
+        if (vehicleEngineToDelete != null){
             vehicleEngineRepository.delete(vehicleEngineToDelete);
             return 1;
         }

@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class VehicleMakeDto {
 
-    private Make make;
+    private String make;
 }

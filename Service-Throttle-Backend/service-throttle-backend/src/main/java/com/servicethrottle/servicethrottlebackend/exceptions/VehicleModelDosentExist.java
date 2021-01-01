@@ -1,4 +1,4 @@
-package com.servicethrottle.servicethrottlebackend.repositories;
+package com.servicethrottle.servicethrottlebackend.exceptions;
 
 public class VehicleModelDosentExist extends Throwable {
     public VehicleModelDosentExist(String s) {

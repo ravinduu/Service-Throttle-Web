@@ -22,5 +22,5 @@ public class VehicleEngine implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private Engine engine;
+    private String engine;
 }

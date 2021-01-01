@@ -4,7 +4,7 @@ import com.servicethrottle.servicethrottlebackend.exceptions.VehicleEngineDosent
 import com.servicethrottle.servicethrottlebackend.exceptions.VehicleMakeDosentExist;
 import com.servicethrottle.servicethrottlebackend.models.*;
 import com.servicethrottle.servicethrottlebackend.models.dto.*;
-import com.servicethrottle.servicethrottlebackend.repositories.VehicleModelDosentExist;
+import com.servicethrottle.servicethrottlebackend.exceptions.VehicleModelDosentExist;
 import com.servicethrottle.servicethrottlebackend.services.VehicleService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,7 +29,7 @@ public class VehicleController {
      * get currentCustomer logged in
      * */
     @PostMapping("customer-vehicle/add")
-    public CustomerVehicle addCustomerVehicle(CustomerVehicleDto customerVehicleDto){
+    public CustomerVehicle addCustomerVehicle(@RequestBody CustomerVehicleDto customerVehicleDto){
         return vehicleService.addCustomerVehicle(customerVehicleDto);
     }
 
@@ -112,7 +112,7 @@ public class VehicleController {
      * */
     @PostMapping("mobile-service-vehicle/add")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public MobileServiceVehicle addMobileServiceVehicle(MobileServiceVehicleDto mobileServiceVehicleDto){
+    public MobileServiceVehicle addMobileServiceVehicle(@RequestBody MobileServiceVehicleDto mobileServiceVehicleDto){
         return vehicleService.addMobileServiceVehicle(mobileServiceVehicleDto);
     }
 
@@ -160,7 +160,7 @@ public class VehicleController {
      * */
     @PutMapping("mobile-service-vehicle/update")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public MobileServiceVehicle updateMobileServiceVehicle(MobileServiceVehicleDto mobileServiceVehicleDto){
+    public MobileServiceVehicle updateMobileServiceVehicle(@RequestBody MobileServiceVehicleDto mobileServiceVehicleDto){
         return vehicleService.updateMobileServiceVehicle(mobileServiceVehicleDto);
     }
 
@@ -204,7 +204,7 @@ public class VehicleController {
      * */
     @PostMapping("make/add")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public VehicleMake addVehicleMake(VehicleMakeDto vehicleMakeDto){
+    public VehicleMake addVehicleMake(@RequestBody VehicleMakeDto vehicleMakeDto){
         return vehicleService.addVehicleMake(vehicleMakeDto);
     }
 
@@ -238,7 +238,7 @@ public class VehicleController {
      * */
     @PutMapping("make/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public VehicleMake updateVehicleMake(@PathVariable long id, VehicleMakeDto vehicleMakeDto) throws VehicleMakeDosentExist {
+    public VehicleMake updateVehicleMake(@PathVariable long id, @RequestBody VehicleMakeDto vehicleMakeDto) throws VehicleMakeDosentExist {
         return vehicleService.updateVehicleMake(id, vehicleMakeDto);
     }
 
@@ -263,9 +263,9 @@ public class VehicleController {
      * parameter {@link VehicleModelDto} is information about vehicle make and model
      * return {@link VehicleModel}
      * */
-    @PutMapping("model/add")
+    @PostMapping("model/add")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public VehicleModel addVehicleModel(VehicleModelDto vehicleModelDto){
+    public VehicleModel addVehicleModel(@RequestBody VehicleModelDto vehicleModelDto){
         return vehicleService.addVehicleModel(vehicleModelDto);
     }
 
@@ -312,7 +312,7 @@ public class VehicleController {
      * */
     @PutMapping("model/update/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public VehicleModel updateVehicleModel(@PathVariable long id, VehicleModelDto vehicleModelDto) throws VehicleModelDosentExist {
+    public VehicleModel updateVehicleModel(@PathVariable long id, @RequestBody VehicleModelDto vehicleModelDto) throws VehicleModelDosentExist {
         return vehicleService.updateVehicleModel(id, vehicleModelDto);
     }
 
@@ -337,9 +337,9 @@ public class VehicleController {
      * parameter {@link VehicleEngineDto} is information about vehicle make and model
      * return {@link VehicleEngine}
      * */
-    @PutMapping("engine/add")
+    @PostMapping("engine/add")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public VehicleEngine addVehicleEngine(VehicleEngineDto vehicleEngineDto){
+    public VehicleEngine addVehicleEngine(@RequestBody VehicleEngineDto vehicleEngineDto){
         return vehicleService.addVehicleEngine(vehicleEngineDto);
     }
 
@@ -374,7 +374,7 @@ public class VehicleController {
      * */
     @PutMapping("engine/update/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public VehicleEngine updateVehicleEngine(@PathVariable long id, VehicleEngineDto vehicleEngineDto) throws VehicleEngineDosentExist {
+    public VehicleEngine updateVehicleEngine(@PathVariable long id, @RequestBody VehicleEngineDto vehicleEngineDto) throws VehicleEngineDosentExist {
         return vehicleService.updateVehicleEngine(id, vehicleEngineDto);
     }
 
