@@ -84,6 +84,10 @@ public class VehicleController {
         return vehicleService.getMyCustomerVehicles();
     }
 
+    @GetMapping("customer-vehicle/my-vehicles/{id}")
+    public CustomerVehicle getMyVehicle(@PathVariable long id){
+        return vehicleService.getMyVehicle(id);
+    }
 
     /**
      * add a new service vehicle for company

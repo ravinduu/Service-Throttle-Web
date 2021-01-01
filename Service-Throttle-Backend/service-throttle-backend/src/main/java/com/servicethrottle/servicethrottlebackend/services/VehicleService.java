@@ -1,6 +1,7 @@
 package com.servicethrottle.servicethrottlebackend.services;
 
 import com.servicethrottle.servicethrottlebackend.exceptions.CustomerVehicleNotFound;
+import com.servicethrottle.servicethrottlebackend.exceptions.UserNotLogIn;
 import com.servicethrottle.servicethrottlebackend.exceptions.VehicleEngineDosentExist;
 import com.servicethrottle.servicethrottlebackend.exceptions.VehicleMakeDosentExist;
 import com.servicethrottle.servicethrottlebackend.models.*;
@@ -17,8 +18,8 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class VehicleService {
-
     private final CustomerService customerService;
+
     private final MobileMechanicService mobileMechanicService;
 
     private final CustomerVehicleRepository customerVehicleRepository;
@@ -61,6 +62,7 @@ public class VehicleService {
                 .orElseThrow(() -> new CustomerVehicleNotFound(id.toString()));
     }
 
+
     @Transactional(readOnly = true)
     public List<CustomerVehicle> getMyCustomerVehicles() {
         Customer currentCustomer = customerService.getCurrentCustomer();
@@ -70,10 +72,26 @@ public class VehicleService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public CustomerVehicle getMyVehicle(long id) {
+        Customer currentCustomer = customerService.getCurrentCustomer();
+        CustomerVehicle customerVehicle = customerVehicleRepository.findById(id).orElseThrow(
+                ()-> new CustomerVehicleNotFound("id")
+        );
+
+        if (currentCustomer.getUsername().equals(customerVehicle.getCustomer().getUsername())) return customerVehicle;
+
+        throw new UserNotLogIn("User not login");
+    }
+
     public MobileServiceVehicle addMobileServiceVehicle(MobileServiceVehicleDto mobileServiceVehicleDto) {
         MobileServiceVehicle mobileServiceVehicle = new MobileServiceVehicle();
+        mobileServiceVehicle.setYear(mobileServiceVehicleDto.getYear());
+        mobileServiceVehicle.setVehicleMake(mobileServiceVehicleDto.getVehicleMake());
+        mobileServiceVehicle.setVehicleModel(mobileServiceVehicleDto.getVehicleModel());
+        mobileServiceVehicle.setVehicleEngine(mobileServiceVehicleDto.getVehicleEngine());
+        mobileServiceVehicle.setCapacity(mobileServiceVehicleDto.getCapacity());
         mobileServiceVehicleRepository.save(mobileServiceVehicle);
-
         return mobileServiceVehicle;
     }
 

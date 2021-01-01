@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.Year;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -21,6 +22,8 @@ public class Vehicle implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    private Year year;
 
     @OneToOne(fetch = LAZY)
     private VehicleMake vehicleMake;
