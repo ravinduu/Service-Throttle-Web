@@ -195,7 +195,6 @@ public class VehicleController {
      * only access by ADMIN
      * */
     @GetMapping("make/all")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<VehicleMake> getAllVehicleMake(){
         return vehicleService.getAllVehicleMake();
     }
@@ -207,7 +206,6 @@ public class VehicleController {
      * return {@link VehicleMake} with matching id or will return an empty instance of {@link VehicleMake}
      * */
     @GetMapping("make/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public VehicleMake getVehicleMake(@PathVariable long id) throws VehicleMakeDosentExist {
         return vehicleService.getVehicleMake(id);
     }
