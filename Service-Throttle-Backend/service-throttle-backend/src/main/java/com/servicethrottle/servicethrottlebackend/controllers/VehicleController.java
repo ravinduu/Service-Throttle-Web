@@ -29,7 +29,7 @@ public class VehicleController {
      * get currentCustomer logged in
      * */
     @PostMapping("customer-vehicle/add")
-    public CustomerVehicle addCustomerVehicle(@RequestBody CustomerVehicleDto customerVehicleDto){
+    public CustomerVehicle addCustomerVehicle(@RequestBody CustomerVehicleDto customerVehicleDto) throws VehicleModelDosentExist {
         return vehicleService.addCustomerVehicle(customerVehicleDto);
     }
 
@@ -112,7 +112,7 @@ public class VehicleController {
      * */
     @PostMapping("mobile-service-vehicle/add")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public MobileServiceVehicle addMobileServiceVehicle(@RequestBody MobileServiceVehicleDto mobileServiceVehicleDto){
+    public MobileServiceVehicle addMobileServiceVehicle(@RequestBody MobileServiceVehicleDto mobileServiceVehicleDto) throws VehicleModelDosentExist {
         return vehicleService.addMobileServiceVehicle(mobileServiceVehicleDto);
     }
 
@@ -158,10 +158,10 @@ public class VehicleController {
      * only access by ADMIN
      * MobileServiceVehicleDto is the new data of the service vehicle
      * */
-    @PutMapping("mobile-service-vehicle/update")
+    @PutMapping("mobile-service-vehicle/{id}/update")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public MobileServiceVehicle updateMobileServiceVehicle(@RequestBody MobileServiceVehicleDto mobileServiceVehicleDto){
-        return vehicleService.updateMobileServiceVehicle(mobileServiceVehicleDto);
+    public MobileServiceVehicle updateMobileServiceVehicle(@PathVariable long id, @RequestBody MobileServiceVehicleDto mobileServiceVehicleDto){
+        return vehicleService.updateMobileServiceVehicle(id,mobileServiceVehicleDto);
     }
 
     /**

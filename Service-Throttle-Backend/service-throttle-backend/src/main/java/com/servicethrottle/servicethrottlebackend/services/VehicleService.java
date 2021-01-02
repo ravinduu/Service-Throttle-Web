@@ -27,8 +27,18 @@ public class VehicleService {
     private final VehicleEngineRepository vehicleEngineRepository;
 
 
-    public CustomerVehicle addCustomerVehicle(CustomerVehicleDto customerVehicleDto){
+    public CustomerVehicle addCustomerVehicle(CustomerVehicleDto customerVehicleDto) throws VehicleModelDosentExist {
         CustomerVehicle customerVehicle = new CustomerVehicle();
+
+        VehicleMake vehicleMake = getVehicleMake(customerVehicleDto.getVehicleMakeId());
+        customerVehicle.setVehicleMake(vehicleMake);
+
+        VehicleModel vehicleModel = getVehicleModel(customerVehicleDto.getVehicleModelId());
+        customerVehicle.setVehicleModel(vehicleModel);
+
+        VehicleEngine vehicleEngine = getVehicleEngine(customerVehicleDto.getVehicleEngineId());
+        customerVehicle.setVehicleEngine(vehicleEngine);
+
         Customer currentCustomer = customerService.getCurrentCustomer();
         customerVehicle.setCustomer(currentCustomer);
 
@@ -94,30 +104,28 @@ public class VehicleService {
         return 0;
     }
 
-    public MobileServiceVehicle addMobileServiceVehicle(MobileServiceVehicleDto mobileServiceVehicleDto) {
+    public MobileServiceVehicle addMobileServiceVehicle(MobileServiceVehicleDto mobileServiceVehicleDto) throws VehicleModelDosentExist {
         MobileServiceVehicle mobileServiceVehicle = new MobileServiceVehicle();
-        mobileServiceVehicle.setYear(mobileServiceVehicleDto.getYear());
-        mobileServiceVehicle.setVehicleMake(mobileServiceVehicleDto.getVehicleMake());
-        mobileServiceVehicle.setVehicleModel(mobileServiceVehicleDto.getVehicleModel());
-        mobileServiceVehicle.setVehicleEngine(mobileServiceVehicleDto.getVehicleEngine());
-        mobileServiceVehicle.setCapacity(mobileServiceVehicleDto.getCapacity());
-        mobileServiceVehicleRepository.save(mobileServiceVehicle);
-        return mobileServiceVehicle;
+        return addDataAndSaveMobileServiceVehicle(mobileServiceVehicleDto, mobileServiceVehicle);
     }
 
 
     public MobileServiceVehicle addMechanicToMobileServiceVehicle(long mobileServiceVehicleId, String  mobileMechanicUsername) {
-        MobileMechanic mobileMechanic = mobileMechanicService.getMobileMechanic(mobileMechanicUsername);
         Optional<MobileServiceVehicle> mobileServiceVehicle = mobileServiceVehicleRepository.findById(mobileServiceVehicleId);
 
         if (mobileServiceVehicle.isPresent()) mobileServiceVehicle.stream().map(mobileServiceVehicle1 -> {
-            mobileServiceVehicle1.setMobileMechanic(mobileMechanic);
-            //add check condition for MM
-            mobileServiceVehicleRepository.save(mobileServiceVehicle1);
-            return mobileServiceVehicle1;
+            if (mobileServiceVehicle1.getMobileMechanic() == null){
+                MobileMechanic mobileMechanic = mobileMechanicService.getMobileMechanic(mobileMechanicUsername);
+                if(!mobileServiceVehicleRepository.findByMobileMechanic(mobileMechanic).isPresent()) {
+                    mobileServiceVehicle1.setMobileMechanic(mobileMechanic);
+                    mobileServiceVehicleRepository.save(mobileServiceVehicle1);
+                    return mobileServiceVehicle1;
+                }
+                throw new MobileMechanicAlreadyHaveVehicle("Mobile Mechanic, "+ mobileMechanicUsername +" Already Have Service Vehicle ");
+            }
+            throw new MobileMechanicExistForThisVehicle("Mobile Mechanic Already Exist For This Service Vehicle : "+mobileServiceVehicleId);
         });
-
-        return new MobileServiceVehicle();
+        throw new NoMobileServiceVehicle("No Mobile Service Vehicle For This id : "+mobileServiceVehicleId);
     }
 
     public MobileServiceVehicle removeMechanicOfMobileServiceVehicle(long mobileServiceVehicleId) {
@@ -125,12 +133,15 @@ public class VehicleService {
 
         if (mobileServiceVehicle.isPresent()) {
             mobileServiceVehicle.stream().map(mobileServiceVehicle1 -> {
-                mobileServiceVehicle1.setMobileMechanic(null);
-                mobileServiceVehicleRepository.save(mobileServiceVehicle1);
-                return mobileServiceVehicle1;
+                if (mobileServiceVehicle1.getMobileMechanic() != null) {
+                    mobileServiceVehicle1.setMobileMechanic(null);
+                    mobileServiceVehicleRepository.save(mobileServiceVehicle1);
+                    return mobileServiceVehicle1;
+                }
+                throw new NoMobileMechanicExistForThisVehicle("No Mobile Mechanic For This Service Vehicle ");
             });
         }
-        return new MobileServiceVehicle();
+        throw new NoMobileServiceVehicle("No Mobile Service Vehicle For This id : "+mobileServiceVehicleId);
     }
 
     public MobileServiceVehicle changeMechanicOfMobileServiceVehicle(long mobileServiceVehicleId, String mobileMechanicUsername) {
@@ -141,7 +152,7 @@ public class VehicleService {
             mobileServiceVehicle.stream().map(mobileServiceVehicle1 -> {
                 MobileMechanic mobileMechanic = mobileServiceVehicle1.getMobileMechanic();
 
-                if(mobileMechanic != null && mobileMechanic.getUsername() != mobileMechanicUsername ){
+                if(mobileMechanic != null && !mobileMechanic.getUsername().equals(mobileMechanicUsername)){
                     MobileMechanic newMobileMechanic = mobileMechanicService.getMobileMechanic(mobileMechanicUsername);
                     mobileServiceVehicle1.setMobileMechanic(newMobileMechanic);
                 }
@@ -155,21 +166,39 @@ public class VehicleService {
 
     }
 
-    public MobileServiceVehicle updateMobileServiceVehicle(MobileServiceVehicleDto mobileServiceVehicleDto) {
-        //implement
-        return null;
+    public MobileServiceVehicle updateMobileServiceVehicle(long id, MobileServiceVehicleDto mobileServiceVehicleDto) throws VehicleModelDosentExist {
+        MobileServiceVehicle mobileServiceVehicle = getMobileServiceVehicle(id);
+        return addDataAndSaveMobileServiceVehicle(mobileServiceVehicleDto, mobileServiceVehicle);
+    }
+
+    /*
+        since add and update methods are similar extracted both method to this method
+    */
+    private MobileServiceVehicle addDataAndSaveMobileServiceVehicle(MobileServiceVehicleDto mobileServiceVehicleDto, MobileServiceVehicle mobileServiceVehicle) throws VehicleModelDosentExist {
+        mobileServiceVehicle.setYear(mobileServiceVehicleDto.getYear());
+        VehicleMake vehicleMake = getVehicleMake(mobileServiceVehicleDto.getVehicleMakeId());
+        mobileServiceVehicle.setVehicleMake(vehicleMake);
+
+        VehicleModel vehicleModel = getVehicleModel(mobileServiceVehicleDto.getVehicleModelId());
+        if (!vehicleModel.getVehicleMake().getMake().equals(vehicleMake.getMake())) {
+            throw new InCompatibleModelType("No Model : "+vehicleModel.getVehicleMake()+" For Make : "+vehicleMake.getMake());
+        }
+
+        mobileServiceVehicle.setVehicleModel(vehicleModel);
+
+        VehicleEngine vehicleEngine = getVehicleEngine(mobileServiceVehicleDto.getVehicleEngineId());
+        mobileServiceVehicle.setVehicleEngine(vehicleEngine);
+
+        mobileServiceVehicle.setCapacity(mobileServiceVehicleDto.getCapacity());
+        mobileServiceVehicleRepository.save(mobileServiceVehicle);
+        return mobileServiceVehicle;
     }
 
     @Transactional(readOnly = true)
     public MobileServiceVehicle getMobileServiceVehicle(long mobileServiceVehicleId) {
-
         Optional<MobileServiceVehicle> mobileServiceVehicle = mobileServiceVehicleRepository.findById(mobileServiceVehicleId);
+        return mobileServiceVehicle.orElseGet(MobileServiceVehicle::new);
 
-        if (mobileServiceVehicle.isPresent()) {
-            return mobileServiceVehicle.get();
-        }
-
-        return new MobileServiceVehicle();
     }
 
     @Transactional(readOnly = true)
@@ -258,10 +287,7 @@ public class VehicleService {
     @Transactional(readOnly = true)
     public List<VehicleModel> getAllVehicleModelByMake(long makeId) throws VehicleMakeDosentExist, VehicleModelDosentExist {
         VehicleMake vehicleMake = getVehicleMake(makeId);
-
-
         List<VehicleModel> vehicleModels = vehicleModelRepository.findAllByVehicleMake(vehicleMake);
-        vehicleModels.stream().forEach(System.out::println);
         if (!vehicleModels.isEmpty()) return vehicleModels.stream().collect(Collectors.toList());
 
         throw new VehicleModelDosentExist("Vehicle models doesn't exist for "+ vehicleMake.getMake());

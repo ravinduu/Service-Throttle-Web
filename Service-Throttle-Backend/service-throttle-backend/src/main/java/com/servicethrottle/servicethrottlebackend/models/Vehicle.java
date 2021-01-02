@@ -25,13 +25,16 @@ public class Vehicle implements Serializable {
 
     private Year year;
 
-    @OneToOne(fetch = LAZY)
+    @ManyToOne
+    @JoinColumn(name = "vehicle_make_id", nullable = false)
     private VehicleMake vehicleMake;
 
-    @OneToOne(fetch = LAZY)
+    @ManyToOne
+    @JoinColumn(name = "vehicle_model_id", nullable = false)
     private VehicleModel vehicleModel;
 
-    @OneToOne(fetch = LAZY)
+    @ManyToOne
+    @JoinColumn(name = "vehicle_engine_id", nullable = false)
     private VehicleEngine vehicleEngine;
 
 }
