@@ -72,7 +72,7 @@ public class STVehicleServiceController {
      *
      * only for ADMIN
      * PathVariable id is the id of the service we want to delete
-     * throw {@link NoStVehicleService} if no {@link STVehicleService} to be found for given id
+     * return 1 if the process is success or 0 if error
      * */
     @DeleteMapping("/{id}/delete")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
