@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class VehicleService {
     private final CustomerService customerService;
-
     private final MobileMechanicService mobileMechanicService;
 
     private final CustomerVehicleRepository customerVehicleRepository;

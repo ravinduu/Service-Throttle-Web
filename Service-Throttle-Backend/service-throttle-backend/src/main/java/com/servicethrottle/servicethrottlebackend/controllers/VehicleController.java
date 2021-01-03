@@ -160,7 +160,7 @@ public class VehicleController {
      * */
     @PutMapping("mobile-service-vehicle/{id}/update")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public MobileServiceVehicle updateMobileServiceVehicle(@PathVariable long id, @RequestBody MobileServiceVehicleDto mobileServiceVehicleDto){
+    public MobileServiceVehicle updateMobileServiceVehicle(@PathVariable long id, @RequestBody MobileServiceVehicleDto mobileServiceVehicleDto) throws VehicleModelDosentExist {
         return vehicleService.updateMobileServiceVehicle(id,mobileServiceVehicleDto);
     }
 
