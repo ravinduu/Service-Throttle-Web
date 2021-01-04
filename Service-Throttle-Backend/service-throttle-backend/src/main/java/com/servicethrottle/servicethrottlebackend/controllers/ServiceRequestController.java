@@ -81,4 +81,36 @@ public class ServiceRequestController {
         return serviceRequestService.deleteServiceRequest(id);
     }
 
+    /**
+     * get all services request of a customer logged in
+     *
+     * return List of {@link ServiceRequest} of the current customer
+     * */
+    @GetMapping("/my-service-requests")
+    public List<ServiceRequest> getMyServiceRequests(){
+        return serviceRequestService.getMyServiceRequests();
+    }
+
+    /**
+     * get all services request of a customer
+     *
+     * PathVariable customerUsername is the customerUsername of the Customer that the service request we want
+     * return {@link ServiceRequest}
+     * */
+    @GetMapping("/by-customer/{customerUsername}")
+    public List<ServiceRequest> getServiceRequestsByCustomer(@PathVariable String customerUsername){
+        return serviceRequestService.getServiceRequestsByCustomer(customerUsername);
+    }
+
+    /**
+     * get all services request of a vehicle
+     *
+     * PathVariable vehicleId is the vehicleId of the Vehicle that the service request we want
+     * return {@link ServiceRequest}
+     * */
+    @GetMapping("/by-vehicle/{vehicleId}")
+    public List<ServiceRequest> getServiceRequestsByVehicle(@PathVariable long vehicleId){
+        return serviceRequestService.getServiceRequestsByVehicle(vehicleId);
+    }
+
 }

@@ -2,6 +2,7 @@ package com.servicethrottle.servicethrottlebackend.services;
 
 import com.servicethrottle.servicethrottlebackend.exceptions.ValueNotFoundException;
 import com.servicethrottle.servicethrottlebackend.models.Customer;
+import com.servicethrottle.servicethrottlebackend.models.CustomerVehicle;
 import com.servicethrottle.servicethrottlebackend.models.ServiceRequest;
 import com.servicethrottle.servicethrottlebackend.models.dto.ServiceRequestDto;
 import com.servicethrottle.servicethrottlebackend.repositories.ServiceRequestRepository;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class ServiceRequestService {
 
     private final CustomerService customerService;
+    private final VehicleService vehicleService;
 
     private final ServiceRequestRepository serviceRequestRepository;
 
@@ -56,5 +58,20 @@ public class ServiceRequestService {
             return 1;
         }
         return 0;
+    }
+
+    public List<ServiceRequest> getMyServiceRequests() {
+        Customer customer = customerService.getCurrentCustomer();
+        return new ArrayList<>(serviceRequestRepository.findByCustomer(customer));
+    }
+
+    public List<ServiceRequest> getServiceRequestsByCustomer(String customerUsername) {
+        Customer customer = customerService.getCustomer(customerUsername);
+        return new ArrayList<>(serviceRequestRepository.findByCustomer(customer));
+    }
+
+    public List<ServiceRequest> getServiceRequestsByVehicle(long vehicleId) {
+        CustomerVehicle customerVehicle = vehicleService.getCustomerVehicle(vehicleId);
+        return new ArrayList<>(serviceRequestRepository.findByCustomerVehicle(customerVehicle));
     }
 }
