@@ -16,11 +16,11 @@ public class MobileServiceVehicleDto {
 
     private Year year;
 
-    private long vehicleMakeId;
+    private VehicleMake vehicleMake;
 
-    private long vehicleModelId;
+    private VehicleModel vehicleModel;
 
-    private long vehicleEngineId;
+    private VehicleEngine vehicleEngine;
 
     private double capacity;
 }

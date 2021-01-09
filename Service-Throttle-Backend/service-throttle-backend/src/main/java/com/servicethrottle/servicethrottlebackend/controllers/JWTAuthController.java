@@ -2,14 +2,16 @@ package com.servicethrottle.servicethrottlebackend.controllers;
 
 import com.servicethrottle.servicethrottlebackend.models.dto.AuthenticationResponseDto;
 import com.servicethrottle.servicethrottlebackend.models.dto.LoginRequestDto;
-import com.servicethrottle.servicethrottlebackend.security.SecurityUtils;
+import com.servicethrottle.servicethrottlebackend.services.CustomerService;
 import com.servicethrottle.servicethrottlebackend.services.JWTAuthService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 
 @RestController
 @RequestMapping("/st")
@@ -41,6 +43,11 @@ public class JWTAuthController {
         return ResponseEntity.ok().body(authenticationResponseDto);
     }
 
+    @PostMapping("/logout")
+    public String login() {
+        SecurityContextHolder.clearContext();
+        return "Logout";
+    }
 
     @GetMapping("/hello")
     public String hello(){

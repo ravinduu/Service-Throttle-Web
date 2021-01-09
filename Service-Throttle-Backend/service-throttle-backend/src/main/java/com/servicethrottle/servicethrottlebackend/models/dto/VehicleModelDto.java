@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class VehicleModelDto {
 
-    private long vehicleMakeId;
+    private VehicleMake vehicleMake;
 
     private String model;
 }

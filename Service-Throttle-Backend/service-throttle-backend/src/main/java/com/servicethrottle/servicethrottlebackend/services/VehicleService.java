@@ -28,19 +28,12 @@ public class VehicleService {
 
     public CustomerVehicle addCustomerVehicle(CustomerVehicleDto customerVehicleDto) throws VehicleModelDosentExist {
         CustomerVehicle customerVehicle = new CustomerVehicle();
-
-        VehicleMake vehicleMake = getVehicleMake(customerVehicleDto.getVehicleMakeId());
-        customerVehicle.setVehicleMake(vehicleMake);
-
-        VehicleModel vehicleModel = getVehicleModel(customerVehicleDto.getVehicleModelId());
-        customerVehicle.setVehicleModel(vehicleModel);
-
-        VehicleEngine vehicleEngine = getVehicleEngine(customerVehicleDto.getVehicleEngineId());
-        customerVehicle.setVehicleEngine(vehicleEngine);
-
+        customerVehicle.setYear(customerVehicleDto.getYear());
+        customerVehicle.setVehicleMake(customerVehicleDto.getVehicleMake());
+        customerVehicle.setVehicleModel(customerVehicleDto.getVehicleModel());
+        customerVehicle.setVehicleEngine(customerVehicleDto.getVehicleEngine());
         Customer currentCustomer = customerService.getCurrentCustomer();
         customerVehicle.setCustomer(currentCustomer);
-
         customerVehicleRepository.save(customerVehicle);
         return customerVehicle;
     }
@@ -175,18 +168,15 @@ public class VehicleService {
     */
     private MobileServiceVehicle addDataAndSaveMobileServiceVehicle(MobileServiceVehicleDto mobileServiceVehicleDto, MobileServiceVehicle mobileServiceVehicle) throws VehicleModelDosentExist {
         mobileServiceVehicle.setYear(mobileServiceVehicleDto.getYear());
-        VehicleMake vehicleMake = getVehicleMake(mobileServiceVehicleDto.getVehicleMakeId());
-        mobileServiceVehicle.setVehicleMake(vehicleMake);
+        mobileServiceVehicle.setVehicleMake(mobileServiceVehicleDto.getVehicleMake());
 
-        VehicleModel vehicleModel = getVehicleModel(mobileServiceVehicleDto.getVehicleModelId());
-        if (!vehicleModel.getVehicleMake().getMake().equals(vehicleMake.getMake())) {
-            throw new InCompatibleModelType("No Model : "+vehicleModel.getVehicleMake()+" For Make : "+vehicleMake.getMake());
+        if (!mobileServiceVehicleDto.getVehicleMake().getMake().equals(mobileServiceVehicleDto.getVehicleModel().getVehicleMake().getMake())) {
+            throw new InCompatibleModelType("No Model : "+mobileServiceVehicleDto.getVehicleModel().getModel()+" For Make : "+mobileServiceVehicleDto.getVehicleModel().getVehicleMake().getMake());
         }
 
-        mobileServiceVehicle.setVehicleModel(vehicleModel);
+        mobileServiceVehicle.setVehicleModel(mobileServiceVehicleDto.getVehicleModel());
 
-        VehicleEngine vehicleEngine = getVehicleEngine(mobileServiceVehicleDto.getVehicleEngineId());
-        mobileServiceVehicle.setVehicleEngine(vehicleEngine);
+        mobileServiceVehicle.setVehicleEngine(mobileServiceVehicleDto.getVehicleEngine());
 
         mobileServiceVehicle.setCapacity(mobileServiceVehicleDto.getCapacity());
         mobileServiceVehicleRepository.save(mobileServiceVehicle);
@@ -260,8 +250,9 @@ public class VehicleService {
 
     public VehicleModel addVehicleModel(VehicleModelDto vehicleModelDto) {
         VehicleModel vehicleModel = new VehicleModel();
-        VehicleMake vehicleMake = getVehicleMake(vehicleModelDto.getVehicleMakeId());
-        vehicleModel.setVehicleMake(vehicleMake);
+//        VehicleMake vehicleMake = getVehicleMake(vehicleModelDto.getVehicleMakeId());
+
+        vehicleModel.setVehicleMake(vehicleModelDto.getVehicleMake());
         vehicleModel.setModel(vehicleModelDto.getModel());
         vehicleModelRepository.save(vehicleModel);
         return vehicleModel;
@@ -295,8 +286,8 @@ public class VehicleService {
     public VehicleModel updateVehicleModel(long id, VehicleModelDto vehicleModelDto) throws VehicleModelDosentExist {
         VehicleModel vehicleModelToUpdate = getVehicleModel(id);
 
-        VehicleMake vehicleMake = getVehicleMake(vehicleModelDto.getVehicleMakeId());
-        vehicleModelToUpdate.setVehicleMake(vehicleMake);
+//        VehicleMake vehicleMake = getVehicleMake(vehicleModelDto.getVehicleMakeId());
+        vehicleModelToUpdate.setVehicleMake(vehicleModelDto.getVehicleMake());
         vehicleModelDto.setModel(vehicleModelDto.getModel());
         vehicleModelRepository.save(vehicleModelToUpdate);
         return vehicleModelToUpdate;
