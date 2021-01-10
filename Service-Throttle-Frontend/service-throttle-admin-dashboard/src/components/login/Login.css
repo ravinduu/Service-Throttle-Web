@@ -1,4 +1,4 @@
-.login {
+/* .login {
   flex: 0.2;
   border: 1.5px solid #03254c;
   margin-top: 50px;
@@ -31,4 +31,26 @@
   width: 90%;
   height: 50px;
   margin: 10px auto;
+} */
+
+.base-container {
+  margin-top: 150px;
+  display: grid;
+  place-items: center;
+  justify-content: center;
+}
+.base-container input {
+  height: 40px;
+  width: 250px;
+  padding: 0px 14px;
+}
+.base-container label {
+  height: 36px;
+  top: -6px;
+}
+
+.btn-login {
+  padding: 0px 14px;
+  padding-top: 14px;
+  margin-left: 80px;
 }

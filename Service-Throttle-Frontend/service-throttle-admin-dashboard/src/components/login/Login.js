@@ -1,39 +1,84 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Login.css";
+import { userLogin } from "./userLogin";
 import { Button, TextField, Typography, Container } from "@material-ui/core";
 
-function login() {
-  return (
-    <div className="login">
-      <Typography className="login__text" variant="h4" gutterBottom>
-        Service Throttle
-      </Typography>
-      <Button className="login__buttons" variant="contained" color="primary">
-        Login With GOOGLE
-      </Button>
-      <br></br>
-      <Button className="login__buttons" variant="contained" color="primary">
-        Login With Facebook
-      </Button>
+// const api = "http://localhost:8081/st";
+// let users;
+// let token = localStorage.getItem("token");
+// let authAxios = axios.create({
+//   baseURL: api,
+//   headers: {
+//     Authorization: `Bearer ${token}`,
+//   },
+// });
 
-      <hr />
-      <TextField
-        className="login__inputs"
-        type="text"
-        label="Username"
-        margin="dense"
-        variant="outlined"
-      />
-      <TextField
-        className="login__inputs"
-        type="text"
-        label="Password"
-        margin="dense"
-        variant="outlined"
-        type="password"
-      />
-    </div>
+function Login() {
+  const [credentials, setState] = useState({
+    username: "",
+    password: "",
+  });
+
+  // const userLogin = async () => {
+  //   try {
+  //     // const res = await axios.post(`${api}/login`, this.state);
+  //     // token = res.data.jwttoken;
+  //     // localStorage.setItem("token", token);
+  //     console.log(credentials.username + "   " + credentials.password);
+  //   } catch (err) {}
+  //   console.log("err");
+  // };
+
+  return (
+    <Container maxWidth="sm">
+      <div className="base-container">
+        <Typography variant="h4" gutterBottom>
+          Service Throttle
+        </Typography>
+        <form>
+          <div className="input">
+            <div className="input-username">
+              <TextField
+                type="text"
+                label="Username"
+                margin="dense"
+                variant="outlined"
+                onChange={(option) => {
+                  setState({ ...credentials, username: option.target.value });
+                }}
+              />
+            </div>
+            <div className="input-password">
+              <TextField
+                type="password"
+                label="Password"
+                margin="dense"
+                variant="outlined"
+                onChange={(option) => {
+                  setState({ ...credentials, password: option.target.value });
+                }}
+              />
+            </div>
+          </div>
+          <div className="btn-login">
+            <Button
+              variant="contained"
+              color="primary"
+              component="span"
+              style={{
+                backgroundColor: "#1167b1",
+              }}
+              onClick={() =>
+                userLogin(credentials.username, credentials.password)
+              }
+            >
+              LOGIN
+            </Button>
+          </div>
+        </form>
+      </div>
+    </Container>
   );
 }
 
-export default login;
+export default Login;
