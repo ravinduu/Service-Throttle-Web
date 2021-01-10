@@ -9,6 +9,7 @@ import com.servicethrottle.servicethrottlebackend.security.SecurityUtils;
 import lombok.SneakyThrows;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,7 +35,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         String lowerCaseUsername = username.toLowerCase(Locale.ENGLISH);
-//        if (SecurityUtils.getCurrentUsername().isPresent()) throw new UserAlreadyLoggedIn("Already Logged in");
+        System.out.println("Here " +SecurityUtils.getCurrentUsername());
+//        if (!SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) throw new UserAlreadyLoggedIn("Already Logged in");
         return  userCredentialsRepository
                 .findOneByUsername(lowerCaseUsername)
                 .map(userAuthenticationCredentials -> createSpringSecurityUser(lowerCaseUsername, userAuthenticationCredentials))
