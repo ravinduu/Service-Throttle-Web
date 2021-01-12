@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/st/vehicle/service")
 @AllArgsConstructor
+@CrossOrigin("http://localhost:3000")
 public class STVehicleServiceController {
 
     private STVehicleServiceService stVehicleServiceService;

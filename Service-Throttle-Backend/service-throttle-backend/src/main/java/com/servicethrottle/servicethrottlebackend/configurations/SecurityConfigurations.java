@@ -63,6 +63,8 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .cors()
+                .and()
                 .csrf()
                 .disable()
                 .addFilter(new UsernamePasswordAuthenticationFilter())
@@ -73,7 +75,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 .antMatchers("/st/login").permitAll()
                 .antMatchers("/st/register").permitAll()
                 .antMatchers("/st/activate").permitAll()
-                .antMatchers("/st/hello").hasAuthority("ROLE_ADMIN")
+//                .antMatchers("/st/hello").permitAll()
                 .anyRequest().authenticated();
     }
 

@@ -16,7 +16,7 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 @RestController
 @RequestMapping("/st")
 @AllArgsConstructor
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 public class JWTAuthController {
 
     /**

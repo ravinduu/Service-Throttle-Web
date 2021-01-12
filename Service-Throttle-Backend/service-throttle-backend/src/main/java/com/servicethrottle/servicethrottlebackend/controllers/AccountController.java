@@ -22,6 +22,7 @@ REST controller for managing user accounts.
 @RestController
 @RequestMapping("/st")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class AccountController {
 
     private final UserAccountService userAccountService;
