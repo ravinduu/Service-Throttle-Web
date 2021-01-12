@@ -1,17 +1,10 @@
 import React, { useState } from "react";
 import "./Login.css";
-import { userLogin } from "./userLogin";
+import axios from "axios";
+import { useDataLayerValue } from "../../dataLayer/DataLayer";
 import { Button, TextField, Typography, Container } from "@material-ui/core";
 
-// const api = "http://localhost:8081/st";
-// let users;
-// let token = localStorage.getItem("token");
-// let authAxios = axios.create({
-//   baseURL: api,
-//   headers: {
-//     Authorization: `Bearer ${token}`,
-//   },
-// });
+const api = "http://localhost:8081/st";
 
 function Login() {
   const [credentials, setState] = useState({
@@ -19,15 +12,20 @@ function Login() {
     password: "",
   });
 
-  // const userLogin = async () => {
-  //   try {
-  //     // const res = await axios.post(`${api}/login`, this.state);
-  //     // token = res.data.jwttoken;
-  //     // localStorage.setItem("token", token);
-  //     console.log(credentials.username + "   " + credentials.password);
-  //   } catch (err) {}
-  //   console.log("err");
-  // };
+  const [{ token }, dispatch] = useDataLayerValue();
+
+  const userLogin = async () => {
+    try {
+      const res = await axios.post(`${api}/login`, credentials);
+      const _token = res.data.jwttoken;
+      dispatch({
+        type: "SET_TOKEN",
+        token: _token,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Container maxWidth="sm">
@@ -68,9 +66,9 @@ function Login() {
               style={{
                 backgroundColor: "#1167b1",
               }}
-              onClick={() =>
-                userLogin(credentials.username, credentials.password)
-              }
+              onClick={() => {
+                userLogin();
+              }}
             >
               LOGIN
             </Button>
