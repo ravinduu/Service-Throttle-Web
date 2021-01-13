@@ -4,15 +4,13 @@ import axios from "axios";
 import { useDataLayerValue } from "../../dataLayer/DataLayer";
 import { Button, TextField, Typography, Container } from "@material-ui/core";
 
-const api = "http://localhost:8081/st";
-
 function Login() {
   const [credentials, setState] = useState({
     username: "",
     password: "",
   });
 
-  const [{ token }, dispatch] = useDataLayerValue();
+  const [{ token, api }, dispatch] = useDataLayerValue();
 
   const userLogin = async () => {
     try {

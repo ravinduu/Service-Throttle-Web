@@ -1,6 +1,7 @@
 export const initialState = {
   user: null,
   token: null,
+  api: "http://localhost:8081/st",
 };
 
 export const reducer = (state, action) => {
