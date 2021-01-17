@@ -7,7 +7,7 @@ import { useDataLayerValue } from "./dataLayer/DataLayer";
 function App() {
   const [{ token }] = useDataLayerValue();
 
-  return <div className="App">{token ? <Home /> : <Login />}</div>;
+  return <div className="App">{!token ? <Home /> : <Login />}</div>;
 }
 
 export default App;

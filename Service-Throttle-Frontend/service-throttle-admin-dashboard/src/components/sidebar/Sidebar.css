@@ -1,11 +1,12 @@
 .sidebar {
-  height: 100vh;
-  min-width: 250px;
+  min-height: 100vh;
+  min-width: 280px;
   padding-left: 10px;
   padding-right: 10px;
   flex: 0.2;
   color: white;
   background-color: #03254c;
+  position: relative;
 }
 
 .sidebar__logo {
@@ -28,4 +29,9 @@
 
 .search-bar {
   padding: 5px;
+}
+
+.drawer {
+  width: 280px;
+  background-color: #03254c;
 }
