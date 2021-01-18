@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import "./SidebarOption.css";
 import { Collapse, Divider, List, ListItem } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
-function SidebarOption({ option, Icon, children, isSidebarOpened }) {
+function SidebarOption({ option, Icon, children, isSidebarOpened, link }) {
   var [isOpen, setIsOpen] = useState(false);
 
   function toggleCollapse(e) {
@@ -14,12 +15,14 @@ function SidebarOption({ option, Icon, children, isSidebarOpened }) {
 
   if (!children)
     return (
-      <ListItem button disableRipple>
-        <div className="sidebarOption">
-          {Icon && <Icon className="sidebarOption__icon" />}
-          {Icon ? <p>{option}</p> : <h4>{option}</h4>}
-        </div>
-      </ListItem>
+      <Link to={link} style={{ textDecoration: "none" }}>
+        <ListItem button disableRipple>
+          <div className="sidebarOption">
+            {Icon && <Icon className="sidebarOption__icon" />}
+            {Icon ? <p>{option}</p> : <h4>{option}</h4>}
+          </div>
+        </ListItem>
+      </Link>
     );
 
   return (

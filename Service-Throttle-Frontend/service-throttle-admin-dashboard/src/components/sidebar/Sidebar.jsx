@@ -1,6 +1,9 @@
 import React from "react";
 import SidebarOption from "./sidebarOption/SidebarOption";
 import "./Sidebar.css";
+import useStyles from "./styles";
+
+import { useTheme } from "@material-ui/styles";
 import { Drawer, Icon, IconButton, List } from "@material-ui/core";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import AddBoxIcon from "@material-ui/icons/AddBox";
@@ -15,28 +18,26 @@ import PersonPinIcon from "@material-ui/icons/PersonPin";
 import StarHalfIcon from "@material-ui/icons/StarHalf";
 import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
-import useStyles from "./styles";
-import { useTheme } from "@material-ui/styles";
 
 const structure = [
-  { id: 0, option: "Dashboard", icon: DashboardIcon },
-  { id: 1, option: "Service Requests", icon: AddBoxIcon },
+  { id: 0, option: "Dashboard", icon: DashboardIcon, link: "/st" },
+  { id: 1, option: "Service Requests", icon: AddBoxIcon, link: "/st/navbar" },
   {
     id: 2,
     option: "Users",
     icon: PeopleAltIcon,
     children: [
-      { option: "Customers", link: "/app/ui/icons", icon: PersonIcon },
-      { option: "Admins", link: "/app/ui/charts", icon: PeopleAltIcon },
+      { option: "Customers", icon: PersonIcon, link: "/st/users/customers" },
+      { option: "Admins", icon: PeopleAltIcon, link: "/st/users/admins" },
       {
         option: "Supervisors",
-        link: "/app/ui/charts",
         icon: SupervisorAccountIcon,
+        link: "/st/users/supervisors",
       },
       {
         option: "Mobile Mechanics",
-        link: "/app/ui/charts",
         icon: PeopleAltIcon,
+        link: "/st/users/mobile-mechanics",
       },
     ],
   },
@@ -47,23 +48,21 @@ const structure = [
     children: [
       {
         option: "Customer Vehicles",
-        link: "/app/ui/icons",
         icon: DriveEtaIcon,
       },
       {
         option: "Service Vehicles",
-        link: "/app/ui/charts",
         icon: AirportShuttleIcon,
       },
     ],
   },
   { id: 4, option: "Earning Reports", icon: LocalAtmIcon },
   { id: 5, option: "Managing Documents", icon: DescriptionIcon },
-  { id: 5, option: "Managing Documents", icon: DescriptionIcon },
+  // { id: 5, option: "Managing Documents", icon: DescriptionIcon },
 
-  { id: 5, option: "Managing Documents", icon: DescriptionIcon },
+  // { id: 5, option: "Managing Documents", icon: DescriptionIcon },
 
-  { id: 5, option: "Managing Documents", icon: DescriptionIcon },
+  // { id: 5, option: "Managing Documents", icon: DescriptionIcon },
 ];
 
 function Sidebar() {
@@ -84,6 +83,7 @@ function Sidebar() {
               Icon={sidebarOption.icon}
               children={sidebarOption.children}
               isSidebarOpened={true}
+              link={sidebarOption.link}
               {...sidebarOption}
             />
           ))}
