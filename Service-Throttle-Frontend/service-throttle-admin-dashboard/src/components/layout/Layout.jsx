@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useDataLayerValue } from "../../dataLayer/DataLayer";
-import "./Dashboard.css";
+import "./Layout.css";
 import NavBar from "../navbar/NavBar";
 import Sidebar from "../sidebar/Sidebar";
 
-function Home() {
+function Layout() {
   const [{ user, token, api }, dispatch] = useDataLayerValue();
 
   let authAxios = axios.create({
@@ -37,4 +37,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Layout;
