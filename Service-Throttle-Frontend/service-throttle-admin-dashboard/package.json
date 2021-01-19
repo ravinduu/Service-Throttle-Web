@@ -12,6 +12,7 @@
     "axios": "^0.21.1",
     "classnames": "^2.2.6",
     "formik": "^2.2.6",
+    "mui-datatables": "^3.7.4",
     "node-sass": "^4.14.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
