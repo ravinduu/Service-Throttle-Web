@@ -1,9 +1,10 @@
 import React from "react";
+import Title from "../title/Title";
 
 function Dashboard() {
   return (
     <div>
-      <h1>Dashboard</h1>
+      <Title title="Dashboard" variant="h1" />
     </div>
   );
 }

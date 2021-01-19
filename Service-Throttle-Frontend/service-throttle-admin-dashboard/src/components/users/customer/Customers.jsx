@@ -9,6 +9,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import Title from "../../title/Title";
 
 const useStyles = makeStyles({
   table: {
@@ -47,6 +48,9 @@ function Customers() {
 
   return (
     <div>
+      <div>
+        <Title title="Customers" variant="h3" />
+      </div>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>

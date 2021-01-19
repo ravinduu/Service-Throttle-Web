@@ -28,7 +28,11 @@ function SidebarOption({ option, Icon, children, isSidebarOpened, link }) {
   return (
     <div>
       <ListItem button onClick={toggleCollapse} disableRipple>
-        <div className={isOpen ? "sidebarOptionOpen" : "sidebarOption"}>
+        <div
+          className={
+            isOpen && isSidebarOpened ? "sidebarOptionOpen" : "sidebarOption"
+          }
+        >
           {Icon && <Icon className="sidebarOption__icon" />}
           {Icon ? <p>{option}</p> : <h4>{option}</h4>}
         </div>
@@ -41,6 +45,7 @@ function SidebarOption({ option, Icon, children, isSidebarOpened, link }) {
                 <SidebarOption
                   option={childrenLink.option}
                   Icon={childrenLink.icon}
+                  link={children.link}
                   nested
                   {...childrenLink}
                 />

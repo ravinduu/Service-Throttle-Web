@@ -1,9 +1,12 @@
 import React from "react";
+import Title from "../../title/Title";
 
 function Admins() {
   return (
     <div>
-      <h1>Admins</h1>
+      <div>
+        <Title title="Admin" variant="h3" />
+      </div>
     </div>
   );
 }
