@@ -1,14 +1,10 @@
-import React from "react";
-import Title from "../../title/Title";
+import React, { useState } from "react";
+import Table from "../../table/Table";
 
 function Admins() {
-  return (
-    <div>
-      <div>
-        <Title title="Admin" variant="h3" />
-      </div>
-    </div>
-  );
+  const [customers, setCustomers] = useState([]);
+
+  return <Table data={customers} title="Admin List" />;
 }
 
 export default Admins;
