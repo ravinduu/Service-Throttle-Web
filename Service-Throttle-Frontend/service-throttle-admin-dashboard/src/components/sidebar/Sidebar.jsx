@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SidebarOption from "./sidebarOption/SidebarOption";
 import "./Sidebar.css";
 import useStyles from "./styles";
@@ -18,9 +18,13 @@ import PersonPinIcon from "@material-ui/icons/PersonPin";
 import StarHalfIcon from "@material-ui/icons/StarHalf";
 import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
+import ArrowBack from "@material-ui/icons/ArrowBack";
+import MenuIcon from "@material-ui/icons/Menu";
+
+import classNames from "classnames";
 
 const structure = [
-  { id: 0, option: "Dashboard", icon: DashboardIcon, link: "/st" },
+  { id: 0, option: "Dashboard", icon: DashboardIcon, link: "/" },
   { id: 1, option: "Service Requests", icon: AddBoxIcon, link: "/st/navbar" },
   {
     id: 2,
@@ -66,15 +70,40 @@ const structure = [
 ];
 
 function Sidebar() {
-  var theme = useTheme();
-  var classes = useStyles();
+  const classes = useStyles();
+  const theme = useTheme();
 
-  var isSidebarOpened = "true";
+  var [isSidebarOpened, setSidebarOpened] = useState(true);
+  var [isPermanent, setPermanent] = useState(true);
+
+  function toggleSidebar() {
+    if (isSidebarOpened) setSidebarOpened(false);
+    else setSidebarOpened(true);
+  }
 
   return (
-    <Drawer variant="permanent" className={classes.drawer}>
+    <Drawer
+      variant={isPermanent ? "permanent" : "temporary"}
+      className={classNames(classes.drawer, {
+        [classes.drawerOpen]: isSidebarOpened,
+        [classes.drawerClose]: !isSidebarOpened,
+      })}
+      classes={{
+        paper: classNames({
+          [classes.drawerOpen]: isSidebarOpened,
+          [classes.drawerClose]: !isSidebarOpened,
+        }),
+      }}
+      open={isSidebarOpened}
+    >
       <div className="sidebar">
-        <h1 className="search-bar">Search Bar</h1>
+        <IconButton onClick={() => toggleSidebar()}>
+          {isSidebarOpened ? (
+            <ArrowBack className="iconButton" />
+          ) : (
+            <MenuIcon className="iconButton" />
+          )}
+        </IconButton>
         <List>
           {structure.map((sidebarOption) => (
             <SidebarOption
@@ -82,21 +111,11 @@ function Sidebar() {
               option={sidebarOption.option}
               Icon={sidebarOption.icon}
               children={sidebarOption.children}
-              isSidebarOpened={true}
+              isSidebarOpened={isSidebarOpened}
               link={sidebarOption.link}
               {...sidebarOption}
             />
           ))}
-          {/* 
-        <SidebarOption option="Earning Reports" Icon={LocalAtmIcon} />
-        <SidebarOption option="Managing Documents" Icon={DescriptionIcon} />
-        <SidebarOption option="God's View Locaton" Icon={PersonPinIcon} />
-        <SidebarOption option="Reviews & Ratings" Icon={StarHalfIcon} />
-        <SidebarOption option="Promo Code" Icon={LocalOfferIcon} />
-        <SidebarOption
-          option="Push Notifications"
-          Icon={NotificationsActiveIcon}
-        /> */}
         </List>
       </div>
     </Drawer>

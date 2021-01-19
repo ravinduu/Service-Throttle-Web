@@ -1,6 +1,17 @@
 .sidebar {
   min-height: 100vh;
-  min-width: 280px;
+  min-width: 290px;
+  padding-left: 10px;
+  padding-right: 10px;
+  flex: 0.2;
+  color: white;
+  background-color: #03254c;
+  position: relative;
+}
+
+.sidebarOpen {
+  min-height: 100vh;
+  min-width: 30px;
   padding-left: 10px;
   padding-right: 10px;
   flex: 0.2;
@@ -33,4 +44,9 @@
 
 .drawer {
   width: 280px;
+}
+
+.iconButton {
+  color: white;
+  padding-left: 3px;
 }

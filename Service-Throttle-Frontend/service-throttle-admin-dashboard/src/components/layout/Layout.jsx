@@ -41,7 +41,7 @@ function Layout() {
       <div className="dashbord_body">
         <Sidebar />
         <Switch>
-          <Route path="/st" exact component={Dashboard} />
+          <Route path="/" exact component={Dashboard} />
           <Route path="/st/users/admins" exact component={Admins} />
           <Route path="/st/users/customers" exact component={Customers} />
           <Route path="/st/users/supervisors" exact component={Supervisors} />

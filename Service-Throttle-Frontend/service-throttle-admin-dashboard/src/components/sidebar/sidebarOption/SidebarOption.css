@@ -16,7 +16,7 @@
 }
 
 .childrenLink {
-  padding-left: 20px;
+  /* padding-left: 20px; */
   color: whitesmoke;
 }
 
@@ -26,12 +26,14 @@
 
 .sidebarOption__icon {
   /* margin-top: 10px; */
-  padding-left: 10px;
+  /* padding-left: 10px; */
   padding-right: 10px;
 }
 
 .sidebarOption > p {
   /* margin-top: 10px; */
+  padding-left: 15px;
+
   font-size: 20px;
 }
 

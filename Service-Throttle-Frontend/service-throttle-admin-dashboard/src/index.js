@@ -8,9 +8,11 @@ import { reducer, initialState } from "./dataLayer/reducer";
 
 ReactDOM.render(
   <React.StrictMode>
+    {/* <LayoutProvider> */}
     <DataLayer initialState={initialState} reducer={reducer}>
       <App />
     </DataLayer>
+    {/* </LayoutProvider> */}
   </React.StrictMode>,
   document.getElementById("root")
 );
