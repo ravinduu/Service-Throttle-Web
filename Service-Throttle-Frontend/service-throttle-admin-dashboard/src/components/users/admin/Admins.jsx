@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import Table from "../../table/Table";
+import Datalist from "../Userlist";
 
 function Admins() {
   const [customers, setCustomers] = useState([]);
 
-  return <Table data={customers} title="Admin List" />;
+  return <Datalist></Datalist>;
 }
 
 export default Admins;

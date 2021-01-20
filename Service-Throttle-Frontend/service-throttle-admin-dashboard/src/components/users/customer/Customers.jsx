@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Table from "../../table/Table";
 import axios from "axios";
 import { useDataLayerValue } from "../../../dataLayer/DataLayer";
+import Userlist from "../Userlist";
 
 function Customers() {
   // const classes = useStyles();
@@ -32,7 +32,11 @@ function Customers() {
     console.log(customers);
   };
 
-  return <Table data={customers} title="Customer List" />;
+  return (
+    <div>
+      <Userlist data={customers} title="Customer list"></Userlist>
+    </div>
+  );
 }
 
 export default Customers;
