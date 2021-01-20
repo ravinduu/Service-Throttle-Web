@@ -1,0 +1,10 @@
+.userlistComponent {
+  width: 100%;
+  min-height: auto;
+  padding: 30px;
+  border-style: none;
+}
+
+.title {
+  padding-bottom: 20px;
+}
