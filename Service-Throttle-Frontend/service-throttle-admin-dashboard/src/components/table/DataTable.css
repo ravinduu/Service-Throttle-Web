@@ -1,7 +1,5 @@
-.tableContainer {
-  display: flex;
-  width: 100%;
+.table {
+  /* display: flex; */
+  width: auto;
   min-height: auto;
-  padding: 30px;
-  border-style: none;
 }
