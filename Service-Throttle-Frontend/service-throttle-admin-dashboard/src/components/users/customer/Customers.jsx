@@ -34,7 +34,11 @@ function Customers() {
 
   return (
     <div>
-      <Userlist data={customers} title="Customer list"></Userlist>
+      <Userlist
+        data={customers}
+        authotity="customer"
+        title="Customers List"
+      ></Userlist>
     </div>
   );
 }
