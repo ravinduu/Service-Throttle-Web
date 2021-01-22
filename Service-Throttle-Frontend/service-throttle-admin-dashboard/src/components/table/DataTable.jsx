@@ -4,11 +4,6 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import CreateIcon from "@material-ui/icons/Create";
-import DeleteIcon from "@material-ui/icons/Delete";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import Typography from "@material-ui/core/Typography";
-import { Tab, IconButton } from "@material-ui/core";
 import "./DataTable.css";
 
 function DataTable(props) {
@@ -16,12 +11,6 @@ function DataTable(props) {
     <div className="tableContainer">
       <Table className="table" table-layout="fixed" aria-label="simple table">
         <TableHead>
-          <IconButton
-            className="iconBtnAdd"
-            onClick={() => console.log("add user")}
-          >
-            <PersonAddIcon />
-          </IconButton>
           <TableRow>
             <TableCell white-space="nowrap" align="left">
               Id

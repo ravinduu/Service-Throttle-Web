@@ -1,10 +1,21 @@
 .userlistComponent {
-  width: 100%;
-  min-height: auto;
-  padding: 30px;
+  max-width: 100%;
+  min-height: 100vh;
+  padding: 50px;
   border-style: none;
 }
 
+.tableContainer {
+  position: relative;
+  width: 100%;
+  min-height: auto;
+}
+
 .title {
-  padding-bottom: 20px;
+  padding-bottom: 30px;
+}
+
+.table {
+  width: 100%;
+  height: auto;
 }

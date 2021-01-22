@@ -1,17 +1,61 @@
-import React from "react";
-import DataTable from "../table/DataTable";
+import React, { useState } from "react";
 import Title from "../title/Title";
-import Button from "@material-ui/core/Button";
-import CreateIcon from "@material-ui/icons/Create";
-import DeleteIcon from "@material-ui/icons/Delete";
-import Typography from "@material-ui/core/Typography";
+import MUIDataTable from "mui-datatables";
 import "./Userlist.css";
+import Paper from "@material-ui/core/Paper";
+import TableContainer from "@material-ui/core/TableContainer";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import { IconButton } from "@material-ui/core";
+
+const columns = [
+  { name: "id", lable: "id" },
+  { name: "username", lable: "username" },
+  { name: "firstname", lable: "firstname" },
+  { name: "lastname", lable: "lastname" },
+  { name: "email", lable: "email" },
+  { name: "phoneNumber", lable: "phoneNumber" },
+  { name: "address", lable: "address" },
+];
 
 function Userlist(props) {
+  const handleRowClick = (rowData, rowMeta) => {
+    // console.log(row);
+    //implement edit function
+  };
+
+  const deleteRowItem = (rowsDeleted, dataRows) => {
+    console.log(props.data[rowsDeleted.data[0].index]);
+  };
+
+  const options = {
+    filter: true,
+    filterType: "dropdown",
+    responsive: "stacked",
+    onRowClick: handleRowClick,
+    onRowsDelete: deleteRowItem,
+  };
+
   return (
     <div className="userlistComponent">
-      <Title className="title" title={props.title} variant="h3" />
-      <DataTable data={props.data}></DataTable>
+      <div className="title">
+        <Title title={props.title} variant="h2" />
+      </div>
+      <IconButton
+        className="iconBtnAdd"
+        onClick={() => console.log("add user")}
+      >
+        <PersonAddIcon />
+      </IconButton>
+      <TableContainer component={Paper} className="tableContainer">
+        <div className="table">
+          <MUIDataTable
+            title={props.title}
+            data={props.data}
+            columns={columns}
+            options={options}
+          />
+        </div>
+      </TableContainer>
     </div>
   );
 }
