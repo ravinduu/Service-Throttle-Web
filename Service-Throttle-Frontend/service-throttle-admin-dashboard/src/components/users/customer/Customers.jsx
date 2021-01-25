@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useDataLayerValue } from "../../../dataLayer/DataLayer";
 import Userlist from "../Userlist";
+import DisplayList from "../DisplayList";
 
 function Customers() {
   // const classes = useStyles();
@@ -34,11 +35,12 @@ function Customers() {
 
   return (
     <div>
-      <Userlist
+      {/* <Userlist
         data={customers}
         authotity="customer"
         title="Customers List"
-      ></Userlist>
+      ></Userlist> */}
+      <DisplayList data={customers}></DisplayList>
     </div>
   );
 }

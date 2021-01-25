@@ -1,13 +1,14 @@
 .userlistComponent {
+  height: 100vh;
   max-width: 100%;
-  min-height: 100vh;
   padding: 50px;
-  border-style: none;
+  margin-right: auto;
+  flex: 0.8;
 }
 
 .tableContainer {
   position: relative;
-  width: 100%;
+  min-width: 100%;
   min-height: auto;
 }
 
@@ -18,4 +19,6 @@
 .table {
   width: 100%;
   height: auto;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }

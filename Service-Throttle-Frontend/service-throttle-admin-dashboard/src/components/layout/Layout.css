@@ -1,3 +1,4 @@
 .dashbord_body {
   display: flex;
+  flex: 0.8;
 }

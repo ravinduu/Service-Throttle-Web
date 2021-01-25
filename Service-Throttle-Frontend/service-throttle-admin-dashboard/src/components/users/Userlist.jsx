@@ -6,6 +6,10 @@ import Paper from "@material-ui/core/Paper";
 import TableContainer from "@material-ui/core/TableContainer";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import { IconButton } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
+import Popup from "../popup/Popup";
+import Button from "@material-ui/core/Button";
+import DialogActions from "@material-ui/core/DialogActions";
 
 const columns = [
   { name: "id", lable: "id" },
@@ -18,13 +22,23 @@ const columns = [
 ];
 
 function Userlist(props) {
+  const [openPopup, setOpen] = useState(false);
+  const [toDelete, setToDelete] = useState();
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const handleRowClick = (rowData, rowMeta) => {
     // console.log(row);
     //implement edit function
   };
 
-  const deleteRowItem = (rowsDeleted, dataRows) => {
-    console.log(props.data[rowsDeleted.data[0].index]);
+  const handleClickOpen = (rowsDeleted) => {
+    // console.log(props.data[rowsDeleted.data[0].index]);
+    setToDelete(props.data[rowsDeleted.data[0].index]);
+    setOpen(true);
+    console.log(toDelete);
   };
 
   const options = {
@@ -32,7 +46,7 @@ function Userlist(props) {
     filterType: "dropdown",
     responsive: "stacked",
     onRowClick: handleRowClick,
-    onRowsDelete: deleteRowItem,
+    onRowsDelete: handleClickOpen,
   };
 
   return (
@@ -56,6 +70,27 @@ function Userlist(props) {
           />
         </div>
       </TableContainer>
+      <Popup
+        title="Delete"
+        text="Are you sure you want to delete this field??"
+        openPopup={openPopup}
+        setOpenPopup={setOpen}
+      >
+        <DialogActions>
+          <Button onClick={handleClose} variant="outlined" color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleClose}
+            variant="contained"
+            color="secondary"
+            startIcon={<DeleteIcon />}
+            autoFocus
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Popup>
     </div>
   );
 }
