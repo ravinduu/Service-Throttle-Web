@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+
+import Title from "../title/Title";
+import "./DisplayList.css";
+
 import {
   Paper,
   makeStyles,
@@ -9,22 +13,18 @@ import {
   TableHead,
   TablePagination,
   TableSortLabel,
-  IconButton,
   Toolbar,
   InputAdornment,
   TextField,
   Button,
 } from "@material-ui/core";
-
-import CloseIcon from "@material-ui/icons/Close";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import AddIcon from "@material-ui/icons/Add";
 import { Search } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
-    margin: theme.spacing(5),
-    padding: theme.spacing(3),
+    margin: theme.spacing(0),
+    padding: theme.spacing(0),
   },
   searchInput: {
     width: "75%",
@@ -34,31 +34,16 @@ const useStyles = makeStyles((theme) => ({
     right: "10px",
   },
   table: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(0),
     "& thead th": {
-      // fontWeight: "600",
       color: theme.palette.primary.main,
-      // backgroundColor: theme.palette.primary.light,
     },
-    "& tbody td": {
-      // fontWeight: "300",
-    },
+    "& tbody td": {},
     "& tbody tr:hover": {
-      // backgroundColor: "#fffbf2",
       cursor: "pointer",
     },
   },
 }));
-
-const headCells = [
-  { id: "username", label: "username" },
-  //   { id: "firstname", label: "firstname" },
-  //   { id: "lastname", label: "lastname" },
-  //   { id: "email", label: "email" },
-  //   { id: "phoneNumber", label: "phoneNumber" },
-  //   { id: "address", label: "address" },
-  { id: "actions", label: "Actions", disableSorting: true },
-];
 
 function DisplayList(props) {
   const classes = useStyles();
@@ -76,11 +61,6 @@ function DisplayList(props) {
   const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
   const [order, setOrder] = useState();
   const [orderBy, setOrderBy] = useState();
-
-  const openInPopup = (user) => {
-    setRecordForEdit(user);
-    setOpenPopup(true);
-  };
 
   const handleSortRequest = (cellId) => {
     const isAsc = orderBy === cellId && order === "asc";
@@ -110,9 +90,11 @@ function DisplayList(props) {
     });
   };
 
-  console.log();
   return (
-    <>
+    <div className="userlistComponent">
+      <div className="title">
+        <Title title={props.title} variant="h2" />
+      </div>
       <Paper className={classes.pageContent}>
         <Toolbar>
           <TextField
@@ -142,7 +124,7 @@ function DisplayList(props) {
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
-              {headCells.map((headCell) => (
+              {props.headCells.map((headCell) => (
                 <TableCell
                   key={headCell.id}
                   sortDirection={orderBy === headCell.id ? order : false}
@@ -164,32 +146,7 @@ function DisplayList(props) {
               ))}
             </TableRow>
           </TableHead>
-          <TableBody>
-            {props.data.map((user) => {
-              <TableRow key={user.id}>
-                <TableCell>{user.username}</TableCell>
-                {/* <TableCell>{user.firstname}</TableCell>
-                <TableCell>{user.lastname}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.phoneNumber}</TableCell>
-                <TableCell>{user.address}</TableCell> */}
-
-                <TableCell>
-                  <IconButton
-                    color="primary"
-                    onClick={() => {
-                      openInPopup(user);
-                    }}
-                  >
-                    <EditOutlinedIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton color="secondary">
-                    <CloseIcon fontSize="small" />
-                  </IconButton>
-                </TableCell>
-              </TableRow>;
-            })}
-          </TableBody>
+          <TableBody>{props.children}</TableBody>
         </Table>
         <TablePagination
           component="div"
@@ -201,7 +158,7 @@ function DisplayList(props) {
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>
-    </>
+    </div>
   );
 }
 

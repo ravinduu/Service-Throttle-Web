@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useDataLayerValue } from "../../../dataLayer/DataLayer";
-import Userlist from "../Userlist";
-import DisplayList from "../DisplayList";
+import UserListTable from "../UserListTable";
 
 function Customers() {
   // const classes = useStyles();
@@ -40,7 +39,7 @@ function Customers() {
         authotity="customer"
         title="Customers List"
       ></Userlist> */}
-      <DisplayList data={customers}></DisplayList>
+      <UserListTable data={customers} title="Customer List"></UserListTable>
     </div>
   );
 }

@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import Title from "../title/Title";
+import Title from "../../components/title/Title";
 import MUIDataTable from "mui-datatables";
-import "./Userlist.css";
 import Paper from "@material-ui/core/Paper";
 import TableContainer from "@material-ui/core/TableContainer";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import { IconButton } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import Popup from "../popup/Popup";
+import Popup from "../../components/popup/Popup";
 import Button from "@material-ui/core/Button";
 import DialogActions from "@material-ui/core/DialogActions";
 
