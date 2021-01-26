@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useDataLayerValue } from "../../../dataLayer/DataLayer";
-import Datalist from "../Userlist";
+import UserListTable from "../UserListTable";
+import * as userService from "../../../services/userService";
 
 function Supervisors() {
+  const [type, setType] = useState("supervisor");
+
   const [{ token, api }] = useDataLayerValue();
 
   let authAxios = axios.create({
@@ -23,19 +26,17 @@ function Supervisors() {
   const [supervisors, setCustomers] = useState([]);
 
   const fetchSupervisors = async () => {
-    const res = await authAxios.get(`/users/supervisor`);
-
-    const _supervisors = await res.data;
+    const _supervisors = await userService.getUsers(authAxios, type);
     setCustomers(_supervisors);
     console.log(supervisors);
   };
 
   return (
-    <Datalist
+    <UserListTable
       data={supervisors}
-      authotity="supervisor"
-      title="Supervisor List"
-    ></Datalist>
+      title="Supervisors List"
+      type={type}
+    ></UserListTable>
   );
 }
 

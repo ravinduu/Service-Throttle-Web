@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useDataLayerValue } from "../../../dataLayer/DataLayer";
-import Datalist from "../Userlist";
+import UserListTable from "../UserListTable";
+import * as userService from "../../../services/userService";
 
 function Admins() {
+  const [type, setType] = useState("admin");
+
   const [{ token, api }] = useDataLayerValue();
 
   let authAxios = axios.create({
@@ -23,15 +26,14 @@ function Admins() {
   const [admins, setCustomers] = useState([]);
 
   const fetchAdmins = async () => {
-    const res = await authAxios.get(`/users/admin`);
-
-    const _admins = await res.data;
+    const _admins = await userService.getUsers(authAxios, type);
     setCustomers(_admins);
-    console.log(admins);
   };
 
   return (
-    <Datalist data={admins} authotity="admin" title="Admin List"></Datalist>
+    <div>
+      <UserListTable data={admins} title="Admin List"></UserListTable>
+    </div>
   );
 }
 

@@ -16,9 +16,7 @@ import {
   Toolbar,
   InputAdornment,
   TextField,
-  Button,
 } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
 import { Search } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
@@ -109,17 +107,7 @@ function DisplayList(props) {
             }}
             onChange={handleSearch}
           />
-          <Button
-            variant="outlined"
-            startIcon={<AddIcon />}
-            className={classes.newButton}
-            onClick={() => {
-              setOpenPopup(true);
-              setRecordForEdit(null);
-            }}
-          >
-            Add New
-          </Button>
+          {props.addBtn}
         </Toolbar>
         <Table className={classes.table}>
           <TableHead>

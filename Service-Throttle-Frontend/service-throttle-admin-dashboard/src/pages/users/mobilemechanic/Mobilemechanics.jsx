@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useDataLayerValue } from "../../../dataLayer/DataLayer";
-import Datalist from "../Userlist";
+import UserListTable from "../UserListTable";
+import * as userService from "../../../services/userService";
 
 function Mobilemechanics() {
+  const [type, setType] = useState("mobile-mechanic");
+
   const [{ token, api }] = useDataLayerValue();
 
   let authAxios = axios.create({
@@ -20,22 +23,19 @@ function Mobilemechanics() {
     } else console.log("no token");
   }, []);
 
-  const [mobileMechanic, setCustomers] = useState([]);
+  const [mobileMechanic, setMobileMechanic] = useState([]);
 
   const fetchMM = async () => {
-    const res = await authAxios.get(`/users/Mobile Mechanic`);
-
-    const _mobileMechanic = await res.data;
-    setCustomers(_mobileMechanic);
+    const _mobileMechanic = await userService.getUsers(authAxios, type);
+    setMobileMechanic(_mobileMechanic);
     console.log(mobileMechanic);
   };
 
   return (
-    <Datalist
+    <UserListTable
       data={mobileMechanic}
-      authotity="mobile_mechanic"
       title="Mobile Mechanic List"
-    ></Datalist>
+    ></UserListTable>
   );
 }
 
