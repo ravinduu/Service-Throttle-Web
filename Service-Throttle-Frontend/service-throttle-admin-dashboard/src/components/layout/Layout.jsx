@@ -9,10 +9,10 @@ import NavBar from "../navbar/NavBar";
 import Sidebar from "../sidebar/Sidebar";
 import Dashboard from "../dashboard/Dashboard";
 import Footer from "../footer/Footer";
-import Admins from "../users/admin/Admins";
-import Customers from "../users/customer/Customers";
-import Mobilemechanics from "../users/mobilemechanic/Mobilemechanics";
-import Supervisors from "../users/supervisor/Supervisors";
+import Admins from "../../pages/users/admin/Admins";
+import Customers from "../../pages/users/customer/Customers";
+import Mobilemechanics from "../../pages/users/mobilemechanic/Mobilemechanics";
+import Supervisors from "../../pages/users/supervisor/Supervisors";
 
 function Layout() {
   const [{ user, token, api }, dispatch] = useDataLayerValue();
