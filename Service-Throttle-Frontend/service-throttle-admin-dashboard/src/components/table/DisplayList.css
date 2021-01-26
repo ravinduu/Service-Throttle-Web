@@ -1,6 +1,6 @@
 .userlistComponent {
   height: 100vh;
-  max-width: 100%;
+  max-width: 100% - 50px;
   padding: 50px;
   margin-right: auto;
   flex: 0.8;
@@ -21,4 +21,8 @@
   height: auto;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+
+.actionCell {
+  display: flex;
 }
