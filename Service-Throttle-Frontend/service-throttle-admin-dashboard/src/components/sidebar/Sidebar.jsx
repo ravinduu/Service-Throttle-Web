@@ -53,6 +53,7 @@ const structure = [
       {
         option: "Customer Vehicles",
         icon: DriveEtaIcon,
+        link: "/st/vehicles/customer-vehicle",
       },
       {
         option: "Service Vehicles",

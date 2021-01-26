@@ -13,6 +13,7 @@ import Admins from "../../pages/users/admin/Admins";
 import Customers from "../../pages/users/customer/Customers";
 import Mobilemechanics from "../../pages/users/mobilemechanic/Mobilemechanics";
 import Supervisors from "../../pages/users/supervisor/Supervisors";
+import CustomerVehicle from "../../pages/vehicles/customerVehicles/CustomerVehicle";
 
 function Layout() {
   const [{ user, token, api }, dispatch] = useDataLayerValue();
@@ -50,6 +51,12 @@ function Layout() {
             exact
             component={Mobilemechanics}
           />
+          <Route
+            path="/st/vehicles/customer-vehicle"
+            exact
+            component={CustomerVehicle}
+          />
+
           <Route path="/st/navbar" component={NavBar} />
           <Route path="/st/footer" component={Footer} />
         </Switch>
