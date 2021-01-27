@@ -1,43 +1,42 @@
-version: '3.8'
+version: "3.8"
 
-services: 
-    service-throttle-mysql:
-        restart: always
-        image: mysql
-        environment: 
-            - MYSQL_DATABASE=service_throttle
-            - MYSQL_USER=servicethrottleuser
-            - MYSQL_PASSWORD=servicethrottleuser
-            - MYSQL_ROOT_PASSWORD=root
-            - MYSQL_ROOT_USERNAME=root
-        ports: 
-            - '3307:3306'
-        volumes: 
-            - service-throttle-mysql-data:/var/lib/mysql
-        networks: 
-            - backend
-        container_name: service-throttle-mysql
+services:
+  service-throttle-mysql:
+    restart: always
+    image: mysql
+    environment:
+      - MYSQL_DATABASE=service_throttle
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_ROOT_USERNAME=root
+    ports:
+      - "3307:3306"
+    # volumes:
+    #   - service-throttle-mysql-data:/var/lib/mysql
+    # networks:
+    #   - backend
+    container_name: service-throttle-mysql
 
-    service-throttle-backend:
-        build: ./Service-Throttle-Backend/service-throttle-backend
-        image: ravdsn/service-throttle-backend:v1.0
-        ports: 
-            - '8081:8081'
-        depends_on: 
-            - service-throttle-mysql
-        links:
-            - service-throttle-mysql
-        environment: 
-            - spring.datasource.url=jdbc:mysql://service-throttle-mysql:3306/service_throttle??autoReconnect=true&useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
-            - spring.datasource.username=servicethrottleuser
-            - spring.datasource.password=servicethrottleuser
-        networks: 
-            - backend
-        container_name: service-throttle-backend
+  service-throttle-backend:
+    restart: always
+    build: ./Service-Throttle-Backend/service-throttle-backend
+    image: ravdsn/service-throttle-backend:v1.0
+    environment:
+      - spring.datasource.url=jdbc:mysql://service-throttle-mysql:3306/service_throttle
+    #   - spring.datasource.username=servicethrottleuser
+    #   - spring.datasource.password=servicethrottleuser
+    ports:
+      - "8081:8081"
+    # depends_on:
+    #   - service-throttle-mysql
+    # links:
+    #   - service-throttle-mysql
 
-volumes: 
-    service-throttle-mysql-data:
+    #     # networks:
+    #     #   - backend
+    container_name: service-throttle-backend
+# volumes:
+#   service-throttle-mysql-data:
 
-networks: 
-    backend:
-        driver: bridge
+# networks:
+#   backend:
+#     driver: bridge
