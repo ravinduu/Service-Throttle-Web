@@ -1,0 +1,14 @@
+.editUserForm {
+  display: flex;
+  /* background-color: cadetblue; */
+}
+
+.input {
+  width: 250px;
+}
+
+.actions {
+  float: right;
+  padding-top: 10px;
+  padding-right: 20px;
+}
