@@ -12,6 +12,8 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import EditUser from "../../components/form/EditUser";
+import Popup from "../../components/popup/Popup";
 
 const useStyles = makeStyles((theme) => ({
   newButton: {
@@ -39,15 +41,13 @@ function UserListTable(props) {
 
   const openInPopup = () => {
     console.log("Edittt");
-
-    console.log(recordForEdit);
     setOpenPopup(true);
   };
 
   const deleteUser = () => {
     console.log("Deletee");
 
-    console.log(recordForDelete);
+    // console.log(recordForDelete);
     setOpenPopup(true);
   };
 
@@ -58,12 +58,11 @@ function UserListTable(props) {
         startIcon={<AddIcon />}
         className={classes.newButton}
         onClick={() => {
-          console.log("cusss");
-          setOpenPopup(true);
           setRecordForEdit(null);
+          setOpenPopup(true);
         }}
       >
-        Add New
+        Add New Admin
       </Button>
     );
   };
@@ -71,7 +70,7 @@ function UserListTable(props) {
     <div>
       <DisplayList
         headCells={headCells}
-        addBtn={addBtn()}
+        addBtn={props.type === "admin" ? addBtn() : ""}
         title={props.title}
         data={props.data}
       >
@@ -111,6 +110,13 @@ function UserListTable(props) {
           );
         })}
       </DisplayList>
+      <Popup
+        title={props.type}
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}
+      >
+        <EditUser recordForEdit={recordForEdit} />
+      </Popup>
     </div>
   );
 }

@@ -32,7 +32,11 @@ function Admins() {
 
   return (
     <div>
-      <UserListTable data={admins} title="Admin List"></UserListTable>
+      <UserListTable
+        data={admins}
+        title="Admin List"
+        type={type}
+      ></UserListTable>
     </div>
   );
 }
