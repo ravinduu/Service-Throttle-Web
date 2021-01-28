@@ -2,9 +2,19 @@ import React, { useState } from "react";
 import "./SidebarOption.css";
 import { Collapse, Divider, List, ListItem } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles({
+  root: {
+    background: "gray",
+    width: 278,
+  },
+});
 
 function SidebarOption({ option, Icon, children, isSidebarOpened, link }) {
   var [isOpen, setIsOpen] = useState(false);
+
+  const classes = useStyles();
 
   function toggleCollapse(e) {
     if (isSidebarOpened) {
@@ -52,6 +62,7 @@ function SidebarOption({ option, Icon, children, isSidebarOpened, link }) {
               ))}
             </List>
           </div>
+          <Divider className={classes.root} />
         </Collapse>
       )}
     </div>

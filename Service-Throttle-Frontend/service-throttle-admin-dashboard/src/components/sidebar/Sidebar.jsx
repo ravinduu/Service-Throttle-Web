@@ -58,6 +58,22 @@ const structure = [
       {
         option: "Service Vehicles",
         icon: AirportShuttleIcon,
+        link: "/st/vehicles/mobile-service-vehicle",
+      },
+      {
+        option: "Vehicle Makes",
+        icon: StarHalfIcon,
+        link: "/st/vehicles/make",
+      },
+      {
+        option: "Vehicle Models",
+        icon: StarHalfIcon,
+        link: "/st/vehicles/model",
+      },
+      {
+        option: "Vehicle Engines",
+        icon: StarHalfIcon,
+        link: "/st/vehicles/engine",
       },
     ],
   },
