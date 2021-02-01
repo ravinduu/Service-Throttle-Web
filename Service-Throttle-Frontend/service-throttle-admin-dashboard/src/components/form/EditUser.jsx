@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useFormik } from "formik";
+import { useFormik, Form } from "formik";
 import * as yup from "yup";
 import { Grid, Button, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -13,42 +13,57 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const validationSchema = yup.object({
-  username: yup
-    .string("Enter your username")
-    .min(5, "Username should be of minimum 5 characters length")
-    .required("Username is required"),
-  password: yup
-    .string("Enter your password")
-    .min(5, "Password should be of minimum 8 characters length")
-    .required("Password is required"),
-});
-
-const handleSubmit = (e) => {
-  e.preventDefault();
-  console.log("submitt");
-};
-
-function EditUser(initialFValues) {
-  const [values, setValues] = useState(initialFValues.recordForEdit);
-
+function EditUser(data) {
   const classes = useStyles();
 
+  const [recordForEdit, setValues] = useState(data.recordForEdit);
+
+  const isAddMode = !recordForEdit;
+
+  const _initialValues = {
+    username: "",
+    firstname: "",
+    lastname: "",
+    phoneNumber: "",
+    email: "",
+    address: "",
+  };
+
+  const validationSchema = yup.object({
+    username: yup.string().required("Username is required"),
+    firstname: yup.string().required("Firstname is required"),
+    lastname: yup.string().required("Lastname is required"),
+    email: yup.string().email("Email is invalid").required("Email is required"),
+    phoneNumber: yup.string().required("Phonenumber is required"),
+    address: yup.string().required("Address is required"),
+  });
+
+  function onSubmit(user) {
+    if (isAddMode) {
+      // createUser(fields, setSubmitting);
+      console.log("Add ");
+      console.log(user);
+    } else {
+      // updateUser(id, fields, setSubmitting);
+      console.log("Edit " + user);
+    }
+  }
+
+  function createUser(fields, setSubmitting) {}
+
+  function updateUser(id, fields, setSubmitting) {}
+
   const formik = useFormik({
-    initialValues: {
-      username: "",
-      password: "",
-    },
+    initialValues: _initialValues,
     validationSchema: validationSchema,
-    onSubmit: () => {},
+    onSubmit: (values) => {
+      onSubmit(values);
+    },
   });
 
   const resetForm = () => {
-    setValues(null);
+    formik.handleReset();
   };
-
-  console.log("Edorrr");
-  // console.log(initialFValues.recordForEdit.username);
 
   return (
     <div>
@@ -63,11 +78,13 @@ function EditUser(initialFValues) {
               margin="dense"
               variant="outlined"
               className="input"
-              value={values ? values.username : formik.values.username}
+              value={
+                recordForEdit ? recordForEdit.username : formik.values.username
+              }
               onChange={formik.handleChange}
               error={formik.touched.username && Boolean(formik.errors.username)}
               helperText={formik.touched.username && formik.errors.username}
-            ></TextField>
+            />
             <TextField
               type="text"
               id="firstname"
@@ -76,76 +93,83 @@ function EditUser(initialFValues) {
               margin="dense"
               variant="outlined"
               className="input"
-              value={values ? values.firstname : ""}
-              // value={formik.values.username}
-              // onChange={formik.handleChange}
-              // error={
-              //   formik.touched.username && Boolean(formik.errors.username)
-              // }
-              // helperText={formik.touched.username && formik.errors.username}
-            ></TextField>
+              value={
+                recordForEdit
+                  ? recordForEdit.firstname
+                  : formik.values.firstname
+              }
+              onChange={formik.handleChange}
+              error={
+                formik.touched.firstname && Boolean(formik.errors.firstname)
+              }
+              helperText={formik.touched.firstname && formik.errors.firstname}
+            />
             <TextField
               type="text"
-              id="username"
-              name="username"
-              label="Username"
+              id="lastname"
+              name="lastname"
+              label="lastname"
               margin="dense"
               variant="outlined"
               className="input"
-              // value={formik.values.username}
-              // onChange={formik.handleChange}
-              // error={
-              //   formik.touched.username && Boolean(formik.errors.username)
-              // }
-              // helperText={formik.touched.username && formik.errors.username}
-            ></TextField>
+              value={
+                recordForEdit ? recordForEdit.lastname : formik.values.lastname
+              }
+              onChange={formik.handleChange}
+              error={formik.touched.lastname && Boolean(formik.errors.lastname)}
+              helperText={formik.touched.lastname && formik.errors.lastname}
+            />
           </Grid>
           <Grid>
             <TextField
               type="text"
-              id="username"
-              name="username"
-              label="Username"
+              id="email"
+              name="email"
+              label="email"
               margin="dense"
               variant="outlined"
               className="input"
-              // value={formik.values.username}
-              // onChange={formik.handleChange}
-              // error={
-              //   formik.touched.username && Boolean(formik.errors.username)
-              // }
-              // helperText={formik.touched.username && formik.errors.username}
-            ></TextField>
+              value={recordForEdit ? recordForEdit.email : formik.values.email}
+              onChange={formik.handleChange}
+              error={formik.touched.email && Boolean(formik.errors.email)}
+              helperText={formik.touched.email && formik.errors.email}
+            />
             <TextField
               type="text"
-              id="username"
-              name="username"
-              label="Username"
+              id="phoneNumber"
+              name="phoneNumber"
+              label="phoneNumber"
               margin="dense"
               variant="outlined"
               className="input"
-              // value={formik.values.username}
-              // onChange={formik.handleChange}
-              // error={
-              //   formik.touched.username && Boolean(formik.errors.username)
-              // }
-              // helperText={formik.touched.username && formik.errors.username}
-            ></TextField>
+              value={
+                recordForEdit
+                  ? recordForEdit.phoneNumber
+                  : formik.values.phoneNumber
+              }
+              onChange={formik.handleChange}
+              error={
+                formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)
+              }
+              helperText={
+                formik.touched.phoneNumber && formik.errors.phoneNumber
+              }
+            />{" "}
             <TextField
               type="text"
-              id="username"
-              name="username"
-              label="Username"
+              id="address"
+              name="address"
+              label="address"
               margin="dense"
               variant="outlined"
               className="input"
-              // value={formik.values.username}
-              // onChange={formik.handleChange}
-              // error={
-              //   formik.touched.username && Boolean(formik.errors.username)
-              // }
-              // helperText={formik.touched.username && formik.errors.username}
-            ></TextField>
+              value={
+                recordForEdit ? recordForEdit.address : formik.values.address
+              }
+              onChange={formik.handleChange}
+              error={formik.touched.address && Boolean(formik.errors.address)}
+              helperText={formik.touched.address && formik.errors.address}
+            />
           </Grid>
         </div>
         <div className="actions">
