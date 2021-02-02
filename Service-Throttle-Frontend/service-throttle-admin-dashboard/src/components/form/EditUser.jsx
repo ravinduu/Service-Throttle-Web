@@ -3,6 +3,9 @@ import { useFormik, Form, FormikConsumer } from "formik";
 import * as yup from "yup";
 import { Grid, Button, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import * as userService from "../../services/userService";
+import { useDataLayerValue } from "../../dataLayer/DataLayer";
+import axios from "axios";
 import "./EditUser.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -14,6 +17,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function EditUser(data) {
+  const [{ token, api }] = useDataLayerValue();
+
+  let authAxios = axios.create({
+    baseURL: api,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "text/plain",
+    },
+  });
+
   const classes = useStyles();
 
   const [recordForEdit, setValues] = useState(data.recordForEdit);
@@ -22,11 +35,11 @@ function EditUser(data) {
 
   const [_initialValues, setInitialValues] = useState({
     id: "",
-    username: "",
+    username: recordForEdit.username,
     firstname: "",
     lastname: "",
-    phoneNumber: "",
-    email: "",
+    phoneNumber: recordForEdit.phoneNumber,
+    email: recordForEdit.email,
     address: "",
     created: "",
   });
@@ -48,13 +61,15 @@ function EditUser(data) {
     } else {
       // updateUser(id, fields, setSubmitting);
       console.log("Edit ");
-      console.log(user);
+      // console.log(user);
+      updateUser(user);
     }
   }
 
-  function createUser(fields, setSubmitting) {}
-
-  function updateUser(id, fields, setSubmitting) {}
+  const updateUser = async (userForEdit) => {
+    console.log(userForEdit);
+    // const _admins = await userService.getUsers(authAxios, userForEdit);
+  };
 
   const resetForm = () => {
     formik.handleReset();
@@ -70,7 +85,7 @@ function EditUser(data) {
 
   useEffect(() => {
     if (!isAddMode) {
-      formik.initialValues = recordForEdit;
+      console.log(_initialValues);
     }
   }, []);
 

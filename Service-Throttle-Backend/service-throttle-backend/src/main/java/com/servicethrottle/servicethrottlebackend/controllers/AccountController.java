@@ -133,7 +133,7 @@ public class AccountController {
      * throws RuntimeException  if the user login wasn't found.
      */
     @PostMapping("/account")
-    public ResponseEntity<String> saveAccount(@Valid @RequestBody UserDetailsDto userDetailsDto) throws AccountResourceException {
+    public ResponseEntity<String> saveAccount(@RequestBody UserDetailsDto userDetailsDto) throws AccountResourceException {
         return ResponseEntity.ok().body(userAccountService.updateUser(userDetailsDto));
     }
 
