@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useFormik, Form } from "formik";
+import React, { useState, useEffect } from "react";
+import { useFormik, Form, FormikConsumer } from "formik";
 import * as yup from "yup";
 import { Grid, Button, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -20,14 +20,16 @@ function EditUser(data) {
 
   const isAddMode = !recordForEdit;
 
-  const _initialValues = {
+  const [_initialValues, setInitialValues] = useState({
+    id: "",
     username: "",
     firstname: "",
     lastname: "",
     phoneNumber: "",
     email: "",
     address: "",
-  };
+    created: "",
+  });
 
   const validationSchema = yup.object({
     username: yup.string().required("Username is required"),
@@ -45,7 +47,8 @@ function EditUser(data) {
       console.log(user);
     } else {
       // updateUser(id, fields, setSubmitting);
-      console.log("Edit " + user);
+      console.log("Edit ");
+      console.log(user);
     }
   }
 
@@ -53,17 +56,23 @@ function EditUser(data) {
 
   function updateUser(id, fields, setSubmitting) {}
 
+  const resetForm = () => {
+    formik.handleReset();
+  };
+
   const formik = useFormik({
-    initialValues: _initialValues,
+    initialValues: recordForEdit,
     validationSchema: validationSchema,
     onSubmit: (values) => {
       onSubmit(values);
     },
   });
 
-  const resetForm = () => {
-    formik.handleReset();
-  };
+  useEffect(() => {
+    if (!isAddMode) {
+      formik.initialValues = recordForEdit;
+    }
+  }, []);
 
   return (
     <div>
@@ -78,9 +87,7 @@ function EditUser(data) {
               margin="dense"
               variant="outlined"
               className="input"
-              value={
-                recordForEdit ? recordForEdit.username : formik.values.username
-              }
+              value={formik.values.username}
               onChange={formik.handleChange}
               error={formik.touched.username && Boolean(formik.errors.username)}
               helperText={formik.touched.username && formik.errors.username}
@@ -93,16 +100,12 @@ function EditUser(data) {
               margin="dense"
               variant="outlined"
               className="input"
-              value={
-                recordForEdit
-                  ? recordForEdit.firstname
-                  : formik.values.firstname
-              }
+              value={formik.values.firstname}
               onChange={formik.handleChange}
               error={
                 formik.touched.firstname && Boolean(formik.errors.firstname)
               }
-              helperText={formik.touched.firstname && formik.errors.firstname}
+              helperText={formik.errors.firstname}
             />
             <TextField
               type="text"
@@ -112,9 +115,7 @@ function EditUser(data) {
               margin="dense"
               variant="outlined"
               className="input"
-              value={
-                recordForEdit ? recordForEdit.lastname : formik.values.lastname
-              }
+              value={formik.values.lastname}
               onChange={formik.handleChange}
               error={formik.touched.lastname && Boolean(formik.errors.lastname)}
               helperText={formik.touched.lastname && formik.errors.lastname}
@@ -129,7 +130,7 @@ function EditUser(data) {
               margin="dense"
               variant="outlined"
               className="input"
-              value={recordForEdit ? recordForEdit.email : formik.values.email}
+              value={formik.values.email}
               onChange={formik.handleChange}
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
@@ -142,11 +143,7 @@ function EditUser(data) {
               margin="dense"
               variant="outlined"
               className="input"
-              value={
-                recordForEdit
-                  ? recordForEdit.phoneNumber
-                  : formik.values.phoneNumber
-              }
+              value={formik.values.phoneNumber}
               onChange={formik.handleChange}
               error={
                 formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)
@@ -163,9 +160,7 @@ function EditUser(data) {
               margin="dense"
               variant="outlined"
               className="input"
-              value={
-                recordForEdit ? recordForEdit.address : formik.values.address
-              }
+              value={formik.values.address}
               onChange={formik.handleChange}
               error={formik.touched.address && Boolean(formik.errors.address)}
               helperText={formik.touched.address && formik.errors.address}
