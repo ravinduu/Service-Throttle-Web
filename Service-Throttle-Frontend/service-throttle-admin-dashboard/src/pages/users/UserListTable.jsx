@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import DisplayList from "../../components/table/DisplayList";
+import { useDataLayerValue } from "../../dataLayer/DataLayer";
+import * as userService from "../../services/userService";
+
+import axios from "axios";
 
 import {
   makeStyles,
@@ -13,6 +17,7 @@ import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import EditUser from "../../components/form/EditUser";
+import Delete from "../../components/deleteItem/Delete";
 import Popup from "../../components/popup/Popup";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,22 +38,45 @@ const headCells = [
 ];
 
 function UserListTable(props) {
+  const [{ token, api }] = useDataLayerValue();
+  const [users, setCustomers] = useState([]);
   const classes = useStyles();
-
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [recordForDelete, setRecordForDelete] = useState(null);
-  const [openPopup, setOpenPopup] = useState(false);
+  const [openPopupEdit, setOpenPopupEdit] = useState(false);
+  const [openPopupDelete, setOpenPopupDelete] = useState(false);
+  const [timesReload, setTimesReload] = useState(0);
 
-  const openInPopup = () => {
-    console.log("Edittt");
-    setOpenPopup(true);
+  let authAxios = axios.create({
+    baseURL: api,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  useEffect(() => {
+    if (token) {
+      fetchusers();
+    } else console.log("no token");
+  }, [timesReload]);
+
+  const fetchusers = async () => {
+    const _users = await userService.getUsers(authAxios, props.type);
+    setCustomers(_users);
   };
 
-  const deleteUser = () => {
-    console.log("Deletee");
+  const deleteUser = (user) => {
+    userService.deleteUser(authAxios, user.username).then(() => {
+      setOpenPopupDelete(false);
+      setTimesReload(timesReload + 1);
+    });
+  };
 
-    // console.log(recordForDelete);
-    setOpenPopup(true);
+  const editUser = (user) => {
+    userService.editUser(authAxios, user).then(() => {
+      setOpenPopupEdit(false);
+      setTimesReload(timesReload + 1);
+    });
   };
 
   const addBtn = () => {
@@ -59,7 +87,7 @@ function UserListTable(props) {
         className={classes.newButton}
         onClick={() => {
           setRecordForEdit(null);
-          setOpenPopup(true);
+          // setOpenPopup(true);
         }}
       >
         Add New Admin
@@ -71,10 +99,10 @@ function UserListTable(props) {
       <DisplayList
         headCells={headCells}
         addBtn={props.type === "admin" ? addBtn() : ""}
-        title={props.title}
-        data={props.data}
+        title={props.type + " list"}
+        data={users}
       >
-        {props.data.map((user) => {
+        {users.map((user) => {
           return (
             <React.Fragment>
               <TableRow key={user.id}>
@@ -90,7 +118,7 @@ function UserListTable(props) {
                     color="primary"
                     onClick={async () => {
                       await setRecordForEdit(user);
-                      await openInPopup();
+                      setOpenPopupEdit(true);
                     }}
                   >
                     <EditOutlinedIcon fontSize="small" />
@@ -99,7 +127,7 @@ function UserListTable(props) {
                     color="secondary"
                     onClick={async () => {
                       await setRecordForDelete(user);
-                      await deleteUser();
+                      setOpenPopupDelete(true);
                     }}
                   >
                     <CloseIcon fontSize="small" />
@@ -112,10 +140,23 @@ function UserListTable(props) {
       </DisplayList>
       <Popup
         title={props.type}
-        openPopup={openPopup}
-        setOpenPopup={setOpenPopup}
+        openPopup={openPopupEdit}
+        setOpenPopup={setOpenPopupEdit}
       >
-        <EditUser recordForEdit={recordForEdit} />
+        <EditUser editUser={editUser} recordForEdit={recordForEdit} />
+      </Popup>
+
+      <Popup
+        title="Delete"
+        openPopup={openPopupDelete}
+        setOpenPopup={setOpenPopupDelete}
+      >
+        <Delete
+          deleteRecord={deleteUser}
+          recordForDelete={recordForDelete}
+          setOpenPopupDelete={setOpenPopupDelete}
+          name={recordForDelete ? recordForDelete.username : ""}
+        />
       </Popup>
     </div>
   );
