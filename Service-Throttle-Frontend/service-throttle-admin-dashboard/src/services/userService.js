@@ -13,10 +13,21 @@ const _editUser = async (authAxios, data) => {
   return _users;
 };
 
+const _deleteUser = async (authAxios, username) => {
+  console.log("insss");
+  console.log(username);
+  const res = await authAxios.delete(`/delete/${username}`);
+  return username;
+};
+
 export function getUsers(authAxios, type) {
   return fetchUsers(authAxios, type);
 }
 
 export function editUser(authAxios, data) {
   return _editUser(authAxios, data);
+}
+
+export function deleteUser(authAxios, username) {
+  return _deleteUser(authAxios, username);
 }
