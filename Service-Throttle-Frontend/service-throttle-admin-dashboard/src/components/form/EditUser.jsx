@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useFormik, Form, FormikConsumer } from "formik";
 import * as yup from "yup";
 import { Grid, Button, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import * as userService from "../../services/userService";
-import { useDataLayerValue } from "../../dataLayer/DataLayer";
-import axios from "axios";
 import "./EditUser.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -16,59 +13,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function EditUser(data) {
-  const [{ token, api }] = useDataLayerValue();
-
-  let authAxios = axios.create({
-    baseURL: api,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "text/plain",
-    },
-  });
-
+function EditUser(props) {
   const classes = useStyles();
 
-  const [recordForEdit, setValues] = useState(data.recordForEdit);
-
-  const isAddMode = !recordForEdit;
-
-  const [_initialValues, setInitialValues] = useState({
-    id: "",
-    username: recordForEdit.username,
-    firstname: "",
-    lastname: "",
-    phoneNumber: recordForEdit.phoneNumber,
-    email: recordForEdit.email,
-    address: "",
-    created: "",
-  });
+  const { editUser, recordForEdit } = props;
 
   const validationSchema = yup.object({
     username: yup.string().required("Username is required"),
     firstname: yup.string().required("Firstname is required"),
     lastname: yup.string().required("Lastname is required"),
     email: yup.string().email("Email is invalid").required("Email is required"),
-    phoneNumber: yup.string().required("Phonenumber is required"),
+    phoneNumber: yup
+      .string()
+      .min(10, "Enter a valid phonenumber")
+      .max(10, "Enter a valid phonenumber")
+      .required("Phonenumber is required"),
     address: yup.string().required("Address is required"),
   });
 
   function onSubmit(user) {
-    if (isAddMode) {
-      // createUser(fields, setSubmitting);
-      console.log("Add ");
-      console.log(user);
-    } else {
-      // updateUser(id, fields, setSubmitting);
-      console.log("Edit ");
-      // console.log(user);
-      updateUser(user);
-    }
+    updateUser(user);
   }
 
   const updateUser = async (userForEdit) => {
-    console.log(userForEdit);
-    // const _admins = await userService.getUsers(authAxios, userForEdit);
+    editUser(userForEdit);
   };
 
   const resetForm = () => {
@@ -82,12 +50,6 @@ function EditUser(data) {
       onSubmit(values);
     },
   });
-
-  useEffect(() => {
-    if (!isAddMode) {
-      console.log(_initialValues);
-    }
-  }, []);
 
   return (
     <div>
@@ -184,14 +146,19 @@ function EditUser(data) {
         </div>
         <div className="actions">
           <div className={classes.root}>
-            <Button variant="outlined" type="submit" value="Submit">
+            <Button
+              variant="outlined"
+              type="submit"
+              value="Submit"
+              color="primary"
+            >
               Submit
             </Button>
             <Button
               variant="outlined"
               color="primary"
               value="Reset"
-              color="default"
+              color="secondary"
               onClick={resetForm}
             >
               Reset
