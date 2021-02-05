@@ -17,6 +17,7 @@ import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import EditUser from "../../components/form/EditUser";
+import AddUser from "../../components/form/AddUser";
 import Delete from "../../components/deleteItem/Delete";
 import Popup from "../../components/popup/Popup";
 
@@ -45,6 +46,7 @@ function UserListTable(props) {
   const [recordForDelete, setRecordForDelete] = useState(null);
   const [openPopupEdit, setOpenPopupEdit] = useState(false);
   const [openPopupDelete, setOpenPopupDelete] = useState(false);
+  const [openPopupAdd, setOpenPopupAdd] = useState(false);
   const [timesReload, setTimesReload] = useState(0);
 
   let authAxios = axios.create({
@@ -86,8 +88,7 @@ function UserListTable(props) {
         startIcon={<AddIcon />}
         className={classes.newButton}
         onClick={() => {
-          setRecordForEdit(null);
-          // setOpenPopup(true);
+          setOpenPopupAdd(true);
         }}
       >
         Add New Admin
@@ -157,6 +158,14 @@ function UserListTable(props) {
           setOpenPopupDelete={setOpenPopupDelete}
           name={recordForDelete ? recordForDelete.username : ""}
         />
+      </Popup>
+
+      <Popup
+        title="Register New Admin"
+        openPopup={openPopupAdd}
+        setOpenPopup={setOpenPopupAdd}
+      >
+        <AddUser />
       </Popup>
     </div>
   );
