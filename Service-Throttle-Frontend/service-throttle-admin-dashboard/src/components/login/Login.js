@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Login.css";
 import axios from "axios";
 import { useDataLayerValue } from "../../dataLayer/DataLayer";
@@ -22,6 +22,8 @@ function Login() {
   //   username: "",
   //   password: "",
   // });
+
+  const [warning, setWarning] = useState(false);
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -36,6 +38,7 @@ function Login() {
   const [{ token, api }, dispatch] = useDataLayerValue();
 
   const userLogin = async (credentials) => {
+    setWarning(false);
     try {
       const res = await axios.post(`${api}/login`, credentials);
       const _token = res.data.jwttoken;
@@ -44,6 +47,7 @@ function Login() {
         token: _token,
       });
     } catch (err) {
+      setWarning(true);
       console.log(err);
     }
   };
@@ -51,9 +55,22 @@ function Login() {
   return (
     <Container maxWidth="sm">
       <div className="base-container">
-        <Typography variant="h4" gutterBottom>
+        <Typography className="title" variant="h4" gutterBottom>
           Service Throttle
         </Typography>
+
+        {warning ? (
+          <Typography
+            variant="caption"
+            display="block"
+            color="error"
+            gutterBottom
+          >
+            Invalid Username or Password
+          </Typography>
+        ) : (
+          ""
+        )}
         <form onSubmit={formik.handleSubmit}>
           <div className="input">
             <div className="input-username">

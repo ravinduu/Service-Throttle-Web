@@ -36,7 +36,6 @@
 .base-container {
   margin-top: 150px;
   display: grid;
-  place-items: center;
   justify-content: center;
 }
 .base-container input {
@@ -52,5 +51,9 @@
 .btn-login {
   padding: 0px 14px;
   padding-top: 14px;
-  margin-left: 110px;
+  padding-left: 110px;
+}
+
+.title {
+  padding-left: 25px;
 }
