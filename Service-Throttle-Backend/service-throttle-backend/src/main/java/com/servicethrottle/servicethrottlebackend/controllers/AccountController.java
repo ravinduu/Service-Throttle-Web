@@ -120,9 +120,10 @@ public class AccountController {
      * return {userDetailsDto} the current user
      * throws UsernameNotFoundException if the no user logged in
     * */
-    @GetMapping("/account")
-    public UserDetailsDto getUser(){
-        return userAccountService.getUser();
+    @GetMapping("/account/{username}")
+    public UserDetailsDto getUser(@PathVariable String username){
+        System.out.println("Here username" + username);
+        return userAccountService.getUser(username);
 
     }
 

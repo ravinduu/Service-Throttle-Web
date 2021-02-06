@@ -1,6 +1,7 @@
 export const initialState = {
   user: null,
   token: null,
+  username: null,
   api: "http://localhost:8081/st",
 };
 
@@ -17,6 +18,12 @@ export const reducer = (state, action) => {
       return {
         ...state,
         token: action.token,
+      };
+
+    case "SET_USERNAME":
+      return {
+        ...state,
+        username: action.username,
       };
 
     default:
