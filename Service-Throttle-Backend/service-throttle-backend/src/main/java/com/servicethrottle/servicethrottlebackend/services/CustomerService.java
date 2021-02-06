@@ -63,8 +63,8 @@ public class CustomerService {
             throw new EmailAlreadyExistException();
         }
 
-        SecurityUtils.getCurrentUsername()
-                .flatMap(customerRepository::findOneByUsername)
+        customerRepository
+                .findOneByUsername(userDetailsDto.getUsername())
                 .ifPresent(
                         customer -> {
                             customer.setFirstname(userDetailsDto.getFirstname());

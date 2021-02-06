@@ -64,8 +64,8 @@ public class MobileMechanicService {
             throw new EmailAlreadyExistException();
         }
 
-        SecurityUtils.getCurrentUsername()
-                .flatMap(mobileMechanicRepository::findOneByUsername)
+            mobileMechanicRepository
+                .findOneByUsername(userDetailsDto.getUsername())
                 .ifPresent(
                         mm -> {
                             mm.setFirstname(userDetailsDto.getFirstname());

@@ -14,11 +14,13 @@ import com.servicethrottle.servicethrottlebackend.repositories.ActivationCodeRep
 import com.servicethrottle.servicethrottlebackend.repositories.UserCredentialsRepository;
 import com.servicethrottle.servicethrottlebackend.security.SecurityUtils;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -227,6 +229,14 @@ public class UserAccountService {
 
     public String updateUser(UserDetailsDto userDetailsDto) throws AccountResourceException {
         String username = SecurityUtils.getCurrentUsername().orElseThrow(() -> new UsernameNotFoundException("User  was not found !!"));
+        return updateAndSaveUser(userDetailsDto, username);
+    }
+
+    public String updateExistingUser(UserDetailsDto userDetailsDto) throws AccountResourceException {
+        return updateAndSaveUser(userDetailsDto, userDetailsDto.getUsername());
+    }
+
+    private String updateAndSaveUser(UserDetailsDto userDetailsDto, String username) throws AccountResourceException {
 
         Optional<UserCredentials> userCredentials = userCredentialsRepository.findOneByUsername(username);
         if (!userCredentials.isPresent()) throw new AccountResourceException("User could not be found");
@@ -257,4 +267,5 @@ public class UserAccountService {
                });
        return "Something went wrong !!";
     }
+
 }

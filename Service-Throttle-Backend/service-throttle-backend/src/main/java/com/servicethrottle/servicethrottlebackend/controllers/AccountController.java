@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
 REST controller for managing user accounts.
@@ -135,6 +136,12 @@ public class AccountController {
     @PostMapping("/account")
     public ResponseEntity<String> saveAccount(@RequestBody UserDetailsDto userDetailsDto) throws AccountResourceException {
         return ResponseEntity.ok().body(userAccountService.updateUser(userDetailsDto));
+    }
+
+    @PostMapping("/account/update")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<String> updateAccount(@RequestBody UserDetailsDto userDetailsDto) throws AccountResourceException {
+        return ResponseEntity.ok().body(userAccountService.updateExistingUser(userDetailsDto));
     }
 
     /**
