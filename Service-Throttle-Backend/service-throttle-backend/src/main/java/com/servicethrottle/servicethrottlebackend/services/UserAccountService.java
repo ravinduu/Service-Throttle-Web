@@ -213,9 +213,12 @@ public class UserAccountService {
 
 
     @Transactional(readOnly = true)
-    public UserDetailsDto getUser() {
+    public UserDetailsDto getUser(String username) {
+
+
+
         UserDetailsDto userDetailsDto = new UserDetailsDto();
-        String username = SecurityUtils.getCurrentUsername().orElseThrow(() -> new UsernameNotFoundException("User  was not found !!"));
+//        String username = SecurityUtils.getCurrentUsername().orElseThrow(() -> new UsernameNotFoundException("User  was not found !!"));
 
         UserCredentials userCredentials = userCredentialsRepository.findOneByUsername(username).get();
 

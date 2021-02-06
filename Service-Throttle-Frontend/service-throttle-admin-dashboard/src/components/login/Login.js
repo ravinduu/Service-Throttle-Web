@@ -35,16 +35,34 @@ function Login() {
     },
   });
 
-  const [{ token, api }, dispatch] = useDataLayerValue();
+  const [{ api }, dispatch] = useDataLayerValue();
 
   const userLogin = async (credentials) => {
     setWarning(false);
     try {
-      const res = await axios.post(`${api}/login`, credentials);
-      const _token = res.data.jwttoken;
-      dispatch({
-        type: "SET_TOKEN",
-        token: _token,
+      const res = await axios.post(`${api}/login`, credentials).then((res) => {
+        const _token = res.data.jwttoken;
+        const _username = res.data.username;
+
+        dispatch({
+          type: "SET_TOKEN",
+          token: _token,
+        });
+
+        let authAxios = axios.create({
+          baseURL: api,
+          headers: {
+            Authorization: `Bearer ${_token}`,
+            "Content-Type": "text/plain",
+          },
+        });
+
+        authAxios.get(`/account/${_username}`).then((res) => {
+          dispatch({
+            type: "SET_USER",
+            user: res.data,
+          });
+        });
       });
     } catch (err) {
       setWarning(true);
