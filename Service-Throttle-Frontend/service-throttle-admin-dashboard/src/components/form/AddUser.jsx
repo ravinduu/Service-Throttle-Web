@@ -13,7 +13,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AddUser() {
+function AddUser(props) {
+  const { addNewUser } = props;
+
   const classes = useStyles();
   const [user, setUser] = useState({
     username: "",
@@ -48,18 +50,16 @@ function AddUser() {
     validationSchema: validationSchema,
 
     onSubmit: (values) => {
-      setUser({
-        username: values.username,
-        email: values.email,
-        password: values.password,
-      });
-
-      addUser();
+      user.username = values.username;
+      user.password = values.password;
+      user.email = values.email;
+      addUser(user);
     },
   });
 
-  const addUser = async () => {
-    console.log(user);
+  const addUser = async (user) => {
+    addNewUser(user);
+    // console.log(user);
   };
 
   const resetForm = () => {

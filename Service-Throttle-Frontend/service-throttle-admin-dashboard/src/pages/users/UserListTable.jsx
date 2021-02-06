@@ -74,6 +74,13 @@ function UserListTable(props) {
     });
   };
 
+  const addUser = (user) => {
+    userService.addUser(authAxios, user).then(() => {
+      setOpenPopupAdd(false);
+      setTimesReload(timesReload + 1);
+    });
+  };
+
   const editUser = (user) => {
     userService.editUser(authAxios, user).then(() => {
       setOpenPopupEdit(false);
@@ -165,7 +172,7 @@ function UserListTable(props) {
         openPopup={openPopupAdd}
         setOpenPopup={setOpenPopupAdd}
       >
-        <AddUser />
+        <AddUser addNewUser={addUser} />
       </Popup>
     </div>
   );
