@@ -12,7 +12,7 @@ const fetchUsers = async (authAxios, type) => {
 
 const _editUser = async (authAxios, data) => {
   try {
-    const res = await authAxios.post(`/account/update`, data);
+    const res = await authAxios.put(`/account/update`, data);
     const _users = await res.data;
     return _users;
   } catch (error) {

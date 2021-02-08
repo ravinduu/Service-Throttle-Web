@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import DisplayList from "../../components/table/DisplayList";
+import { useDataLayerValue } from "../../dataLayer/DataLayer";
+import * as vehicleService from "../../services/vehicleService";
 
 import {
   makeStyles,
@@ -20,16 +23,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const headCells = [
-  { id: "username", label: "Customer username" },
-  { id: "make", label: "Make" },
-  { id: "model", label: "Model" },
-  { id: "year", label: "Year" },
-  { id: "engine", label: "Engine" },
-  { id: "actions", label: "Actions", disableSorting: true },
-];
-
 function VehicleListTable(props) {
+  const { headCells, type, title } = props;
+
+  const [{ token, api }] = useDataLayerValue();
+
+  let authAxios = axios.create({
+    baseURL: api,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  useEffect(() => {
+    if (token) {
+      fetchcustomersVehicles();
+    } else console.log("no token");
+  }, []);
+
+  const [customersVehicles, setcustomersVehicles] = useState([]);
+
+  const fetchcustomersVehicles = async () => {
+    const _customersVehicles = await vehicleService.getVehicles(
+      authAxios,
+      type
+    );
+    setcustomersVehicles(_customersVehicles);
+  };
   const classes = useStyles();
 
   const [recordForEdit, setRecordForEdit] = useState(null);
@@ -72,19 +92,52 @@ function VehicleListTable(props) {
       <DisplayList
         headCells={headCells}
         addBtn={addBtn()}
-        title={props.title}
-        data={props.data}
+        title={title}
+        data={customersVehicles}
       >
-        {props.data.map((vehicle) => {
+        {customersVehicles.map((vehicle) => {
+          if (type === "customer-vehicle") {
+            return (
+              <React.Fragment>
+                <TableRow key={vehicle.id}>
+                  <TableCell>{vehicle.customer.username}</TableCell>
+                  <TableCell>{vehicle.vehicleMake.make}</TableCell>
+                  <TableCell>{vehicle.vehicleModel.model}</TableCell>
+                  <TableCell>{vehicle.year}</TableCell>
+                  <TableCell>{vehicle.vehicleEngine.engine}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      color="primary"
+                      onClick={async () => {
+                        await setRecordForEdit(vehicle);
+                        await openInPopup();
+                      }}
+                    >
+                      <EditOutlinedIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                      color="secondary"
+                      onClick={async () => {
+                        await setRecordForDelete(vehicle);
+                        await deletevehicle();
+                      }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              </React.Fragment>
+            );
+          }
           return (
             <React.Fragment>
               <TableRow key={vehicle.id}>
-                <TableCell>{vehicle.customer.username}</TableCell>
+                <TableCell>{vehicle.mobileMechanic}</TableCell>
                 <TableCell>{vehicle.vehicleMake.make}</TableCell>
                 <TableCell>{vehicle.vehicleModel.model}</TableCell>
                 <TableCell>{vehicle.year}</TableCell>
                 <TableCell>{vehicle.vehicleEngine.engine}</TableCell>
-
+                <TableCell>{vehicle.capacity}</TableCell>
                 <TableCell>
                   <IconButton
                     color="primary"

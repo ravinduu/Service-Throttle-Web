@@ -1,41 +1,23 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { useDataLayerValue } from "../../../dataLayer/DataLayer";
-import * as vehicleService from "../../../services/vehicleService";
+import React, { useState } from "react";
 import VehicleListTable from "../VehicleListTable";
 
+const headCells = [
+  { id: "username", label: "Customer username" },
+  { id: "make", label: "Make" },
+  { id: "model", label: "Model" },
+  { id: "year", label: "Year" },
+  { id: "engine", label: "Engine" },
+  { id: "actions", label: "Actions", disableSorting: true },
+];
+
 function CustomerVehicle() {
-  const [type, setType] = useState("customer-vehicle");
-  const [{ token, api }] = useDataLayerValue();
-
-  let authAxios = axios.create({
-    baseURL: api,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "text/plain",
-    },
-  });
-
-  useEffect(() => {
-    if (token) {
-      fetchcustomersVehicles();
-    } else console.log("no token");
-  }, []);
-
-  const [customersVehicles, setcustomersVehicles] = useState([]);
-
-  const fetchcustomersVehicles = async () => {
-    const _customersVehicles = await vehicleService.getVehicles(
-      authAxios,
-      type
-    );
-    setcustomersVehicles(_customersVehicles);
-  };
+  const [type] = useState("customer-vehicle");
 
   return (
     <div>
       <VehicleListTable
-        data={customersVehicles}
+        headCells={headCells}
+        type={type}
         title="Customer Vehcicle List"
       ></VehicleListTable>
     </div>
