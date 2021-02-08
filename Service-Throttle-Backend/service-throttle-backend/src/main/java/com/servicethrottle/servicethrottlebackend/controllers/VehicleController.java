@@ -38,7 +38,7 @@ public class VehicleController {
      *
      * only for ADMIN
      * */
-    @GetMapping("customer-vehicle")
+    @GetMapping("customer-vehicle/all")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<CustomerVehicle> getAllCustomerVehicles(){
         return vehicleService.getAllCustomerVehicles();
