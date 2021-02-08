@@ -139,7 +139,7 @@ public class AccountController {
         return ResponseEntity.ok().body(userAccountService.updateUser(userDetailsDto));
     }
 
-    @PostMapping("/account/update")
+    @PutMapping("/account/update")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> updateAccount(@RequestBody UserDetailsDto userDetailsDto) throws AccountResourceException {
         return ResponseEntity.ok().body(userAccountService.updateExistingUser(userDetailsDto));
