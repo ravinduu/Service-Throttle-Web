@@ -3,6 +3,9 @@ import axios from "axios";
 import DisplayList from "../../components/table/DisplayList";
 import { useDataLayerValue } from "../../dataLayer/DataLayer";
 import * as vehicleService from "../../services/vehicleService";
+import Popup from "../../components/popup/Popup";
+import EditVehicleParts from "../../components/form/EditVehicleParts";
+import Delete from "../../components/deleteItem/Delete";
 
 import {
   makeStyles,
@@ -33,13 +36,18 @@ function VehiclePartsList(props) {
     },
   });
 
-  useEffect(() => {
-    if (token) {
-      fetchVehicleParts();
-    } else console.log("no token");
-  }, []);
-
   const [vehicleParts, setVehicleParts] = useState([]);
+
+  const { headCells, partType } = props;
+  const classes = useStyles();
+  const type = useState("engine");
+
+  const [recordForEdit, setRecordForEdit] = useState(null);
+  const [recordForDelete, setRecordForDelete] = useState(null);
+  const [openPopupEdit, setOpenPopupEdit] = useState(false);
+  const [openPopupDelete, setOpenPopupDelete] = useState(false);
+  const [openPopupAdd, setOpenPopupAdd] = useState(false);
+  const [timesReload, setTimesReload] = useState(0);
 
   const fetchVehicleParts = async () => {
     await vehicleService
@@ -50,17 +58,37 @@ function VehiclePartsList(props) {
       .catch((err) => {
         console.log(err);
       });
-
-    console.log(vehicleParts);
   };
 
-  const { headCells, partType } = props;
-  const classes = useStyles();
-  const type = useState("engine");
+  useEffect(() => {
+    if (token) {
+      fetchVehicleParts();
+    } else console.log("no token");
+  }, [timesReload]);
 
-  const [recordForEdit, setRecordForEdit] = useState(null);
-  const [recordForDelete, setRecordForDelete] = useState(null);
-  const [openPopup, setOpenPopup] = useState(false);
+  const editVehiclePart = (vehiclePart) => {
+    vehicleService
+      .updateVehicleParts(authAxios, vehiclePart, partType)
+      .then(() => {
+        setOpenPopupEdit(false);
+        setTimesReload(timesReload + 1);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const deleteVehiclePart = (vehiclePart) => {
+    vehicleService
+      .deleteVehicleParts(authAxios, vehiclePart, partType)
+      .then(() => {
+        setOpenPopupDelete(false);
+        setTimesReload(timesReload + 1);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const addBtn = () => {
     return (
@@ -70,7 +98,7 @@ function VehiclePartsList(props) {
         className={classes.newButton}
         onClick={() => {
           console.log("cusss");
-          setOpenPopup(true);
+          setOpenPopupAdd(true);
           setRecordForEdit(null);
         }}
       >
@@ -87,14 +115,20 @@ function VehiclePartsList(props) {
         title={partType + " list"}
         data={vehicleParts}
       >
-        {vehicleParts.map((vehicle) => {
+        {vehicleParts.map((vehiclePart) => {
           if (partType === "engine") {
             return (
               <React.Fragment>
-                <TableRow key={vehicle.id}>
-                  <TableCell>{vehicle.engine}</TableCell>
+                <TableRow key={vehiclePart.id}>
+                  <TableCell>{vehiclePart.engine}</TableCell>
                   <TableCell>
-                    <IconButton color="primary" onClick={console.log("edit")}>
+                    <IconButton
+                      color="primary"
+                      onClick={async () => {
+                        await setRecordForEdit(vehiclePart);
+                        setOpenPopupEdit(true);
+                      }}
+                    >
                       <EditOutlinedIcon fontSize="small" />
                     </IconButton>
                     <IconButton
@@ -110,15 +144,25 @@ function VehiclePartsList(props) {
           } else if (partType === "make") {
             return (
               <React.Fragment>
-                <TableRow key={vehicle.id}>
-                  <TableCell>{vehicle.make}</TableCell>
+                <TableRow key={vehiclePart.id}>
+                  <TableCell>{vehiclePart.make}</TableCell>
                   <TableCell>
-                    <IconButton color="primary" onClick={console.log("edit")}>
+                    <IconButton
+                      color="primary"
+                      onClick={async () => {
+                        await setRecordForEdit(vehiclePart);
+                        console.log(vehiclePart);
+                        setOpenPopupEdit(true);
+                      }}
+                    >
                       <EditOutlinedIcon fontSize="small" />
                     </IconButton>
                     <IconButton
                       color="secondary"
-                      onClick={console.log("close")}
+                      onClick={async () => {
+                        await setRecordForDelete(vehiclePart);
+                        setOpenPopupDelete(true);
+                      }}
                     >
                       <CloseIcon fontSize="small" />
                     </IconButton>
@@ -130,14 +174,21 @@ function VehiclePartsList(props) {
 
           return (
             <React.Fragment>
-              <TableRow key={vehicle.id}>
-                <TableCell>{vehicle.vehicleMake.make}</TableCell>
-                <TableCell>{vehicle.model}</TableCell>
+              <TableRow key={vehiclePart.id}>
+                <TableCell>{vehiclePart.vehicleMake.make}</TableCell>
+                <TableCell>{vehiclePart.model}</TableCell>
                 <TableCell>
-                  <IconButton color="primary" onClick={console.log("edit")}>
+                  <IconButton
+                    color="primary"
+                    onClick={async () => {
+                      await setRecordForEdit(vehiclePart);
+                      console.log(vehiclePart);
+                      setOpenPopupEdit(true);
+                    }}
+                  >
                     <EditOutlinedIcon fontSize="small" />
                   </IconButton>
-                  <IconButton color="secondary" onClick={console.log("close")}>
+                  <IconButton color="secondary" onClick={console.log()}>
                     <CloseIcon fontSize="small" />
                   </IconButton>
                 </TableCell>
@@ -146,6 +197,30 @@ function VehiclePartsList(props) {
           );
         })}
       </DisplayList>
+
+      <Popup
+        title={partType}
+        openPopup={openPopupEdit}
+        setOpenPopup={setOpenPopupEdit}
+      >
+        <EditVehicleParts
+          editVehiclePart={editVehiclePart}
+          recordForEdit={recordForEdit}
+          partType={partType}
+        />
+      </Popup>
+      <Popup
+        title="Delete"
+        openPopup={openPopupDelete}
+        setOpenPopup={setOpenPopupDelete}
+      >
+        <Delete
+          deleteRecord={deleteVehiclePart}
+          recordForDelete={recordForDelete}
+          setOpenPopupDelete={setOpenPopupDelete}
+          name={partType}
+        />
+      </Popup>
     </div>
   );
 }

@@ -236,7 +236,7 @@ public class VehicleController {
      * {@link VehicleMakeDto} is new data of the vehicle make
      * return updated {@link VehicleMake}
      * */
-    @PutMapping("make/{id}")
+    @PutMapping("make/update/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public VehicleMake updateVehicleMake(@PathVariable long id, @RequestBody VehicleMakeDto vehicleMakeDto) throws VehicleMakeDosentExist {
         return vehicleService.updateVehicleMake(id, vehicleMakeDto);
@@ -249,7 +249,7 @@ public class VehicleController {
      * parameter PathVariable id is the vehicle make id that want to remove
      * return 1 if the process is success or 0 if error
      * */
-    @DeleteMapping("make/remove/{id}")
+    @DeleteMapping("make/delete/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public int deleteVehicleMake(@PathVariable long id) throws VehicleMakeDosentExist {
         return vehicleService.deleteVehicleMake(id);

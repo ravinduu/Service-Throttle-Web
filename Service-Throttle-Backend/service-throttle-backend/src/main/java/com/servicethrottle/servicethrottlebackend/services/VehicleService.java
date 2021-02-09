@@ -288,7 +288,7 @@ public class VehicleService {
 
 //        VehicleMake vehicleMake = getVehicleMake(vehicleModelDto.getVehicleMakeId());
         vehicleModelToUpdate.setVehicleMake(vehicleModelDto.getVehicleMake());
-        vehicleModelDto.setModel(vehicleModelDto.getModel());
+        vehicleModelToUpdate.setModel(vehicleModelDto.getModel());
         vehicleModelRepository.save(vehicleModelToUpdate);
         return vehicleModelToUpdate;
     }

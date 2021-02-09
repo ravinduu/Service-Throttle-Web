@@ -132,7 +132,11 @@ function VehicleListTable(props) {
           return (
             <React.Fragment>
               <TableRow key={vehicle.id}>
-                <TableCell>{vehicle.mobileMechanic}</TableCell>
+                <TableCell>
+                  {vehicle.mobileMechanic
+                    ? vehicle.mobileMechanic.username
+                    : "not assign yet"}
+                </TableCell>
                 <TableCell>{vehicle.vehicleMake.make}</TableCell>
                 <TableCell>{vehicle.vehicleModel.model}</TableCell>
                 <TableCell>{vehicle.year}</TableCell>
