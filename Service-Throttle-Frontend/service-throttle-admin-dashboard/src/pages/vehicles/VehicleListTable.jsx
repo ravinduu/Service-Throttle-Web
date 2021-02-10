@@ -56,6 +56,18 @@ function VehicleListTable(props) {
   const [recordForDelete, setRecordForDelete] = useState(null);
   const [openPopup, setOpenPopup] = useState(false);
 
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   const openInPopup = () => {
     console.log("Edittt");
 
@@ -94,8 +106,18 @@ function VehicleListTable(props) {
         addBtn={addBtn()}
         title={title}
         data={customersVehicles}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        handleChangePage={handleChangePage}
+        handleChangeRowsPerPage={handleChangeRowsPerPage}
       >
-        {customersVehicles.map((vehicle) => {
+        {(rowsPerPage > 0
+          ? customersVehicles.slice(
+              page * rowsPerPage,
+              page * rowsPerPage + rowsPerPage
+            )
+          : customersVehicles
+        ).map((vehicle) => {
           if (type === "customer-vehicle") {
             return (
               <React.Fragment>

@@ -42,12 +42,25 @@ function VehiclePartsList(props) {
   const classes = useStyles();
   const type = useState("engine");
 
+  const [recordForAdd, setRecordForAdd] = useState(null);
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [recordForDelete, setRecordForDelete] = useState(null);
   const [openPopupEdit, setOpenPopupEdit] = useState(false);
   const [openPopupDelete, setOpenPopupDelete] = useState(false);
   const [openPopupAdd, setOpenPopupAdd] = useState(false);
   const [timesReload, setTimesReload] = useState(0);
+
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const fetchVehicleParts = async () => {
     await vehicleService
@@ -90,6 +103,19 @@ function VehiclePartsList(props) {
       });
   };
 
+  const addVehiclePart = (vehiclePart) => {
+    console.log(vehiclePart);
+    vehicleService
+      .addVehicleParts(authAxios, vehiclePart, partType)
+      .then(() => {
+        setOpenPopupAdd(false);
+        setTimesReload(timesReload + 1);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const addBtn = () => {
     return (
       <Button
@@ -97,7 +123,14 @@ function VehiclePartsList(props) {
         startIcon={<AddIcon />}
         className={classes.newButton}
         onClick={() => {
-          console.log("cusss");
+          if (partType === "engine") {
+            setRecordForAdd({ engine: "" });
+          } else if (partType === "make") {
+            setRecordForAdd({ make: "" });
+          } else {
+            setRecordForAdd({ make: "", model: "" });
+          }
+
           setOpenPopupAdd(true);
           setRecordForEdit(null);
         }}
@@ -114,8 +147,18 @@ function VehiclePartsList(props) {
         addBtn={addBtn()}
         title={partType + " list"}
         data={vehicleParts}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        handleChangePage={handleChangePage}
+        handleChangeRowsPerPage={handleChangeRowsPerPage}
       >
-        {vehicleParts.map((vehiclePart) => {
+        {(rowsPerPage > 0
+          ? vehicleParts.slice(
+              page * rowsPerPage,
+              page * rowsPerPage + rowsPerPage
+            )
+          : vehicleParts
+        ).map((vehiclePart) => {
           if (partType === "engine") {
             return (
               <React.Fragment>
@@ -197,7 +240,6 @@ function VehiclePartsList(props) {
           );
         })}
       </DisplayList>
-
       <Popup
         title={partType}
         openPopup={openPopupEdit}
@@ -219,6 +261,17 @@ function VehiclePartsList(props) {
           recordForDelete={recordForDelete}
           setOpenPopupDelete={setOpenPopupDelete}
           name={partType}
+        />
+      </Popup>
+      <Popup
+        title={partType}
+        openPopup={openPopupAdd}
+        setOpenPopup={setOpenPopupAdd}
+      >
+        <EditVehicleParts
+          editVehiclePart={addVehiclePart}
+          recordForEdit={recordForAdd}
+          partType={partType}
         />
       </Popup>
     </div>

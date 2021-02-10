@@ -30,6 +30,14 @@ const _deleteVehicleParts = async (authAxios, data, type) => {
   return _vehicless;
 };
 
+const _addVehicleParts = async (authAxios, data, type) => {
+  const res = await authAxios.post(`/vehicle/${type}/add`, data);
+
+  const _vehicless = await res.data;
+
+  return _vehicless;
+};
+
 export function getVehicles(authAxios, type) {
   return fetcVehicles(authAxios, type);
 }
@@ -44,4 +52,8 @@ export function updateVehicleParts(authAxios, data, type) {
 
 export function deleteVehicleParts(authAxios, data, type) {
   return _deleteVehicleParts(authAxios, data, type);
+}
+
+export function addVehicleParts(authAxios, data, type) {
+  return _addVehicleParts(authAxios, data, type);
 }

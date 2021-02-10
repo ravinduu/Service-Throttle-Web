@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
 
 function EditVehicleParts(props) {
   const { editVehiclePart, recordForEdit, partType } = props;
+  const isForAdd = !editVehiclePart.id;
   const classes = useStyles();
   let validationSchema;
 
