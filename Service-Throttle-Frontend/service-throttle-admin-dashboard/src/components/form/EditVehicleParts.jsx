@@ -2,7 +2,14 @@ import React from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, TextField } from "@material-ui/core";
+import {
+  Button,
+  Select,
+  TextField,
+  InputLabel,
+  MenuItem,
+  FormControl,
+} from "@material-ui/core";
 
 import "./EditUser.css";
 
@@ -12,11 +19,20 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
     },
   },
+  formControl: {
+    margin: theme.spacing(1),
+    marginLeft: 0,
+    minWidth: 250,
+    height: 40,
+  },
+
+  inputLable: {
+    paddingLeft: 15,
+  },
 }));
 
 function EditVehicleParts(props) {
   const { editVehiclePart, recordForEdit, partType } = props;
-  const isForAdd = !editVehiclePart.id;
   const classes = useStyles();
   let validationSchema;
 
@@ -132,7 +148,33 @@ function EditVehicleParts(props) {
   return (
     <div>
       <form onSubmit={formik.handleSubmit}>
-        <h7>{formik.values.vehicleMake.make}</h7>
+        {formik.values.vehicleMake ? (
+          <h7>{formik.values.vehicleMake.make}</h7>
+        ) : (
+          <FormControl>
+            <InputLabel
+              id="demo-simple-select-filled-label"
+              className={classes.inputLable}
+            >
+              Make
+            </InputLabel>
+
+            <Select
+              labelId="vehicleMake"
+              id="vehicleMake"
+              className={classes.formControl}
+              variant="outlined"
+              value={formik.values.vehicleMake}
+              onChange={formik.handleChange}
+              label="Make"
+              name="make"
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+            </Select>
+          </FormControl>
+        )}
         <br></br>
         <TextField
           type="text"

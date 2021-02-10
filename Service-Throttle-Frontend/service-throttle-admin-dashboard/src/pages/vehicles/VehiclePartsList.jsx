@@ -128,7 +128,7 @@ function VehiclePartsList(props) {
           } else if (partType === "make") {
             setRecordForAdd({ make: "" });
           } else {
-            setRecordForAdd({ make: "", model: "" });
+            setRecordForAdd({ vehicleMake: "", model: "" });
           }
 
           setOpenPopupAdd(true);
