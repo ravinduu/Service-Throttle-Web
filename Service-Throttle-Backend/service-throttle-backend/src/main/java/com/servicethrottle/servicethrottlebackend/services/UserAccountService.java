@@ -41,6 +41,7 @@ public class UserAccountService {
     private final CustomerService customerService;
     private final SupervisorService supervisorService;
     private final MobileMechanicService mobileMechanicService;
+    private final MailService mailService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -81,7 +82,14 @@ public class UserAccountService {
 //        userCredentials.setActivated(false);
             if (!success) return "Something goes wrong !!";
 
-            generateActivationCode(userCredentials);
+            String activationCode = generateActivationCode(userCredentials).getActivationCode();
+
+            String to = registrationRequestDto.getEmail();
+            String subject = activationCode+" is your Service Throttle code";
+            String body = "Hi,\n\nSomeone tried to sign up for a Service Throttle account with "+to+". If it was you, enter this activation code in the app: \n\t<p1>" + activationCode+"</p>\n\nThank you,\nService Throttle";
+
+            mailService.sendMails(to, subject, body);
+
             userCredentialsRepository.save(userCredentials);
             return "Success";
         }
@@ -107,8 +115,7 @@ public class UserAccountService {
         activationCode.setActivationCode(code);
         activationCode.setUserCredentials(userCredentials);
         activationCodeRepository.save(activationCode);
-//        verification code will send to the customer email
-//        mailService.sendActivationEmail(activationCode);
+
         return activationCode;
     }
 
