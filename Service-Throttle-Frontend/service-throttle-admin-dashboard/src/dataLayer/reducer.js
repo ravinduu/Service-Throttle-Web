@@ -2,6 +2,7 @@ export const initialState = {
   user: null,
   token: null,
   username: null,
+  makes: [],
   api: "http://localhost:8081/st",
 };
 
@@ -24,6 +25,12 @@ export const reducer = (state, action) => {
       return {
         ...state,
         username: action.username,
+      };
+
+    case "SET_MAKE":
+      return {
+        ...state,
+        makes: action.make,
       };
 
     default:

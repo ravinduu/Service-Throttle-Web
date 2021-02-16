@@ -11,6 +11,8 @@ import {
   FormControl,
 } from "@material-ui/core";
 
+import { useDataLayerValue } from "../../dataLayer/DataLayer";
+
 import "./EditUser.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,6 +34,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function EditVehicleParts(props) {
+  const [{ makes }] = useDataLayerValue();
+
   const { editVehiclePart, recordForEdit, partType } = props;
   const classes = useStyles();
   let validationSchema;
@@ -155,9 +159,7 @@ function EditVehicleParts(props) {
             <InputLabel
               id="demo-simple-select-filled-label"
               className={classes.inputLable}
-            >
-              Make
-            </InputLabel>
+            ></InputLabel>
 
             <Select
               labelId="vehicleMake"
@@ -166,12 +168,16 @@ function EditVehicleParts(props) {
               variant="outlined"
               value={formik.values.vehicleMake}
               onChange={formik.handleChange}
-              label="Make"
-              name="make"
+              label="VehicleMake"
+              name="vehicleMake"
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
+              {makes.map((make) => {
+                return (
+                  <MenuItem value={make}>
+                    <em>{make.make}</em>
+                  </MenuItem>
+                );
+              })}
             </Select>
           </FormControl>
         )}
