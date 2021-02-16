@@ -28,6 +28,7 @@ public class STVehicleServiceService {
         STVehicleService.setVehicleServicePrice(STVehicleServiceDto.getVehicleServicePrice());
         STVehicleService.setVehicleServiceDescription(STVehicleServiceDto.getVehicleServiceDescription());
         STVehicleService.setVehicleServiceType(STVehicleServiceDto.getVehicleServiceType());
+        STVehicleService.setImageURL(STVehicleServiceDto.getImageURL());
         stVehicleServiceRepository.save(STVehicleService);
         return STVehicleService;
     }

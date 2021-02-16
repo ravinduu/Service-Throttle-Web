@@ -34,4 +34,7 @@ public class STVehicleService implements Serializable {
         @NotNull
         private VehicleServiceType vehicleServiceType;
 
+        private String imageURL;
+
+
 }

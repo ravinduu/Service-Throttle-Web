@@ -24,4 +24,7 @@ public class STVehicleServiceDto {
     private String vehicleServiceDescription;
 
     private VehicleServiceType vehicleServiceType;
+
+    private String imageURL;
+
 }
