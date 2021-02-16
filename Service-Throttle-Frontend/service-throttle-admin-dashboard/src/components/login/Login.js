@@ -5,6 +5,7 @@ import { useDataLayerValue } from "../../dataLayer/DataLayer";
 import { Button, TextField, Typography, Container } from "@material-ui/core";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import * as vehicleService from "../../services/vehicleService";
 
 const validationSchema = yup.object({
   username: yup
@@ -61,6 +62,14 @@ function Login() {
           dispatch({
             type: "SET_USER",
             user: res.data,
+          });
+        });
+
+        vehicleService.getVehicleParts(authAxios, "make").then((res) => {
+          console.log(res);
+          dispatch({
+            type: "SET_MAKE",
+            make: res,
           });
         });
       });
