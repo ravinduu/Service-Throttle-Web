@@ -34,6 +34,7 @@ public class ServiceRequestService {
         serviceRequest.setCustomer(customer);
         serviceRequest.setCustomerVehicle(serviceRequestDto.getCustomerVehicle());
         serviceRequest.setVehicleServices(serviceRequestDto.getVehicleServices());
+        serviceRequest.setLocation(serviceRequestDto.getLocation());
         serviceRequestRepository.save(serviceRequest);
         return serviceRequest;
     }

@@ -12,7 +12,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.chrono.IsoEra;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,15 +45,15 @@ public class ServiceRequest implements Serializable {
     private Set<STVehicleService> vehicleServices = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "st_supervisor_id", nullable = false)
+    @JoinColumn(name = "st_supervisor_id")
     private Supervisor supervisor;
 
     @ManyToOne
-    @JoinColumn(name = "st_mobile_mechanic_id", nullable = false)
+    @JoinColumn(name = "st_mobile_mechanic_id")
     private MobileMechanic mobileMechanic;
 
     @ManyToOne
-    @JoinColumn(name = "st_promotion_id", nullable = false)
+    @JoinColumn(name = "st_promotion_id")
     private Promotion promotion;
 
     @NotNull
@@ -64,5 +63,9 @@ public class ServiceRequest implements Serializable {
 
     @NotNull
     private double totalCost;
+
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private Location location;
 
 }
