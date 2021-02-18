@@ -96,29 +96,29 @@ function Promotion() {
       });
   };
 
-  // const editPromotion = (Promotion) => {
-  //   vehicleService
-  //     .updatePromotions(authAxios, Promotion, partType)
-  //     .then(() => {
-  //       setOpenPopupEdit(false);
-  //       setTimesReload(timesReload + 1);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
+  const editPromotion = (promotion) => {
+    promoService
+      .updatePromotions(authAxios, promotion)
+      .then(() => {
+        setOpenPopupEdit(false);
+        setTimesReload(timesReload + 1);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-  //   const deletePromotion = (Promotion) => {
-  //     vehicleService
-  //       .deletePromotions(authAxios, Promotion, partType)
-  //       .then(() => {
-  //         setOpenPopupDelete(false);
-  //         setTimesReload(timesReload + 1);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   };
+  const deletePromotion = (promotion) => {
+    promoService
+      .deletePromotions(authAxios, promotion)
+      .then(() => {
+        setOpenPopupDelete(false);
+        setTimesReload(timesReload + 1);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const addBtn = () => {
     return (
@@ -175,6 +175,7 @@ function Promotion() {
                     color="primary"
                     onClick={async () => {
                       await setRecordForEdit(promo);
+                      setOpenPopupEdit(true);
                     }}
                   >
                     <EditOutlinedIcon fontSize="small" />
@@ -183,7 +184,7 @@ function Promotion() {
                     color="secondary"
                     onClick={async () => {
                       await setRecordForDelete(promo);
-                      //   await deletevehicle();
+                      setOpenPopupDelete(true);
                     }}
                   >
                     <CloseIcon fontSize="small" />
@@ -203,6 +204,30 @@ function Promotion() {
         <EditAddPromotion
           editPromotion={_addPromotion}
           recordForEdit={recordForAdd}
+        />
+      </Popup>
+
+      <Popup
+        title="Promotions"
+        openPopup={openPopupEdit}
+        setOpenPopup={setOpenPopupEdit}
+      >
+        <EditAddPromotion
+          editPromotion={editPromotion}
+          recordForEdit={recordForEdit}
+        />
+      </Popup>
+
+      <Popup
+        title="Delete"
+        openPopup={openPopupDelete}
+        setOpenPopup={setOpenPopupDelete}
+      >
+        <Delete
+          deleteRecord={deletePromotion}
+          recordForDelete={recordForDelete}
+          setOpenPopupDelete={setOpenPopupDelete}
+          name={recordForDelete ? recordForDelete.promoCode : "Promotion"}
         />
       </Popup>
     </div>
