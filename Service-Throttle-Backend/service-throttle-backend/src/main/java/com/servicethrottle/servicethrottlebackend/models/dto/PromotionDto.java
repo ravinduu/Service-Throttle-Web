@@ -16,4 +16,6 @@ public class PromotionDto {
     private double discount;
 
     private String promoDescription;
+
+    private String imageUri;
 }

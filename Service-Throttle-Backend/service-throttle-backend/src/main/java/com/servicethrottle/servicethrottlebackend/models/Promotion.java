@@ -33,6 +33,8 @@ public class Promotion implements Serializable {
     @NotNull
     private String promoDescription;
 
+    private String imageUri;
+
     private Instant createdAt;
 
     private Instant endAt;

@@ -11,6 +11,7 @@ import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +31,9 @@ public class PromotionService {
         promotion.setPromoCode(promotionDto.getPromoCode());
         promotion.setDiscount(promotionDto.getDiscount());
         promotion.setPromoDescription(promotionDto.getPromoDescription());
+        promotion.setImageUri(promotionDto.getImageUri());
         promotion.setCreatedAt(Instant.now());
+        promotion.setEndAt(Instant.now().plus(7, ChronoUnit.DAYS));
         promotionRepository.save(promotion);
         return promotion;
     }
