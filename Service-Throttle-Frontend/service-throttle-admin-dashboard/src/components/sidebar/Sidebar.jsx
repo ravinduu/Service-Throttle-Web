@@ -77,7 +77,7 @@ const structure = [
       },
     ],
   },
-  { id: 4, option: "Earning Reports", icon: LocalAtmIcon },
+  { id: 4, option: "Promotions", icon: LocalAtmIcon, link: "/st/promotions" },
   { id: 5, option: "Managing Documents", icon: DescriptionIcon },
   // { id: 5, option: "Managing Documents", icon: DescriptionIcon },
 

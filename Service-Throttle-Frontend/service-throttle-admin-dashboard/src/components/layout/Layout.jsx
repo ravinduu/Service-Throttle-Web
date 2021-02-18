@@ -17,6 +17,7 @@ import MobileServiceVehicle from "../../pages/vehicles/mobileServiceVehicles/Mob
 import Make from "../../pages/vehicles/VehicleData/Make";
 import Model from "../../pages/vehicles/VehicleData/Model";
 import Engine from "../../pages/vehicles/VehicleData/Engine";
+import Promotion from "../../pages/promotions/Promotion";
 
 function Layout() {
   return (
@@ -49,7 +50,7 @@ function Layout() {
             <Route path="/st/vehicles/model" exact component={Model} />
             <Route path="/st/vehicles/engine" exact component={Engine} />
 
-            <Route path="/st/navbar" component={NavBar} />
+            <Route path="/st/promotions" component={Promotion} />
             <Route path="/st/footer" component={Footer} />
           </Switch>
         </div>
