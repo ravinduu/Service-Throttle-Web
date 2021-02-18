@@ -31,8 +31,9 @@ public class PromotionController {
      * */
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public Promotion addPromotion(PromotionDto promotionDto){
-        return promotionService.addPromotion(promotionDto);
+    public Promotion addPromotion(@RequestBody PromotionDto promotionDto){
+        System.out.println(promotionDto);
+    return promotionService.addPromotion(promotionDto);
     }
 
     /**

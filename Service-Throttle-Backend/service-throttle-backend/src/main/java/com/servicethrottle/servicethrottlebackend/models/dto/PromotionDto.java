@@ -11,10 +11,14 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PromotionDto {
+    @NotNull
     private String promoCode;
 
+    @NotNull
+    @Min(0)
     private double discount;
 
+    @NotNull
     private String promoDescription;
 
     private String imageUri;

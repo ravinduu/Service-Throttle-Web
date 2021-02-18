@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DisplayList from "../../components/table/DisplayList";
 import { useDataLayerValue } from "../../dataLayer/DataLayer";
-import * as vehicleService from "../../services/promotionService";
+import * as promoService from "../../services/promotionService";
 import Popup from "../../components/popup/Popup";
 import Delete from "../../components/deleteItem/Delete";
 
@@ -17,6 +17,7 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import EditAddPromotion from "../../components/form/EditAddPromotion";
 
 const useStyles = makeStyles((theme) => ({
   newButton: {
@@ -66,9 +67,10 @@ function Promotion() {
   });
 
   const fetchPromotion = async () => {
-    await vehicleService
+    await promoService
       .getPromotion(authAxios)
       .then((res) => {
+        console.log(res);
         setPromotions(res);
       })
       .catch((err) => {
@@ -82,17 +84,29 @@ function Promotion() {
     } else console.log("no token");
   }, [timesReload]);
 
-  //   const editPromotion = (Promotion) => {
-  //     vehicleService
-  //       .updatePromotions(authAxios, Promotion, partType)
-  //       .then(() => {
-  //         setOpenPopupEdit(false);
-  //         setTimesReload(timesReload + 1);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   };
+  const _addPromotion = (promotion) => {
+    promoService
+      .addPromotions(authAxios, promotion)
+      .then(() => {
+        setOpenPopupAdd(false);
+        setTimesReload(timesReload + 1);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // const editPromotion = (Promotion) => {
+  //   vehicleService
+  //     .updatePromotions(authAxios, Promotion, partType)
+  //     .then(() => {
+  //       setOpenPopupEdit(false);
+  //       setTimesReload(timesReload + 1);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
   //   const deletePromotion = (Promotion) => {
   //     vehicleService
@@ -113,8 +127,13 @@ function Promotion() {
         startIcon={<AddIcon />}
         className={classes.newButton}
         onClick={() => {
+          setRecordForAdd({
+            promoCode: "",
+            discount: "",
+            promoDescription: "",
+            imageUri: "",
+          });
           setOpenPopupAdd(true);
-          setRecordForEdit(null);
         }}
       >
         Add New
@@ -175,6 +194,17 @@ function Promotion() {
           );
         })}
       </DisplayList>
+
+      <Popup
+        title="Promotions"
+        openPopup={openPopupAdd}
+        setOpenPopup={setOpenPopupAdd}
+      >
+        <EditAddPromotion
+          editPromotion={_addPromotion}
+          recordForEdit={recordForAdd}
+        />
+      </Popup>
     </div>
   );
 }

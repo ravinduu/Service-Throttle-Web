@@ -11,6 +11,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -35,8 +36,8 @@ public class Promotion implements Serializable {
 
     private String imageUri;
 
-    private Instant createdAt;
+    private LocalDate createdAt;
 
-    private Instant endAt;
+    private LocalDate endAt;
 
 }
