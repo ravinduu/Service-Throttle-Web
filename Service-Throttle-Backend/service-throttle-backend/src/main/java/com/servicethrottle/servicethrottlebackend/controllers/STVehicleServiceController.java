@@ -27,7 +27,7 @@ public class STVehicleServiceController {
      * */
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public STVehicleService addVehicleService(STVehicleServiceDto STVehicleServiceDto){
+    public STVehicleService addVehicleService(@RequestBody  STVehicleServiceDto STVehicleServiceDto){
         return stVehicleServiceService.addVehicleService(STVehicleServiceDto);
     }
 

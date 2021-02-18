@@ -18,6 +18,7 @@ import Make from "../../pages/vehicles/VehicleData/Make";
 import Model from "../../pages/vehicles/VehicleData/Model";
 import Engine from "../../pages/vehicles/VehicleData/Engine";
 import Promotion from "../../pages/promotions/Promotion";
+import SrService from "../../pages/srservices/SrService";
 
 function Layout() {
   return (
@@ -51,6 +52,8 @@ function Layout() {
             <Route path="/st/vehicles/engine" exact component={Engine} />
 
             <Route path="/st/promotions" component={Promotion} />
+            <Route path="/st/vehicle/services" component={SrService} />
+
             <Route path="/st/footer" component={Footer} />
           </Switch>
         </div>

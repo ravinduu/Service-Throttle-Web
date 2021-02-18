@@ -20,6 +20,7 @@ import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import MenuIcon from "@material-ui/icons/Menu";
+import SettingsApplicationsOutlinedIcon from "@material-ui/icons/SettingsApplicationsOutlined";
 
 import classNames from "classnames";
 
@@ -78,7 +79,14 @@ const structure = [
     ],
   },
   { id: 4, option: "Promotions", icon: LocalAtmIcon, link: "/st/promotions" },
-  { id: 5, option: "Managing Documents", icon: DescriptionIcon },
+  {
+    id: 5,
+    option: "SR Services",
+    icon: SettingsApplicationsOutlinedIcon,
+    link: "/st/vehicle/services",
+  },
+
+  { id: 6, option: "Managing Documents", icon: DescriptionIcon },
   // { id: 5, option: "Managing Documents", icon: DescriptionIcon },
 
   // { id: 5, option: "Managing Documents", icon: DescriptionIcon },
