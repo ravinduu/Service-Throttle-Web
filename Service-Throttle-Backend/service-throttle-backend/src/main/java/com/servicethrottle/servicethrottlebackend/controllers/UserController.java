@@ -1,5 +1,6 @@
 package com.servicethrottle.servicethrottlebackend.controllers;
 
+import com.servicethrottle.servicethrottlebackend.models.Customer;
 import com.servicethrottle.servicethrottlebackend.models.MobileMechanic;
 import com.servicethrottle.servicethrottlebackend.models.Supervisor;
 import com.servicethrottle.servicethrottlebackend.models.UserCredentials;
@@ -20,6 +21,11 @@ import java.util.List;
 @AllArgsConstructor
 @CrossOrigin("http://localhost:3000")
 public class UserController {
+
+    /**
+     * TO-DO
+     * implement remove user by himself (delete account)
+     * */
 
     private final UserService userService;
     private final AuthorityService authorityService;
@@ -99,7 +105,7 @@ public class UserController {
      * */
     @GetMapping("/user/mobile-mechanic/{username}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_SUPERVISOR','ROLE_MOBILEMECHANIC','ROLE_CUSTOMER')")
-    public ResponseEntity<UserDetailsDto> getMobileMechanic(@PathVariable String username){
+    public ResponseEntity<MobileMechanic> getMobileMechanic(@PathVariable String username){
         return ResponseEntity.ok().body(mobileMechanicService.getMobileMechanic(username));
     }
 
@@ -112,7 +118,7 @@ public class UserController {
      * */
     @GetMapping("/user/customer/{username}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_SUPERVISOR','ROLE_MOBILEMECHANIC')")
-    public ResponseEntity<UserDetailsDto> getCustomer(@PathVariable String username){
+    public ResponseEntity<Customer> getCustomer(@PathVariable String username){
         return ResponseEntity.ok().body(customerService.getCustomer(username));
     }
 

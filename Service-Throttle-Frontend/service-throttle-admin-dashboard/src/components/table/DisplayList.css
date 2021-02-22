@@ -1,0 +1,28 @@
+.userlistComponent {
+  height: 100vh;
+  max-width: 100% - 50px;
+  padding: 50px;
+  margin-right: auto;
+  flex: 0.8;
+}
+
+.tableContainer {
+  position: relative;
+  min-width: 100%;
+  min-height: auto;
+}
+
+.title {
+  padding-bottom: 30px;
+}
+
+.table {
+  width: 100%;
+  height: auto;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.actionCell {
+  display: flex;
+}

@@ -54,8 +54,8 @@ public class MobileMechanicService {
         );
     }
 
-    public UserDetailsDto getMobileMechanic(String username) {
-        return new UserDetailsDto(mobileMechanicRepository.findOneByUsername(username).get());
+    public MobileMechanic getMobileMechanic(String username) {
+        return mobileMechanicRepository.findOneByUsername(username).get();
     }
 
     public void updateMobileMechanic(UserDetailsDto userDetailsDto) {
@@ -64,8 +64,8 @@ public class MobileMechanicService {
             throw new EmailAlreadyExistException();
         }
 
-        SecurityUtils.getCurrentUsername()
-                .flatMap(mobileMechanicRepository::findOneByUsername)
+            mobileMechanicRepository
+                .findOneByUsername(userDetailsDto.getUsername())
                 .ifPresent(
                         mm -> {
                             mm.setFirstname(userDetailsDto.getFirstname());

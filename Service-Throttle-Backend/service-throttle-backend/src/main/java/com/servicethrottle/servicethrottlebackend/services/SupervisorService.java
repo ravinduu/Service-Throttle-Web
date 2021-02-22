@@ -62,8 +62,8 @@ public class SupervisorService {
             throw new EmailAlreadyExistException();
         }
 
-        SecurityUtils.getCurrentUsername()
-                .flatMap(supervisorRepository::findOneByUsername)
+        supervisorRepository
+                .findOneByUsername(userDetailsDto.getUsername())
                 .ifPresent(
                         supervisor -> {
                             supervisor.setFirstname(userDetailsDto.getFirstname());

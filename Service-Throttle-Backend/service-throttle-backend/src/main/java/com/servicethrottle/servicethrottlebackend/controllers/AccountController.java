@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
 REST controller for managing user accounts.
@@ -22,6 +23,7 @@ REST controller for managing user accounts.
 @RestController
 @RequestMapping("/st")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class AccountController {
 
     private final UserAccountService userAccountService;
@@ -118,9 +120,10 @@ public class AccountController {
      * return {userDetailsDto} the current user
      * throws UsernameNotFoundException if the no user logged in
     * */
-    @GetMapping("/account")
-    public UserDetailsDto getUser(){
-        return userAccountService.getUser();
+    @GetMapping("/account/{username}")
+    public UserDetailsDto getUser(@PathVariable String username){
+        System.out.println("Here username" + username);
+        return userAccountService.getUser(username);
 
     }
 
@@ -132,8 +135,14 @@ public class AccountController {
      * throws RuntimeException  if the user login wasn't found.
      */
     @PostMapping("/account")
-    public ResponseEntity<String> saveAccount(@Valid @RequestBody UserDetailsDto userDetailsDto) throws AccountResourceException {
+    public ResponseEntity<String> saveAccount(@RequestBody UserDetailsDto userDetailsDto) throws AccountResourceException {
         return ResponseEntity.ok().body(userAccountService.updateUser(userDetailsDto));
+    }
+
+    @PutMapping("/account/update")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<String> updateAccount(@RequestBody UserDetailsDto userDetailsDto) throws AccountResourceException {
+        return ResponseEntity.ok().body(userAccountService.updateExistingUser(userDetailsDto));
     }
 
     /**
