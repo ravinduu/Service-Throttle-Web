@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import axios from "axios";
 
 import "./Layout.css";
+import * as vehicleService from "../../services/vehicleService";
 
 import Header from "../header/Header";
 import NavBar from "../navbar/NavBar";
@@ -20,7 +22,44 @@ import Engine from "../../pages/vehicles/VehicleData/Engine";
 import Promotion from "../../pages/promotions/Promotion";
 import SrService from "../../pages/srservices/SrService";
 
+import { useDataLayerValue } from "../../dataLayer/DataLayer";
+
 function Layout() {
+  const [{ api }, dispatch] = useDataLayerValue();
+
+  useEffect(() => {
+    const _token = localStorage.getItem("AUTH_TOKEN");
+    const _username = localStorage.getItem("USERNAME");
+
+    dispatch({
+      type: "SET_TOKEN",
+      token: _token,
+    });
+
+    let authAxios = axios.create({
+      baseURL: api,
+      headers: {
+        Authorization: `Bearer ${_token}`,
+        "Content-Type": "text/plain",
+      },
+    });
+
+    authAxios.get(`/account/${_username}`).then((res) => {
+      dispatch({
+        type: "SET_USER",
+        user: res.data,
+      });
+    });
+
+    vehicleService.getVehicleParts(authAxios, "make").then((res) => {
+      console.log(res);
+      dispatch({
+        type: "SET_MAKE",
+        make: res,
+      });
+    });
+  }, []);
+
   return (
     <Router>
       <div className="dashbord_body">

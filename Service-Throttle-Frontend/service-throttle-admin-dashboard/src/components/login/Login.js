@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Login.css";
-import axios from "axios";
 import { useDataLayerValue } from "../../dataLayer/DataLayer";
 import { Button, TextField, Typography, Container } from "@material-ui/core";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import * as vehicleService from "../../services/vehicleService";
+import axios from "axios";
+import Layout from "../layout/Layout";
+import { Redirect } from "react-router-dom";
 
 const validationSchema = yup.object({
   username: yup
@@ -19,11 +20,6 @@ const validationSchema = yup.object({
 });
 
 function Login() {
-  // const [credentials, setState] = useState({
-  //   username: "",
-  //   password: "",
-  // });
-
   const [warning, setWarning] = useState(false);
   const formik = useFormik({
     initialValues: {
@@ -41,38 +37,19 @@ function Login() {
   const userLogin = async (credentials) => {
     setWarning(false);
     try {
-      const res = await axios.post(`${api}/login`, credentials).then((res) => {
-        const _token = res.data.jwttoken;
-        const _username = res.data.username;
-
-        dispatch({
-          type: "SET_TOKEN",
-          token: _token,
-        });
-
-        let authAxios = axios.create({
-          baseURL: api,
-          headers: {
-            Authorization: `Bearer ${_token}`,
-            "Content-Type": "text/plain",
-          },
-        });
-
-        authAxios.get(`/account/${_username}`).then((res) => {
+      await axios
+        .post(`${api}/login`, credentials)
+        .then((res) => {
+          const _token = res.data.jwttoken;
+          const _username = res.data.username;
+          localStorage.setItem("AUTH_TOKEN", _token);
+          localStorage.setItem("USERNAME", _username);
           dispatch({
-            type: "SET_USER",
-            user: res.data,
+            type: "SET_TOKEN",
+            token: _token,
           });
-        });
-
-        vehicleService.getVehicleParts(authAxios, "make").then((res) => {
-          console.log(res);
-          dispatch({
-            type: "SET_MAKE",
-            make: res,
-          });
-        });
-      });
+        })
+        .then(() => {});
     } catch (err) {
       setWarning(true);
       console.log(err);

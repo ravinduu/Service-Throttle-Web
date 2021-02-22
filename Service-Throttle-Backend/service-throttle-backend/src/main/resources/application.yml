@@ -5,9 +5,9 @@ spring:
   application:
     name: service-throttle-backend
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/service_throttle
-    username: root
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/service-throttle
+    username: postgres
     password: root
     intialize: true
   jpa:
@@ -15,4 +15,4 @@ spring:
       hibernate:
         dialate: org.hibernate.dialect.MySQL5InnoDBDialate
     hibernate:
-      ddl-auto: update
+      ddl-auto: create

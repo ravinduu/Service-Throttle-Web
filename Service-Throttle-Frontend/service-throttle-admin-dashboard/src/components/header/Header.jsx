@@ -34,6 +34,14 @@ function Header() {
   const open = Boolean(anchorEl);
   const classes = useStyles();
 
+  const signOut = () => {
+    dispatch({
+      type: "SET_TOKEN",
+      token: null,
+    });
+    localStorage.clear();
+  };
+
   function handleClose() {
     setAnchorEl(null);
   }
@@ -81,7 +89,7 @@ function Header() {
             >
               <MenuItem onClick={handleClose}>Profile</MenuItem>
               <MenuItem onClick={handleClose}>Settings</MenuItem>
-              <MenuItem onClick={handleClose}>Sign Out</MenuItem>
+              <MenuItem onClick={signOut}>Sign Out</MenuItem>
             </Menu>
           </div>
         </Toolbar>

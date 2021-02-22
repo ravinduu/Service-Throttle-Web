@@ -3,7 +3,7 @@ export const initialState = {
   token: null,
   username: null,
   makes: [],
-  api: "http://localhost:8081/st",
+  api: "https://servicethrottle.herokuapp.com/st",
 };
 
 export const reducer = (state, action) => {
