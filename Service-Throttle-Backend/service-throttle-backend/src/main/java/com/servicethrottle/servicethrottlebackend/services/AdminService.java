@@ -65,10 +65,8 @@ public class AdminService {
         if (existingAdmin.isPresent() && !existingAdmin.get().getUsername().toLowerCase().equals(userDetailsDto.getUsername().toLowerCase())){
             throw new EmailAlreadyExistException();
         }
-
-        SecurityUtils
-                .getCurrentUsername()
-                .flatMap(adminRepository::findOneByUsername)
+            adminRepository
+                .findOneByUsername(userDetailsDto.getUsername())
                 .ifPresent(admin -> {
                     admin.setFirstname(userDetailsDto.getFirstname());
                     admin.setLastname(userDetailsDto.getLastname());

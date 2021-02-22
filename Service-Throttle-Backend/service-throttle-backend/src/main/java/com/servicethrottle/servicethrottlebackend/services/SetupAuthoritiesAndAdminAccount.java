@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Set;
@@ -17,9 +18,8 @@ import java.util.Set;
 import static com.servicethrottle.servicethrottlebackend.models.enums.AccountType.*;
 import static com.servicethrottle.servicethrottlebackend.models.enums.AuthorityType.*;
 
-@Component
-public class SetupAuthoritiesAndAdminAccount implements ApplicationListener<ContextRefreshedEvent> {
-
+@Service
+public class SetupAuthoritiesAndAdminAccount implements ApplicationListener<ContextRefreshedEvent>{
     private boolean alreadySetup = false;
 
     private final UserCredentialsRepository UACRepo;

@@ -1,0 +1,54 @@
+.sidebar {
+  min-height: 100vh;
+  min-width: 290px;
+  padding-left: 10px;
+  padding-right: 10px;
+  flex: 0.2;
+  color: white;
+  background-color: #03254c;
+  position: relative;
+  overflow-y: auto;
+}
+
+.sidebarOpen {
+  min-height: 100vh;
+  min-width: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  flex: 0.2;
+  color: white;
+  background-color: #03254c;
+  position: relative;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.sidebar__logo {
+  margin-right: auto;
+  height: 70px;
+  padding: 10px;
+}
+
+.sidebar__title {
+  margin-left: 10px;
+  padding: 5px;
+  font-size: 12px;
+}
+
+.sidebar > hr {
+  border: 1px solid #282828;
+  width: 90%;
+  margin: 10px auto;
+}
+
+.search-bar {
+  padding: 5px;
+}
+
+.drawer {
+  width: 280px;
+}
+
+.iconButton {
+  color: white;
+  padding-left: 3px;
+}

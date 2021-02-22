@@ -14,11 +14,13 @@ import com.servicethrottle.servicethrottlebackend.repositories.ActivationCodeRep
 import com.servicethrottle.servicethrottlebackend.repositories.UserCredentialsRepository;
 import com.servicethrottle.servicethrottlebackend.security.SecurityUtils;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -39,6 +41,7 @@ public class UserAccountService {
     private final CustomerService customerService;
     private final SupervisorService supervisorService;
     private final MobileMechanicService mobileMechanicService;
+    private final MailService mailService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -79,7 +82,14 @@ public class UserAccountService {
 //        userCredentials.setActivated(false);
             if (!success) return "Something goes wrong !!";
 
-            generateActivationCode(userCredentials);
+            String activationCode = generateActivationCode(userCredentials).getActivationCode();
+
+            String to = registrationRequestDto.getEmail();
+            String subject = activationCode+" is your Service Throttle code";
+            String body = "Hi,\n\nSomeone tried to sign up for a Service Throttle account with "+to+". If it was you, enter this activation code in the app: \n\t<p1>" + activationCode+"</p>\n\nThank you,\nService Throttle";
+
+            mailService.sendMails(to, subject, body);
+
             userCredentialsRepository.save(userCredentials);
             return "Success";
         }
@@ -105,8 +115,7 @@ public class UserAccountService {
         activationCode.setActivationCode(code);
         activationCode.setUserCredentials(userCredentials);
         activationCodeRepository.save(activationCode);
-//        verification code will send to the customer email
-//        mailService.sendActivationEmail(activationCode);
+
         return activationCode;
     }
 
@@ -211,22 +220,33 @@ public class UserAccountService {
 
 
     @Transactional(readOnly = true)
-    public UserDetailsDto getUser() {
+    public UserDetailsDto getUser(String username) {
+
+
+
         UserDetailsDto userDetailsDto = new UserDetailsDto();
-        String username = SecurityUtils.getCurrentUsername().orElseThrow(() -> new UsernameNotFoundException("User  was not found !!"));
+//        String username = SecurityUtils.getCurrentUsername().orElseThrow(() -> new UsernameNotFoundException("User  was not found !!"));
 
         UserCredentials userCredentials = userCredentialsRepository.findOneByUsername(username).get();
 
         if (userCredentials.getAccountType().equals(ADMIN_ACCOUNT.getAccountType())) userDetailsDto = adminService.getAdmin(username);
         else if (userCredentials.getAccountType().equals(SUPERVISOR_ACCOUNT.getAccountType())) userDetailsDto = supervisorService.getSupervisor(username);
-        else if (userCredentials.getAccountType().equals(MOBILE_MECHANIC_ACCOUNT.getAccountType())) userDetailsDto = mobileMechanicService.getMobileMechanic(username);
-        else if (userCredentials.getAccountType().equals(CUSTOMER_ACCOUNT.getAccountType())) userDetailsDto = customerService.getCustomer(username);
+        else if (userCredentials.getAccountType().equals(MOBILE_MECHANIC_ACCOUNT.getAccountType())) userDetailsDto = new UserDetailsDto(mobileMechanicService.getMobileMechanic(username));
+        else if (userCredentials.getAccountType().equals(CUSTOMER_ACCOUNT.getAccountType())) userDetailsDto = new UserDetailsDto(customerService.getCustomer(username));
         return userDetailsDto;
 
     }
 
     public String updateUser(UserDetailsDto userDetailsDto) throws AccountResourceException {
         String username = SecurityUtils.getCurrentUsername().orElseThrow(() -> new UsernameNotFoundException("User  was not found !!"));
+        return updateAndSaveUser(userDetailsDto, username);
+    }
+
+    public String updateExistingUser(UserDetailsDto userDetailsDto) throws AccountResourceException {
+        return updateAndSaveUser(userDetailsDto, userDetailsDto.getUsername());
+    }
+
+    private String updateAndSaveUser(UserDetailsDto userDetailsDto, String username) throws AccountResourceException {
 
         Optional<UserCredentials> userCredentials = userCredentialsRepository.findOneByUsername(username);
         if (!userCredentials.isPresent()) throw new AccountResourceException("User could not be found");
@@ -257,4 +277,5 @@ public class UserAccountService {
                });
        return "Something went wrong !!";
     }
+
 }
