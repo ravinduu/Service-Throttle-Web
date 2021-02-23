@@ -10,10 +10,6 @@ services:
       - MYSQL_ROOT_USERNAME=root
     ports:
       - "3307:3306"
-    # volumes:
-    #   - service-throttle-mysql-data:/var/lib/mysql
-    # networks:
-    #   - backend
     container_name: service-throttle-mysql
 
   service-throttle-backend:
@@ -22,21 +18,16 @@ services:
     image: ravdsn/service-throttle-backend:v1.0
     environment:
       - spring.datasource.url=jdbc:mysql://service-throttle-mysql:3306/service_throttle
-    #   - spring.datasource.username=servicethrottleuser
-    #   - spring.datasource.password=servicethrottleuser
+      - spring.datasource.username=root
+      - spring.datasource.password=root
     ports:
       - "8081:8081"
-    # depends_on:
-    #   - service-throttle-mysql
-    # links:
-    #   - service-throttle-mysql
-
-    #     # networks:
-    #     #   - backend
     container_name: service-throttle-backend
-# volumes:
-#   service-throttle-mysql-data:
 
-# networks:
-#   backend:
-#     driver: bridge
+  service-throttle-frontend-admin:
+    restart: always
+    build: ./Service-Throttle-Frontend/service-throttle-admin-dashboard
+    image: ravdsn/service-throttle-frontend-admin:v1.0
+    ports:
+      - "3001:3000"
+    container_name: service-throttle-frontend-admin
