@@ -36,7 +36,7 @@ jobs:
         with:
           image: ravdsn/service-throttle-frontend-admin
           tags: v1.0
-          dockerfile: .Service-Throttle-Web/Service-Throttle-Frontend/service-throttle-admin-dashboard/Dockerfile
+          dockerfile: ./Service-Throttle-Web/Service-Throttle-Frontend/service-throttle-admin-dashboard/Dockerfile
           registry: docker.io
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
