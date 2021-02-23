@@ -24,8 +24,8 @@ jobs:
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & push Docker image
         with:
-          image: ravdsn/service-throttle/backend
-          tags: v1.0
+          image: ravdsn/service-throttle
+          tags: backend:v1.0
           dockerfile: ./Service-Throttle-Backend/service-throttle-backend/Dockerfile
           registry: docker.io
           username: ${{ secrets.DOCKER_USERNAME }}
