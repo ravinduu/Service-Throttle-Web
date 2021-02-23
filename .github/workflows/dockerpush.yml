@@ -20,3 +20,13 @@ jobs:
           java-version: 11
       - name: Build with Maven
         run: mvn -B -e -X package --file ./Service-Throttle-Backend/service-throttle-backend/pom.xml
+        
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push Docker image
+        with:
+          image: ravdsn/service-throttle/backend
+          tags: v1.0
+          dockerfile: ./Service-Throttle-Backend/service-throttle-backend/Dockerfile
+          registry: docker.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
