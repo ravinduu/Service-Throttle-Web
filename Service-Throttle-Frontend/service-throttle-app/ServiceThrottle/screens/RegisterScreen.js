@@ -1,47 +1,46 @@
-import React, { useEffect, useState } from "react";
-import { KeyboardAvoidingView, StyleSheet, View } from "react-native";
-import { Button, Image, Input } from "react-native-elements";
+import React, { useState } from "react";
+import { KeyboardAvoidingView, StyleSheet, Text, View } from "react-native";
+import { Button, Input } from "react-native-elements";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
 
 import { useDataLayerValue } from "../context/DataLayer";
 
-const authCredentials = {
+const regCredentials = {
   username: "",
   password: "",
+  email: "",
 };
 
 const validationSchema = yup.object({
   username: yup
     .string("Enter your username")
     .min(5, "Username should be of minimum 5 characters length")
+    .max(50, "Too Long!")
     .required("Username is required"),
   password: yup
     .string("Enter your password")
-    .min(5, "Password should be of minimum 8 characters length")
+    .min(8, "Password should be of minimum 8 characters length")
+    .max(50, "Too Long!")
     .required("Password is required"),
+  email: yup.string().email("Invalid email").required("Required"),
 });
 
-const LoginScreen = ({ navigation }) => {
-  const [access, setAccess] = useState("");
+const RegisterScreen = ({ navigation }) => {
   const [{ api }, dispatch] = useDataLayerValue();
 
-  useEffect(() => {
-    dispatch({
-      type: "SET_TOKEN",
-      token: access,
-    });
-  }, [access]);
-
   const formik = useFormik({
-    initialValues: authCredentials,
+    initialValues: regCredentials,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+      values.accountType = "customer_account";
+      console.log(values);
       await axios
-        .post(`${api}/login`, values)
+        .post(`${api}/register`, values)
         .then((res) => {
-          setAccess(res.data.jwttoken);
+          console.log(res.data);
+          navigation.navigate("Activate");
         })
         .catch((err) => {
           console.log(err);
@@ -51,10 +50,8 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="height">
-      <Image
-        source={require("../images/1024.png")}
-        style={{ width: 150, height: 150 }}
-      />
+      <Text style={styles.headerText}>Service Throttle</Text>
+      <Text style={styles.headerTextTwo}>at your door step.</Text>
       <View>
         <Input
           inputContainerStyle={styles.inputContainer}
@@ -74,30 +71,29 @@ const LoginScreen = ({ navigation }) => {
           onChangeText={formik.handleChange("password")}
           errorMessage={formik.touched.password && formik.errors.password}
         />
+        <Input
+          inputContainerStyle={styles.inputContainer}
+          placeholder="Email"
+          type="email"
+          value={formik.values.email}
+          onChangeText={formik.handleChange("email")}
+          errorMessage={formik.touched.email && formik.errors.email}
+        />
       </View>
       <Button
         buttonStyle={{
           backgroundColor: "#104a8e",
         }}
         containerStyle={styles.button}
-        onPress={formik.handleSubmit}
-        title="Login"
-      />
-      <Button
-        buttonStyle={{
-          borderColor: "#104a8e",
-        }}
-        titleStyle={{ color: "#104a8e" }}
-        containerStyle={styles.button}
-        type="outline"
         title="Sign Up"
-        onPress={() => navigation.navigate("Register")}
+        onPress={formik.handleSubmit}
       />
+      <View style={{ height: 100 }}></View>
     </KeyboardAvoidingView>
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -113,6 +109,15 @@ const styles = StyleSheet.create({
     borderColor: "#104a8e",
     borderRadius: 5,
     paddingLeft: 10,
+  },
+  headerText: {
+    color: "#03254c",
+    fontSize: 40,
+  },
+  headerTextTwo: {
+    color: "#03254c",
+    fontSize: 25,
+    marginBottom: 50,
   },
   button: {
     paddingTop: 5,
