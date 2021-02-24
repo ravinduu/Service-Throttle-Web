@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/st")
 @AllArgsConstructor
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("*")
 public class UserController {
 
     /**

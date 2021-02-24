@@ -88,7 +88,7 @@ public class UserAccountService {
             String subject = activationCode+" is your Service Throttle code";
             String body = "Hi,\n\nSomeone tried to sign up for a Service Throttle account with "+to+". If it was you, enter this activation code in the app: \n\t<p1>" + activationCode+"</p>\n\nThank you,\nService Throttle";
 
-            mailService.sendMails(to, subject, body);
+//            mailService.sendMails(to, subject, body);
 
             userCredentialsRepository.save(userCredentials);
             return "Success";

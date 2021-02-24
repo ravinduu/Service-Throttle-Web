@@ -1,9 +1,8 @@
 package com.servicethrottle.servicethrottlebackend.controllers;
 
 import com.servicethrottle.servicethrottlebackend.exceptions.AccountResourceException;
-import com.servicethrottle.servicethrottlebackend.models.dto.PasswordResetDto;
-import com.servicethrottle.servicethrottlebackend.models.dto.RegistrationRequestDto;
-import com.servicethrottle.servicethrottlebackend.models.dto.UserDetailsDto;
+import com.servicethrottle.servicethrottlebackend.models.dto.*;
+import com.servicethrottle.servicethrottlebackend.services.JWTAuthService;
 import com.servicethrottle.servicethrottlebackend.services.UserAccountService;
 import lombok.AllArgsConstructor;
 import lombok.Value;
@@ -13,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.*;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -23,10 +23,11 @@ REST controller for managing user accounts.
 @RestController
 @RequestMapping("/st")
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin("*")
 public class AccountController {
 
     private final UserAccountService userAccountService;
+    private JWTAuthService jwtAuthService;
 
     /**
      * registration of a new user
@@ -66,9 +67,18 @@ public class AccountController {
      * */
     @GetMapping("/activate")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> activateAccount(@RequestBody String code)
+    public String activateAccount(@RequestBody ActivationRequestDto activationRequestDto)
             throws Exception {
-        return ResponseEntity.ok().body(userAccountService.activateUser(code));
+
+        System.out.println("activationRequestDto");
+        userAccountService.activateUser(activationRequestDto.getActivationCode());
+        LoginRequestDto loginRequestDto = new LoginRequestDto();
+        loginRequestDto.setUsername(activationRequestDto.getUsername());
+        loginRequestDto.setPassword(activationRequestDto.getPassword());
+
+
+        System.out.println(jwtAuthService.login(loginRequestDto));
+        return "Fuck yoy";
     }
 
     /**

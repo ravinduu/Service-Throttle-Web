@@ -4,6 +4,7 @@ import { Button, Input } from "react-native-elements";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
+import AsyncStorage from "@react-native-community/async-storage";
 
 import { useDataLayerValue } from "../context/DataLayer";
 
@@ -34,8 +35,9 @@ const RegisterScreen = ({ navigation }) => {
     initialValues: regCredentials,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+      await AsyncStorage.setItem("regUsername", values.username);
+      await AsyncStorage.setItem("regPassword", values.password);
       values.accountType = "customer_account";
-      console.log(values);
       await axios
         .post(`${api}/register`, values)
         .then((res) => {

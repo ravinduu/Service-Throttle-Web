@@ -4,6 +4,7 @@ import { Button, Image, Input } from "react-native-elements";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
+import AsyncStorage from "@react-native-community/async-storage";
 
 import { useDataLayerValue } from "../context/DataLayer";
 
@@ -42,6 +43,7 @@ const LoginScreen = ({ navigation }) => {
         .post(`${api}/login`, values)
         .then((res) => {
           setAccess(res.data.jwttoken);
+          console.log(access);
         })
         .catch((err) => {
           console.log(err);

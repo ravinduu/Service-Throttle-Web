@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/st/service-request")
 @AllArgsConstructor
+@CrossOrigin("*")
 public class ServiceRequestController {
 
     private final ServiceRequestService serviceRequestService;
