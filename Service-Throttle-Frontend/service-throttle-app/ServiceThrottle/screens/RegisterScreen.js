@@ -51,14 +51,13 @@ const RegisterScreen = ({ navigation }) => {
   });
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="height">
+    <KeyboardAvoidingView style={styles.container}>
       <Text style={styles.headerText}>Service Throttle</Text>
       <Text style={styles.headerTextTwo}>at your door step.</Text>
       <View>
         <Input
           inputContainerStyle={styles.inputContainer}
           placeholder="Username"
-          autoFocus
           type="username"
           value={formik.values.username}
           onChangeText={formik.handleChange("username")}
@@ -90,7 +89,6 @@ const RegisterScreen = ({ navigation }) => {
         title="Sign Up"
         onPress={formik.handleSubmit}
       />
-      <View style={{ height: 100 }}></View>
     </KeyboardAvoidingView>
   );
 };

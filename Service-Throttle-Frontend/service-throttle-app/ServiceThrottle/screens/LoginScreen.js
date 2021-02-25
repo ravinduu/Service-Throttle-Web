@@ -42,8 +42,11 @@ const LoginScreen = ({ navigation }) => {
       await axios
         .post(`${api}/login`, values)
         .then((res) => {
-          setAccess(res.data.jwttoken);
-          console.log(access);
+          const _token = res.data.jwttoken;
+          dispatch({
+            type: "SET_TOKEN",
+            token: _token,
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -52,7 +55,7 @@ const LoginScreen = ({ navigation }) => {
   });
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="height">
+    <KeyboardAvoidingView style={styles.container}>
       <Image
         source={require("../images/1024.png")}
         style={{ width: 150, height: 150 }}
@@ -61,7 +64,6 @@ const LoginScreen = ({ navigation }) => {
         <Input
           inputContainerStyle={styles.inputContainer}
           placeholder="Username"
-          autoFocus
           type="username"
           value={formik.values.username}
           onChangeText={formik.handleChange("username")}

@@ -65,9 +65,9 @@ public class AccountController {
      * throws AccountResourceException if the code is an invalid one
      *
      * */
-    @GetMapping("/activate")
+    @PostMapping("/activate")
     @ResponseStatus(HttpStatus.OK)
-    public String activateAccount(@RequestBody ActivationRequestDto activationRequestDto)
+    public AuthenticationResponseDto activateAccount(@RequestBody ActivationRequestDto activationRequestDto)
             throws Exception {
 
         System.out.println("activationRequestDto");
@@ -77,8 +77,7 @@ public class AccountController {
         loginRequestDto.setPassword(activationRequestDto.getPassword());
 
 
-        System.out.println(jwtAuthService.login(loginRequestDto));
-        return "Fuck yoy";
+        return jwtAuthService.login(loginRequestDto);
     }
 
     /**
