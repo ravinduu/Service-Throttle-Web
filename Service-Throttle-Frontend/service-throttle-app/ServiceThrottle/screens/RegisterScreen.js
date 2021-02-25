@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { KeyboardAvoidingView, StyleSheet, Text, View } from "react-native";
 import { Button, Input } from "react-native-elements";
 import { useFormik } from "formik";
@@ -42,7 +42,7 @@ const RegisterScreen = ({ navigation }) => {
         .post(`${api}/register`, values)
         .then((res) => {
           console.log(res.data);
-          navigation.navigate("Activate");
+          navigation.replace("Activate");
         })
         .catch((err) => {
           console.log(err);

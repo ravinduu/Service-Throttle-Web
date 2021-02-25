@@ -21,7 +21,7 @@ const validationSchema = yup.object({
     .required("Activation code is required"),
 });
 
-const ActivationScreen = () => {
+const ActivationScreen = ({ navigation }) => {
   const [{ api }, dispatch] = useDataLayerValue();
 
   const [activatonRequest, setActivatonRequest] = useState({
@@ -49,12 +49,25 @@ const ActivationScreen = () => {
     console.log(activatonRequest);
     await axios
       .post(`${api}/activate`, activatonRequest)
-      .then((res) => {
+      .then(async (res) => {
         const _token = res.data.jwttoken;
+        const _username = res.data.username;
+        await AsyncStorage.setItem("JWT", _token);
         dispatch({
           type: "SET_TOKEN",
           token: _token,
         });
+        dispatch({
+          type: "SET_USERNAME",
+          username: _username,
+        });
+      })
+      .then(async () => {
+        await AsyncStorage.removeItem("regUsername");
+        await AsyncStorage.removeItem("regPassword");
+      })
+      .then(() => {
+        navigation.replace("Home");
       })
       .catch((err) => {
         console.log(err);

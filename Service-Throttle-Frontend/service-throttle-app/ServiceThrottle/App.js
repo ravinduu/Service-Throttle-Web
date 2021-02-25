@@ -10,6 +10,7 @@ import { reducer, initialState } from "./context/reducer";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ActivationScreen from "./screens/ActivationScreen";
+import HomeScreen from "./screens/HomeScreen";
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,7 @@ export default function App() {
             />
             <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="Activate" component={ActivationScreen} />
+            <Stack.Screen name="Home" component={HomeScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </DataLayer>

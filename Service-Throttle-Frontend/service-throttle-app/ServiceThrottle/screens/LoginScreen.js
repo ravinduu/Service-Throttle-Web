@@ -25,15 +25,43 @@ const validationSchema = yup.object({
 });
 
 const LoginScreen = ({ navigation }) => {
-  const [access, setAccess] = useState("");
   const [{ api }, dispatch] = useDataLayerValue();
 
-  useEffect(() => {
-    dispatch({
-      type: "SET_TOKEN",
-      token: access,
+  const isRegisterd = async () => {
+    await AsyncStorage.getItem("regPassword").then((res) => {
+      if (res) {
+        navigation.navigate("Activate");
+      }
     });
-  }, [access]);
+  };
+
+  const isLogged = async () => {
+    await AsyncStorage.getItem("USERNAME").then((res) => {
+      if (res) {
+        dispatch({
+          type: "SET_USERNAME",
+          username: res,
+        });
+      }
+    });
+
+    await AsyncStorage.getItem("JWT").then((res) => {
+      if (res) {
+        dispatch({
+          type: "SET_TOKEN",
+          token: res,
+        });
+        navigation.replace("Home");
+      }
+    });
+  };
+
+  useEffect(() => {
+    isLogged();
+    isRegisterd();
+
+    return () => console.log("unmounting...");
+  }, []);
 
   const formik = useFormik({
     initialValues: authCredentials,
@@ -43,10 +71,18 @@ const LoginScreen = ({ navigation }) => {
         .post(`${api}/login`, values)
         .then((res) => {
           const _token = res.data.jwttoken;
+          const _username = res.data.username;
+          AsyncStorage.setItem("JWT", _token);
+          AsyncStorage.setItem("USERNAME", _username);
           dispatch({
             type: "SET_TOKEN",
             token: _token,
           });
+          dispatch({
+            type: "SET_USERNAME",
+            username: _username,
+          });
+          navigation.replace("Home");
         })
         .catch((err) => {
           console.log(err);
