@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { KeyboardAvoidingView, StyleSheet, View } from "react-native";
 import { Button, Image, Input } from "react-native-elements";
 import { useFormik } from "formik";
@@ -7,6 +7,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-community/async-storage";
 
 import { useDataLayerValue } from "../context/DataLayer";
+import Loading from "./Loading";
 
 const authCredentials = {
   username: "",
@@ -25,7 +26,7 @@ const validationSchema = yup.object({
 });
 
 const LoginScreen = ({ navigation }) => {
-  const [{ api }, dispatch] = useDataLayerValue();
+  const [{ api, isLoading }, dispatch] = useDataLayerValue();
 
   const isRegisterd = async () => {
     await AsyncStorage.getItem("regPassword").then((res) => {
@@ -56,11 +57,20 @@ const LoginScreen = ({ navigation }) => {
     });
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    dispatch({
+      type: "SET_LOADING",
+      isLoading: true,
+    });
     isLogged();
     isRegisterd();
 
-    return () => console.log("unmounting...");
+    return () => {
+      dispatch({
+        type: "SET_LOADING",
+        isLoading: false,
+      });
+    };
   }, []);
 
   const formik = useFormik({
@@ -89,6 +99,10 @@ const LoginScreen = ({ navigation }) => {
         });
     },
   });
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <KeyboardAvoidingView style={styles.container}>
