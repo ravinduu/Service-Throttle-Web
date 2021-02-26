@@ -51,7 +51,7 @@ const LoginScreen = ({ navigation }) => {
           type: "SET_TOKEN",
           token: res,
         });
-        navigation.replace("Home");
+        navigation.replace("Main");
       }
     });
   };
@@ -82,7 +82,7 @@ const LoginScreen = ({ navigation }) => {
             type: "SET_USERNAME",
             username: _username,
           });
-          navigation.replace("Home");
+          navigation.replace("Main");
         })
         .catch((err) => {
           console.log(err);

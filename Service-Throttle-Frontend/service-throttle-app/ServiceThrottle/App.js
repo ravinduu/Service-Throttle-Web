@@ -1,7 +1,6 @@
 import React from "react";
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
-import { StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -10,7 +9,7 @@ import { reducer, initialState } from "./context/reducer";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ActivationScreen from "./screens/ActivationScreen";
-import HomeScreen from "./screens/HomeScreen";
+import Main from "./screens/Main";
 
 const Stack = createStackNavigator();
 
@@ -27,7 +26,7 @@ export default function App() {
             />
             <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="Activate" component={ActivationScreen} />
-            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Main" component={Main} />
           </Stack.Navigator>
         </NavigationContainer>
       </DataLayer>

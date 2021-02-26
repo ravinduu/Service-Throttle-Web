@@ -3,6 +3,8 @@ export const initialState = {
   user: null,
   token: null,
   isLoading: false,
+  services: [],
+  promotions: [],
   // api: "https://servicethrottle.herokuapp.com/st",
   api: "http://192.168.1.102:8081/st",
 };
@@ -32,6 +34,18 @@ export const reducer = (state, action) => {
       return {
         ...state,
         isLoading: action.isLoading,
+      };
+
+    case "SET_SERVICES":
+      return {
+        ...state,
+        services: action.services,
+      };
+
+    case "SET_PROMOS":
+      return {
+        ...state,
+        promotions: action.promotions,
       };
 
     default:

@@ -53,6 +53,7 @@ const ActivationScreen = ({ navigation }) => {
         const _token = res.data.jwttoken;
         const _username = res.data.username;
         await AsyncStorage.setItem("JWT", _token);
+        await AsyncStorage.setItem("USERNAME", _username);
         dispatch({
           type: "SET_TOKEN",
           token: _token,
@@ -67,7 +68,7 @@ const ActivationScreen = ({ navigation }) => {
         await AsyncStorage.removeItem("regPassword");
       })
       .then(() => {
-        navigation.replace("Home");
+        navigation.replace("Main");
       })
       .catch((err) => {
         console.log(err);

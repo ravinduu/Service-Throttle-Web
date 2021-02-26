@@ -1,15 +1,13 @@
-const fetchUsers = async (authAxios, type) => {
+const fetchUsers = async (authAxios, username) => {
   try {
-    const res = await authAxios.get(`/users/${type}`);
-
-    const _users = await res.data;
-    console.log(_users);
-    return _users;
+    const res = await authAxios.get(`/account/${username}`);
+    const user = res.data;
+    return user;
   } catch (error) {
     console.log(error);
   }
 };
 
-export function getCurrentUser(authAxios, type) {
-  return fetchUsers(authAxios, type);
+export function getCurrentUser(authAxios, username) {
+  return fetchUsers(authAxios, username);
 }
