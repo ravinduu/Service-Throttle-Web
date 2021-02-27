@@ -29,6 +29,7 @@ const LoginScreen = ({ navigation }) => {
   const [{ api, isLoading }, dispatch] = useDataLayerValue();
 
   const isRegisterd = async () => {
+    console.log("is reg");
     await AsyncStorage.getItem("regPassword").then((res) => {
       if (res) {
         navigation.navigate("Activate");
@@ -37,6 +38,7 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const isLogged = async () => {
+    console.log("is log");
     await AsyncStorage.getItem("USERNAME").then((res) => {
       if (res) {
         dispatch({
@@ -64,6 +66,10 @@ const LoginScreen = ({ navigation }) => {
     });
     isLogged();
     isRegisterd();
+    dispatch({
+      type: "SET_LOADING",
+      isLoading: false,
+    });
 
     return () => {
       dispatch({

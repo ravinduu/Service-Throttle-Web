@@ -63,7 +63,7 @@ const Main = ({ navigation, route }) => {
       headerLeft: () => getHeaderLeft(route),
     });
     return () => {
-      console.log("unmounting account...");
+      console.log("unmounting...");
     };
   }, [navigation, route]);
 

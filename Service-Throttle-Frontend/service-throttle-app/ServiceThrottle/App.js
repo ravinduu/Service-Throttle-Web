@@ -10,6 +10,7 @@ import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ActivationScreen from "./screens/ActivationScreen";
 import Main from "./screens/Main";
+import SettingsScreen from "./screens/SettingsScreen";
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,7 @@ export default function App() {
             <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="Activate" component={ActivationScreen} />
             <Stack.Screen name="Main" component={Main} />
+            <Stack.Screen name="Settings" component={SettingsScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </DataLayer>
