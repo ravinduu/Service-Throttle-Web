@@ -12,7 +12,6 @@ const AccountScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text>{user?.username}</Text>
       <CustomListItem
         _key="1"
         icon="settings-sharp"

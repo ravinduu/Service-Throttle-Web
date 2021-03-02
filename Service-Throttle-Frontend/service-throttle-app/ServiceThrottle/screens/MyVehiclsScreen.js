@@ -1,7 +1,7 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useLayoutEffect } from "react";
+import { Button, StyleSheet, Text, View } from "react-native";
 
-const MyVehiclsScreen = () => {
+const MyVehiclsScreen = ({ navigation }) => {
   return (
     <View>
       <Text>Yo wtsp</Text>

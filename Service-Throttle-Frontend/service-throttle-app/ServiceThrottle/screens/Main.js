@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect } from "react";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import axios from "axios";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
@@ -19,6 +19,7 @@ import MyVehiclsScreen from "./MyVehiclsScreen";
 import AccountScreen from "./AccountScreen";
 import { View } from "react-native";
 import { Avatar } from "react-native-elements";
+import { getEngines, getMakes, getModels } from "../services/vehicleService";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,19 +38,41 @@ const Main = ({ navigation, route }) => {
       case "My Vehicles":
         return "My Vehicles";
       case "Account":
-        return user ? user.firstname + " " + user.lastname : username;
+        return user?.firstname
+          ? user.firstname + " " + user.lastname
+          : username;
     }
   }
 
   function getHeaderLeft(route) {
     const routeName = getFocusedRouteNameFromRoute(route);
-    console.log(routeName);
     switch (routeName) {
       case "Account":
         return (
-          <View style={{ marginLeft: 20 }}>
+          <View style={{ marginLeft: 20 }} pointerEvents="none">
             <Avatar rounded source={require("../images/avatar.png")} />
           </View>
+        );
+
+      default:
+        return "";
+    }
+  }
+
+  function getHeaderRight(route) {
+    const routeName = getFocusedRouteNameFromRoute(route);
+    switch (routeName) {
+      case "My Vehicles":
+        return (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Add Vehicle");
+            }}
+          >
+            <View style={{ marginRight: 20 }}>
+              <Ionicons name="ios-add" size={35} color="black" />
+            </View>
+          </TouchableOpacity>
         );
 
       default:
@@ -61,6 +84,7 @@ const Main = ({ navigation, route }) => {
     navigation.setOptions({
       headerTitle: getHeaderTitle(route),
       headerLeft: () => getHeaderLeft(route),
+      headerRight: () => getHeaderRight(route),
     });
     return () => {
       console.log("unmounting...");
@@ -105,12 +129,27 @@ const Main = ({ navigation, route }) => {
         console.log("get Service Requests..");
       })
       .then(async () => {
-        console.log("get Parts..");
+        await getEngines(authAxios).then((res) => {
+          dispatch({
+            type: "SET_ENGINES",
+            engines: res,
+          });
+        });
       })
-      .then(() => {
-        dispatch({
-          type: "SET_LOADING",
-          isLoading: false,
+      .then(async () => {
+        await getMakes(authAxios).then((res) => {
+          dispatch({
+            type: "SET_MAKES",
+            makes: res,
+          });
+        });
+      })
+      .then(async () => {
+        await getModels(authAxios).then((res) => {
+          dispatch({
+            type: "SET_MODELS",
+            models: res,
+          });
         });
       })
       .catch((err) => {
@@ -121,13 +160,8 @@ const Main = ({ navigation, route }) => {
   useEffect(() => {
     console.log(user);
     if (!user) {
-      dispatch({
-        type: "SET_LOADING",
-        isLoading: true,
-      });
       fetchData();
     }
-
     return () => {
       console.log("unmounting...");
     };

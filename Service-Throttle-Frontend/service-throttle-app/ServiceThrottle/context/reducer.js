@@ -5,6 +5,10 @@ export const initialState = {
   isLoading: false,
   services: [],
   promotions: [],
+  engines: [],
+  makes: [],
+  models: [],
+
   // api: "https://servicethrottle.herokuapp.com/st",
   api: "http://192.168.1.102:8081/st",
 };
@@ -46,6 +50,22 @@ export const reducer = (state, action) => {
       return {
         ...state,
         promotions: action.promotions,
+      };
+
+    case "SET_ENGINES":
+      return {
+        ...state,
+        engines: action.engines,
+      };
+    case "SET_MAKES":
+      return {
+        ...state,
+        makes: action.makes,
+      };
+    case "SET_MODELS":
+      return {
+        ...state,
+        models: action.models,
       };
 
     default:

@@ -15,4 +15,4 @@ spring:
       hibernate:
         dialate: org.hibernate.dialect.MySQL5InnoDBDialate
     hibernate:
-      ddl-auto: create
+      ddl-auto: update

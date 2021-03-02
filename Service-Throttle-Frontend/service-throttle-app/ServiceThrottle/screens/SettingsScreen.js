@@ -18,8 +18,11 @@ const SettingsScreen = ({ navigation }) => {
       <View style={styles.topComponent}>
         <Avatar size="large" rounded source={require("../images/avatar.png")} />
         <Text style={styles.userName}>
-          {user ? user.firstname + " " + user.lastname : username}
+          {user?.firstname ? user.firstname + " " + user.lastname : username}
         </Text>
+        {/* <Text style={styles.otherInfo}>{user ? user.phoneNumber : ""}</Text>
+        <Text style={styles.otherInfo}>{user ? user.email : ""}</Text>
+        <Text style={styles.otherInfo}>{user ? user.address : ""}</Text> */}
         <Text
           style={styles.editAccount}
           onPress={() => {
@@ -55,7 +58,9 @@ const SettingsScreen = ({ navigation }) => {
           style={styles.signOut}
           onPress={async () => {
             console.log("signOut");
-            await AsyncStorage.clear();
+            await AsyncStorage.clear().then(() => {
+              navigation.replace("Login");
+            });
           }}
         >
           Sign Out

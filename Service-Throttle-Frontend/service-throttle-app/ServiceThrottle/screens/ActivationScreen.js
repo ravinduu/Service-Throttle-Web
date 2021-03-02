@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { KeyboardAvoidingView, StyleSheet, Text, View } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import { Button, Input } from "react-native-elements";
@@ -84,8 +84,11 @@ const ActivationScreen = ({ navigation }) => {
     },
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     getRegCredentials();
+    navigation.setOptions({
+      headerLeft: null,
+    });
   }, []);
 
   return (

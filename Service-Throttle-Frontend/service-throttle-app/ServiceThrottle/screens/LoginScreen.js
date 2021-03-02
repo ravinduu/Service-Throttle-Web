@@ -70,7 +70,6 @@ const LoginScreen = ({ navigation }) => {
       type: "SET_LOADING",
       isLoading: false,
     });
-
     return () => {
       dispatch({
         type: "SET_LOADING",
