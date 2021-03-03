@@ -28,16 +28,7 @@ const HomeScreen = ({ navigation }) => {
       showsHorizontalScrollIndicator={false}
     >
       <View>
-        <Text
-          style={{
-            marginTop: 10,
-            marginLeft: 15,
-            fontSize: 25,
-            fontWeight: "bold",
-          }}
-        >
-          Promotions
-        </Text>
+        <Text style={styles.title}>Promotions</Text>
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -48,16 +39,7 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
       <View>
-        <Text
-          style={{
-            marginTop: 10,
-            marginLeft: 15,
-            fontSize: 25,
-            fontWeight: "bold",
-          }}
-        >
-          Our Services
-        </Text>
+        <Text style={styles.title}>Our Services</Text>
         {services?.map((service) => {
           return (
             <CustomCard
@@ -83,5 +65,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  title: {
+    marginTop: 10,
+    marginLeft: 15,
+    fontSize: 30,
+    color: "#03254c",
   },
 });

@@ -14,7 +14,9 @@ const CustomCard = (props) => {
       }}
     >
       <Card pointerEvents="none">
-        <Card.Title style={{ fontSize: 18, fontWeight: "600" }}>
+        <Card.Title
+          style={{ fontSize: 18, fontWeight: "600", color: "#03254c" }}
+        >
           {title}
         </Card.Title>
         <Card.Divider />
@@ -27,7 +29,11 @@ const CustomCard = (props) => {
           <Text style={{ marginTop: 10, marginBottom: 10, fontSize: 15 }}>
             {price}
           </Text>
-          <Text style={styles.name} numberOfLines={2} ellipsizeMode="tail">
+          <Text
+            style={{ color: "gray" }}
+            numberOfLines={2}
+            ellipsizeMode="tail"
+          >
             {description}
           </Text>
         </View>

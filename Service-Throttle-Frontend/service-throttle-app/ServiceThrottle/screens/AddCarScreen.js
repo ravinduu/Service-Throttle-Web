@@ -1,26 +1,48 @@
 import React, { useLayoutEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
 import { StyleSheet, Text, View } from "react-native";
-import DropDownPicker from "react-native-dropdown-picker";
 import { useDataLayerValue } from "../context/DataLayer";
 import { Button, Input } from "react-native-elements";
-import { KeyboardAvoidingView } from "react-native";
+import axios from "axios";
+
+import { addCustomerVehicle } from "../services/vehicleService";
 
 const AddCarScreen = ({ navigation }) => {
-  useLayoutEffect(() => {
-    navigation.setOptions({ title: "" });
-  }, [navigation]);
-  const [{ engines, makes, models }, dispatch] = useDataLayerValue();
-
+  const [
+    { api, user, engines, makes, models, token },
+    dispatch,
+  ] = useDataLayerValue();
   const [selectedValueYear, setSelectedValueYear] = useState();
   const [selectedValue, setSelectedValue] = useState({});
   const [selectedValueMakes, setSelectedValueMakes] = useState({});
   const [selectedValueModels, setSelectedValueModels] = useState({});
-
   const [customerVehicle, setCustomerVehicle] = useState({});
 
+  useLayoutEffect(() => {
+    navigation.setOptions({ title: "" });
+  }, [navigation]);
+
+  let authAxios = axios.create({
+    baseURL: api,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const submit = async () => {
+    customerVehicle.customer = user;
+    customerVehicle.year = selectedValueYear;
+    customerVehicle.vehicleMake = selectedValueMakes;
+    customerVehicle.vehicleModel = selectedValueModels;
+    customerVehicle.vehicleEngine = selectedValue;
+
+    await addCustomerVehicle(authAxios, customerVehicle).then((res) => {
+      navigation.goBack();
+    });
+  };
+
   return (
-    <KeyboardAvoidingView style={styles.container}>
+    <View style={styles.container}>
       <Text
         style={{
           marginTop: 50,
@@ -38,7 +60,9 @@ const AddCarScreen = ({ navigation }) => {
           inputContainerStyle={{ height: 50, width: "100%" }}
           placeholder="Year"
           keyboardType="phone-pad"
-          secureTextEntry
+          onChangeText={(text) => {
+            setSelectedValueYear(text);
+          }}
         />
       </View>
       <View style={styles.pisckerStyle}>
@@ -99,12 +123,10 @@ const AddCarScreen = ({ navigation }) => {
       <Button
         buttonStyle={{ backgroundColor: "#104a8e", height: 50 }}
         containerStyle={styles.button}
-        onPress={() => {
-          console.log("shhshh");
-        }}
+        onPress={submit}
         title="Submit"
       />
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 

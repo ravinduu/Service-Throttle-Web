@@ -3,6 +3,7 @@ export const initialState = {
   user: null,
   token: null,
   isLoading: false,
+  myVehicles: [],
   services: [],
   promotions: [],
   engines: [],
@@ -14,7 +15,7 @@ export const initialState = {
 };
 
 export const reducer = (state, action) => {
-  console.log(action);
+  // console.log(action);
   switch (action.type) {
     case "SET_USER":
       return {
@@ -66,6 +67,11 @@ export const reducer = (state, action) => {
       return {
         ...state,
         models: action.models,
+      };
+    case "SET_CAR":
+      return {
+        ...state,
+        myVehicles: action.myVehicles,
       };
 
     default:

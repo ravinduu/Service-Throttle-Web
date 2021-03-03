@@ -38,6 +38,7 @@ const ServiceItemScreen = (props) => {
         <Text
           style={{
             fontSize: 17,
+            color: "gray",
           }}
         >
           {service.vehicleServiceDescription}

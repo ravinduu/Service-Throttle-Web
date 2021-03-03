@@ -13,6 +13,7 @@ import Main from "./screens/Main";
 import SettingsScreen from "./screens/SettingsScreen";
 import ServiceItemScreen from "./screens/ServiceItemScreen";
 import AddCarScreen from "./screens/AddCarScreen";
+import MyCarScreen from "./screens/MyCarScreen";
 
 const Stack = createStackNavigator();
 
@@ -33,6 +34,7 @@ export default function App() {
             <Stack.Screen name="Settings" component={SettingsScreen} />
             <Stack.Screen name="Service" component={ServiceItemScreen} />
             <Stack.Screen name="Add Vehicle" component={AddCarScreen} />
+            <Stack.Screen name="My Car" component={MyCarScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </DataLayer>

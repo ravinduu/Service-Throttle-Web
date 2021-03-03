@@ -29,7 +29,6 @@ const LoginScreen = ({ navigation }) => {
   const [{ api, isLoading }, dispatch] = useDataLayerValue();
 
   const isRegisterd = async () => {
-    console.log("is reg");
     await AsyncStorage.getItem("regPassword").then((res) => {
       if (res) {
         navigation.navigate("Activate");
@@ -38,7 +37,6 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const isLogged = async () => {
-    console.log("is log");
     await AsyncStorage.getItem("USERNAME").then((res) => {
       if (res) {
         dispatch({
@@ -59,17 +57,24 @@ const LoginScreen = ({ navigation }) => {
     });
   };
 
-  useLayoutEffect(() => {
+  const check = async () => {
     dispatch({
       type: "SET_LOADING",
       isLoading: true,
     });
-    isLogged();
-    isRegisterd();
+
+    await isLogged();
+    await isRegisterd();
+
     dispatch({
       type: "SET_LOADING",
       isLoading: false,
     });
+  };
+
+  useLayoutEffect(() => {
+    check();
+
     return () => {
       dispatch({
         type: "SET_LOADING",
