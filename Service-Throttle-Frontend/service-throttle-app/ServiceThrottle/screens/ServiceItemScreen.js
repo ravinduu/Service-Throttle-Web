@@ -1,6 +1,7 @@
 import React, { useLayoutEffect } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { Button } from "react-native-elements";
+import { Button, Icon } from "react-native-elements";
+import { FontAwesome } from "@expo/vector-icons";
 
 const ServiceItemScreen = (props) => {
   const { navigation } = props;
@@ -8,7 +9,7 @@ const ServiceItemScreen = (props) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: service.vehicleServiceName,
+      title: "",
     });
   }, [navigation]);
 
@@ -21,8 +22,17 @@ const ServiceItemScreen = (props) => {
       <View style={styles.info}>
         <Text
           style={{
-            fontSize: 20,
-            paddingBottom: 15,
+            fontSize: 35,
+            paddingBottom: 5,
+            color: "#03254c",
+          }}
+        >
+          {service.vehicleServiceName}
+        </Text>
+        <Text
+          style={{
+            fontSize: 18,
+            paddingBottom: 5,
           }}
         >
           Price : Rs.{service.vehicleServicePrice}
@@ -30,11 +40,20 @@ const ServiceItemScreen = (props) => {
         <Text
           style={{
             fontSize: 17,
-            paddingBottom: 15,
+            paddingBottom: 5,
           }}
         >
           Type : {service.vehicleServiceType}
         </Text>
+        <View style={{ flexDirection: "row", paddingBottom: 10 }}>
+          <Text>
+            {"Ratings : " + (Math.random() * (5 - 4) + 4).toFixed(1) + " "}
+          </Text>
+          <Icon name="star" size={15} />
+          <Text>
+            {" (" + Math.floor(Math.random() * (180 - 150) + 150) + ")"}
+          </Text>
+        </View>
         <Text
           style={{
             fontSize: 17,
@@ -48,7 +67,7 @@ const ServiceItemScreen = (props) => {
         buttonStyle={{ backgroundColor: "#104a8e", height: 50 }}
         containerStyle={styles.button}
         onPress={() => {
-          console.log("shhshh");
+          navigation.navigate("By Service");
         }}
         title="Create Service Request"
       />
@@ -64,9 +83,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   info: {
-    marginTop: 20,
-    padding: 10,
-    borderBottomColor: "gray",
+    marginTop: 10,
+    marginLeft: 20,
+    marginRight: 20,
   },
   button: {
     flex: 1,

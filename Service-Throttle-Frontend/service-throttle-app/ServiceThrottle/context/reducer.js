@@ -9,6 +9,7 @@ export const initialState = {
   engines: [],
   makes: [],
   models: [],
+  myrequests: [],
 
   // api: "https://servicethrottle.herokuapp.com/st",
   api: "http://192.168.1.102:8081/st",
@@ -73,7 +74,11 @@ export const reducer = (state, action) => {
         ...state,
         myVehicles: action.myVehicles,
       };
-
+    case "SET_REQ":
+      return {
+        ...state,
+        myrequests: action.myrequests,
+      };
     default:
       return state;
   }

@@ -60,7 +60,7 @@ const MyVehiclsScreen = ({ navigation }) => {
       key={item.id.toString()}
       bottomDivider
       onPress={() => {
-        navigation.navigate("My Car", (item = { item }));
+        navigation.navigate("My Car", { item });
       }}
     >
       <ListItem.Content>
@@ -77,7 +77,7 @@ const MyVehiclsScreen = ({ navigation }) => {
       <View style={styles.container}>
         <FlatList
           keyExtractor={keyExtractor}
-          data={myVehicles}
+          data={myVehicles.reverse()}
           renderItem={renderItem}
         />
       </View>

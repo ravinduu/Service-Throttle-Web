@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button } from "react-native-elements";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import axios from "axios";
@@ -10,7 +10,7 @@ import { useDataLayerValue } from "../context/DataLayer";
 
 const MyCarScreen = (props) => {
   const { navigation } = props;
-  const { item } = props.route.params;
+  const item = props.route.params.item;
 
   const [{ api, token }, dispatch] = useDataLayerValue();
 
@@ -44,13 +44,16 @@ const MyCarScreen = (props) => {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={require("../assets/car.jpg")}
+        style={{ width: "100%", height: "35%" }}
+      />
       <Text
         style={{
           fontSize: 35,
           fontWeight: "600",
           color: "#03254c",
           justifyContent: "flex-start",
-          marginTop: 50,
         }}
       >
         {item.vehicleMake.make + " " + item.vehicleModel.model}
@@ -75,7 +78,7 @@ const MyCarScreen = (props) => {
           borderWidth: 1,
           borderColor: "#104a8e",
           height: 50,
-          marginTop: "100%",
+          marginTop: "40%",
         }}
         titleStyle={{ color: "#104a8e" }}
         containerStyle={styles.button}
@@ -89,7 +92,7 @@ const MyCarScreen = (props) => {
         buttonStyle={{ backgroundColor: "#104a8e", height: 50, marginTop: 20 }}
         containerStyle={styles.button}
         onPress={() => {
-          console.log("shhshh");
+          navigation.navigate("By Car", { item });
         }}
         title="Create Service Request"
       />
@@ -139,13 +142,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    padding: 10,
-    justifyContent: "center",
-    alignItems: "center",
+    padding: 20,
   },
   button: {
     justifyContent: "flex-end",
-    width: "95%",
+    width: "100%",
     position: "relative",
   },
 });

@@ -57,10 +57,9 @@ const SettingsScreen = ({ navigation }) => {
         <Text
           style={styles.signOut}
           onPress={async () => {
-            console.log("signOut");
-            await AsyncStorage.clear().then(() => {
-              navigation.replace("Login");
-            });
+            await AsyncStorage.clear();
+            navigation.reset({ routes: [{ name: "Login" }] });
+            // navigation.replace("Login");
           }}
         >
           Sign Out

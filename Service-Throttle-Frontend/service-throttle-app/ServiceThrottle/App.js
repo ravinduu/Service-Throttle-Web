@@ -14,6 +14,9 @@ import SettingsScreen from "./screens/SettingsScreen";
 import ServiceItemScreen from "./screens/ServiceItemScreen";
 import AddCarScreen from "./screens/AddCarScreen";
 import MyCarScreen from "./screens/MyCarScreen";
+import RequesrByVehicle from "./screens/RequesrByVehicle";
+import RequestByService from "./screens/RequestByService";
+import ReceiptScreen from "./screens/ReceiptScreen";
 
 const Stack = createStackNavigator();
 
@@ -35,6 +38,9 @@ export default function App() {
             <Stack.Screen name="Service" component={ServiceItemScreen} />
             <Stack.Screen name="Add Vehicle" component={AddCarScreen} />
             <Stack.Screen name="My Car" component={MyCarScreen} />
+            <Stack.Screen name="By Service" component={RequestByService} />
+            <Stack.Screen name="By Car" component={RequesrByVehicle} />
+            <Stack.Screen name="Receipt" component={ReceiptScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </DataLayer>
