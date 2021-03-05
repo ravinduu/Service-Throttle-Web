@@ -1,7 +1,6 @@
 import React, { useLayoutEffect } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { Button, Icon } from "react-native-elements";
-import { FontAwesome } from "@expo/vector-icons";
 
 const ServiceItemScreen = (props) => {
   const { navigation } = props;
@@ -67,7 +66,7 @@ const ServiceItemScreen = (props) => {
         buttonStyle={{ backgroundColor: "#104a8e", height: 50 }}
         containerStyle={styles.button}
         onPress={() => {
-          navigation.navigate("By Service");
+          navigation.navigate("By Service", { service });
         }}
         title="Create Service Request"
       />

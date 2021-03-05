@@ -81,13 +81,13 @@ const Main = ({ navigation, route }) => {
   }
 
   useLayoutEffect(() => {
-    navigation.setOptions({
+    const unsubscribe = navigation.setOptions({
       headerTitle: getHeaderTitle(route),
       headerLeft: () => getHeaderLeft(route),
       headerRight: () => getHeaderRight(route),
     });
     return () => {
-      console.log("unmounting...");
+      unsubscribe;
     };
   }, [navigation, route]);
 
@@ -123,12 +123,6 @@ const Main = ({ navigation, route }) => {
         });
       })
       .then(async () => {
-        console.log("get CustomerVehicles..");
-      })
-      .then(async () => {
-        console.log("get Service Requests..");
-      })
-      .then(async () => {
         await getEngines(authAxios).then((res) => {
           dispatch({
             type: "SET_ENGINES",
@@ -158,7 +152,6 @@ const Main = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    console.log(user);
     if (!user) {
       fetchData();
     }
@@ -199,7 +192,7 @@ const Main = ({ navigation, route }) => {
         component={RequestScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="request-quote" size={26} color={color} />
+            <Ionicons name="ios-document" size={26} color={color} />
           ),
         }}
       />

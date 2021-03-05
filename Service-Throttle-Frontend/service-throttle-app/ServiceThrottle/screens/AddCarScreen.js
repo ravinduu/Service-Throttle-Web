@@ -6,6 +6,7 @@ import { Button, Input } from "react-native-elements";
 import axios from "axios";
 
 import { addCustomerVehicle } from "../services/vehicleService";
+import { KeyboardAvoidingView } from "react-native";
 
 const AddCarScreen = ({ navigation }) => {
   const [
@@ -42,7 +43,7 @@ const AddCarScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container}>
       <Text
         style={{
           marginTop: 50,
@@ -126,7 +127,7 @@ const AddCarScreen = ({ navigation }) => {
         onPress={submit}
         title="Submit"
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

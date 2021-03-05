@@ -17,6 +17,7 @@ import MyCarScreen from "./screens/MyCarScreen";
 import RequesrByVehicle from "./screens/RequesrByVehicle";
 import RequestByService from "./screens/RequestByService";
 import ReceiptScreen from "./screens/ReceiptScreen";
+import PromotionScreen from "./screens/PromotionScreen";
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,7 @@ export default function App() {
             <Stack.Screen name="By Service" component={RequestByService} />
             <Stack.Screen name="By Car" component={RequesrByVehicle} />
             <Stack.Screen name="Receipt" component={ReceiptScreen} />
+            <Stack.Screen name="Promotions" component={PromotionScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </DataLayer>

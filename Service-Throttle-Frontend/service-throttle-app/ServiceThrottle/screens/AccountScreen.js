@@ -1,11 +1,8 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import CustomListItem from "../components/CustomListItem";
-import { useDataLayerValue } from "../context/DataLayer";
 
 const AccountScreen = ({ navigation }) => {
-  const [{ user }, dispatch] = useDataLayerValue();
-
   const onpress = (route) => {
     navigation.navigate(route);
   };
@@ -19,8 +16,14 @@ const AccountScreen = ({ navigation }) => {
         title="Settings"
         onpress={onpress}
       />
-      {/* <CustomListItem key="2" icon="tag" type="ant-design" title="Promotions" />
       <CustomListItem
+        key="2"
+        icon="tag"
+        type="ant-design"
+        title="Promotions"
+        onpress={onpress}
+      />
+      {/* <CustomListItem
         key="3"
         icon="live-help"
         type="material-icons"

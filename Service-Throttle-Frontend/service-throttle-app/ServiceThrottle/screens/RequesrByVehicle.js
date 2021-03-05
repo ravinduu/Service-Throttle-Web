@@ -114,12 +114,13 @@ const RequesrByVehicle = (props) => {
           if (!service.id) {
             Alert.alert(
               "Not Complete yet!",
-              "Plese Select Your Services before submit!"
+              "Plese select your services before submit!"
             );
           } else {
             (serviceRequest.customerVehicle = item),
               (serviceRequest.vehicleServices[0] = service),
               (serviceRequest.comments = _comments),
+              (serviceRequest.totalCost = service.vehicleServicePrice),
               await addRequest(authAxios, serviceRequest).then((res) =>
                 navigation.navigate("Requests")
               );

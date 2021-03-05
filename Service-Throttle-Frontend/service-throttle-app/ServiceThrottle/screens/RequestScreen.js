@@ -163,7 +163,7 @@ const RequestScreen = ({ navigation }) => {
       }}
     >
       <Text style={{ color: "gray", fontSize: 16 }}>
-        You Don't have any vehicles...
+        You don't have any service requests ...
       </Text>
     </View>
   );

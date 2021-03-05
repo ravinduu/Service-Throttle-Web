@@ -4,7 +4,6 @@ import { ImageBackground, StyleSheet, Text, View } from "react-native";
 const ReceiptScreen = (props) => {
   const { item } = props.route.params.item;
 
-  console.log(item);
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -12,7 +11,7 @@ const ReceiptScreen = (props) => {
         style={{ width: "100%", height: "60%" }}
       >
         <View style={{ marginLeft: 20, marginTop: 20, marginRight: 20 }}>
-          <Text style={{ fontSize: 15 }}>{item?.createdAt}</Text>
+          <Text style={{ fontSize: 15 }}>{item?.whenWant}</Text>
           <Text style={{ fontSize: 30 }}>
             {"Here's Your reciept\nfor " +
               item?.vehicleServices[0]?.vehicleServiceName +
@@ -28,7 +27,9 @@ const ReceiptScreen = (props) => {
           </View>
           <View style={styles.info2}>
             <Text style={{ fontSize: 25 }}>Total</Text>
-            <Text style={{ fontSize: 25 }}>{"Rs" + item?.totalCost}</Text>
+            <Text style={{ fontSize: 25 }}>
+              {"Rs" + item?.totalCost + ".00"}
+            </Text>
           </View>
           <View style={styles.info2}>
             <View>
@@ -36,9 +37,15 @@ const ReceiptScreen = (props) => {
               <Text style={{ fontSize: 15 }}>Discount</Text>
             </View>
             <View>
-              <Text style={{ fontSize: 15 }}>{"Rs" + item?.totalCost}</Text>
+              <Text style={{ fontSize: 15 }}>
+                {"Rs" + item?.vehicleServices[0]?.vehicleServicePrice + ".00"}
+              </Text>
               <Text style={{ fontSize: 15, color: "green" }}>
-                {"Rs" + item?.totalCost}
+                {"Rs" +
+                  (item?.vehicleServices[0]?.vehicleServicePrice *
+                    item?.discount) /
+                    100 +
+                  ".00"}
               </Text>
             </View>
           </View>
