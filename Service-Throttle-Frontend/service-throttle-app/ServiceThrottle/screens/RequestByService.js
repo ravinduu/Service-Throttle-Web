@@ -52,10 +52,6 @@ const RequestByService = (props) => {
     showMode("date");
   };
 
-  const showTimepicker = () => {
-    showMode("time");
-  };
-
   const recentPromo = async () => {
     await AsyncStorage.getItem("RECENT_PROMO").then((res) => {
       setPromotion(JSON.parse(res));
@@ -115,8 +111,6 @@ const RequestByService = (props) => {
   if (isLoading) {
     return <Loading />;
   }
-
-  console.log(date);
 
   return (
     <KeyboardAvoidingView style={styles.container}>

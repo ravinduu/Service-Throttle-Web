@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { useDataLayerValue } from "../context/DataLayer";
 import { Button, Input } from "react-native-elements";
 import axios from "axios";
@@ -37,9 +37,19 @@ const AddCarScreen = ({ navigation }) => {
     customerVehicle.vehicleModel = selectedValueModels;
     customerVehicle.vehicleEngine = selectedValue;
 
-    await addCustomerVehicle(authAxios, customerVehicle).then((res) => {
-      navigation.goBack();
-    });
+    if (
+      !customerVehicle?.customer ||
+      !customerVehicle?.year ||
+      !customerVehicle?.vehicleMake ||
+      !customerVehicle?.vehicleModel ||
+      !customerVehicle?.vehicleEngine
+    ) {
+      Alert.alert("Not Complete yet!", "Plese fill all the fields!");
+    } else {
+      await addCustomerVehicle(authAxios, customerVehicle).then((res) => {
+        navigation.goBack();
+      });
+    }
   };
 
   return (

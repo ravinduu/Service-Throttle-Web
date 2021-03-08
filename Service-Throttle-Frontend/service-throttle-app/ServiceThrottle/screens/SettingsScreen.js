@@ -26,7 +26,7 @@ const SettingsScreen = ({ navigation }) => {
         <Text
           style={styles.editAccount}
           onPress={() => {
-            console.log("Go to edit account");
+            navigation.navigate("Edit Account", { user });
           }}
         >
           EDIT ACCOUNT

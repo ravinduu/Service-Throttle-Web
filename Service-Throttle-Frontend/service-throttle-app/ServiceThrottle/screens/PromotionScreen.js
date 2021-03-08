@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-community/async-storage";
 import React, { useLayoutEffect, useState } from "react";
-import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
+import { KeyboardAvoidingView } from "react-native";
+import { FlatList, StyleSheet, Text } from "react-native";
 import { Button, Input, ListItem } from "react-native-elements";
 import Popup from "../components/Popup";
 import { useDataLayerValue } from "../context/DataLayer";
@@ -55,10 +56,10 @@ const PromotionScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container}>
       <Input
         inputContainerStyle={styles.input}
-        placeholder="Enter Promo Code ..."
+        placeholder="Enter Promo Code..."
         onChangeText={(text) => {
           setcode(text);
         }}
@@ -91,7 +92,7 @@ const PromotionScreen = ({ navigation }) => {
           title="OK"
         />
       </Popup>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
