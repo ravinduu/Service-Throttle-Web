@@ -8,11 +8,10 @@ import { useDataLayerValue } from "../context/DataLayer";
 import { Button, Input } from "react-native-elements";
 import { editCurrentUser, getCurrentUser } from "../services/userService";
 
-const EditAccountScreen = (props) => {
+const CompleteUserScreen = (props) => {
   const [{ api, token, username }, dispatch] = useDataLayerValue();
 
   const { navigation } = props;
-  const { user } = props.route.params;
 
   let authAxios = axios.create({
     baseURL: api,
@@ -38,7 +37,12 @@ const EditAccountScreen = (props) => {
   });
 
   const formik = useFormik({
-    initialValues: user,
+    initialValues: {
+      firstname: "",
+      lastname: "",
+      phoneNumber: "",
+      address: "",
+    },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       console.log(values);
@@ -51,7 +55,7 @@ const EditAccountScreen = (props) => {
             });
           })
           .then(() => {
-            navigation.navigate("Settings");
+            navigation.replace("Main");
           });
       });
     },
@@ -77,14 +81,6 @@ const EditAccountScreen = (props) => {
           value={formik.values.lastname}
           onChangeText={formik.handleChange("lastname")}
           errorMessage={formik.touched.lastname && formik.errors.lastname}
-        />
-        <Input
-          inputContainerStyle={styles.inputContainer}
-          placeholder="Email"
-          type="email"
-          value={formik.values.email}
-          onChangeText={formik.handleChange("email")}
-          errorMessage={formik.touched.email && formik.errors.email}
         />
         <Input
           inputContainerStyle={styles.inputContainer}
@@ -117,7 +113,7 @@ const EditAccountScreen = (props) => {
   );
 };
 
-export default EditAccountScreen;
+export default CompleteUserScreen;
 
 const styles = StyleSheet.create({
   container: {

@@ -19,6 +19,7 @@ import RequestByService from "./screens/RequestByService";
 import ReceiptScreen from "./screens/ReceiptScreen";
 import PromotionScreen from "./screens/PromotionScreen";
 import EditAccountScreen from "./screens/EditAccountScreen";
+import CompleteUserScreen from "./screens/CompleteUserScreen";
 
 const Stack = createStackNavigator();
 
@@ -45,6 +46,10 @@ export default function App() {
             <Stack.Screen name="Receipt" component={ReceiptScreen} />
             <Stack.Screen name="Promotions" component={PromotionScreen} />
             <Stack.Screen name="Edit Account" component={EditAccountScreen} />
+            <Stack.Screen
+              name="Complete Account"
+              component={CompleteUserScreen}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </DataLayer>
