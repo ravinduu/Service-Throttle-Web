@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { StyleSheet, Text, View, KeyboardAvoidingView } from "react-native";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -9,9 +9,9 @@ import { Button, Input } from "react-native-elements";
 import { editCurrentUser, getCurrentUser } from "../services/userService";
 
 const CompleteUserScreen = (props) => {
-  const [{ api, token, username }, dispatch] = useDataLayerValue();
-
+  const [{ api, token, user, username }, dispatch] = useDataLayerValue();
   const { navigation } = props;
+  let initialVal;
 
   let authAxios = axios.create({
     baseURL: api,
@@ -27,7 +27,6 @@ const CompleteUserScreen = (props) => {
     lastname: yup
       .string("Enter your lastname")
       .required("Last Name is required"),
-    email: yup.string().email("Invalid email").required("Email is required"),
     phoneNumber: yup
       .string("Enter your phone number")
       .min(10, "Invalid phone number")
@@ -37,12 +36,7 @@ const CompleteUserScreen = (props) => {
   });
 
   const formik = useFormik({
-    initialValues: {
-      firstname: "",
-      lastname: "",
-      phoneNumber: "",
-      address: "",
-    },
+    initialValues: user,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       console.log(values);

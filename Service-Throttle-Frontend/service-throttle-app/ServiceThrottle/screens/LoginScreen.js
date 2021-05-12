@@ -87,11 +87,11 @@ const LoginScreen = ({ navigation }) => {
     initialValues: authCredentials,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log("yeo");
-
       await axios
         .post(`${api}/login`, values)
         .then((res) => {
+          console.log(res);
+
           const _token = res.data.jwttoken;
           const _username = res.data.username;
           AsyncStorage.setItem("JWT", _token);

@@ -9,10 +9,8 @@ import Loading from "./Loading";
 import { getRequest } from "../services/requestService";
 
 const RequestScreen = ({ navigation }) => {
-  const [
-    { api, token, user, isLoading, myrequests },
-    dispatch,
-  ] = useDataLayerValue();
+  const [{ api, token, user, isLoading, myrequests }, dispatch] =
+    useDataLayerValue();
 
   let authAxios = axios.create({
     baseURL: api,

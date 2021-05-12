@@ -8,10 +8,8 @@ import Loading from "./Loading";
 import { ListItem } from "react-native-elements";
 
 const MyVehiclsScreen = ({ navigation }) => {
-  const [
-    { api, token, user, isLoading, myVehicles },
-    dispatch,
-  ] = useDataLayerValue();
+  const [{ api, token, user, isLoading, myVehicles }, dispatch] =
+    useDataLayerValue();
 
   let authAxios = axios.create({
     baseURL: api,

@@ -41,6 +41,7 @@ const _getMyVehicles = async (authAxios, username) => {
 };
 
 const _addCustomerVehicle = async (authAxios, cvehicle) => {
+  console.log(cvehicle);
   try {
     const res = await authAxios.post(`/vehicle/customer-vehicle/add`, cvehicle);
     const data = res.data;

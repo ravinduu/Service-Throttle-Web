@@ -9,10 +9,8 @@ import { addCustomerVehicle } from "../services/vehicleService";
 import { KeyboardAvoidingView } from "react-native";
 
 const AddCarScreen = ({ navigation }) => {
-  const [
-    { api, user, engines, makes, models, token },
-    dispatch,
-  ] = useDataLayerValue();
+  const [{ api, user, engines, makes, models, token }, dispatch] =
+    useDataLayerValue();
   const [selectedValueYear, setSelectedValueYear] = useState();
   const [selectedValue, setSelectedValue] = useState({});
   const [selectedValueMakes, setSelectedValueMakes] = useState({});
@@ -102,14 +100,14 @@ const AddCarScreen = ({ navigation }) => {
           <Picker.Item key={0} label="Model" />
 
           {models.map((m) => {
-            if (
-              selectedValueMakes &&
-              m.vehicleMake.id == selectedValueMakes.id
-            ) {
-              return (
-                <Picker.Item key={m.id.toString()} label={m.model} value={m} />
-              );
-            }
+            // if (
+            //   selectedValueMakes &&
+            //   m.vehicleMake.id == selectedValueMakes.id
+            // ) {
+            return (
+              <Picker.Item key={m.id.toString()} label={m.model} value={m} />
+            );
+            // }
           })}
         </Picker>
       </View>

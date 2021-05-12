@@ -8,6 +8,7 @@ import axios from "axios";
 
 import { useDataLayerValue } from "../context/DataLayer";
 import {} from "react-native";
+import { getCurrentUser } from "../services/userService";
 
 const regCredentials = {
   code: "",
@@ -54,6 +55,25 @@ const ActivationScreen = ({ navigation }) => {
         const _username = res.data.username;
         await AsyncStorage.setItem("JWT", _token);
         await AsyncStorage.setItem("USERNAME", _username);
+
+        let authAxios = axios.create({
+          baseURL: api,
+          headers: {
+            Authorization: `Bearer ${_token}`,
+          },
+        });
+
+        await getCurrentUser(authAxios, _username)
+          .then((res) => {
+            dispatch({
+              type: "SET_USER",
+              user: res,
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+
         dispatch({
           type: "SET_TOKEN",
           token: _token,
@@ -68,7 +88,7 @@ const ActivationScreen = ({ navigation }) => {
         await AsyncStorage.removeItem("regPassword");
       })
       .then(() => {
-        navigation.replace("Main");
+        navigation.replace("Complete Account");
       })
       .catch((err) => {
         console.log(err);
