@@ -1,10 +1,14 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import AnimatedEllipsis from "react-native-animated-ellipsis";
 
 const Loading = () => {
   return (
     <View style={styles.container}>
-      <Text>Loading...</Text>
+      <Text style={styles.loading}>
+        Loading
+        <AnimatedEllipsis />
+      </Text>
     </View>
   );
 };
@@ -17,5 +21,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  loading: {
+    fontSize: 20,
   },
 });

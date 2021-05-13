@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import * as Network from "expo-network";
+import * as Location from "expo-location";
 
 import { DataLayer } from "./context/DataLayer";
 import { reducer, initialState } from "./context/reducer";
@@ -20,10 +22,33 @@ import ReceiptScreen from "./screens/ReceiptScreen";
 import PromotionScreen from "./screens/PromotionScreen";
 import EditAccountScreen from "./screens/EditAccountScreen";
 import CompleteUserScreen from "./screens/CompleteUserScreen";
+import { Alert } from "react-native";
 
 const Stack = createStackNavigator();
 
 export default function App() {
+  const locationGet = async () => {
+    let { status } = await Location.requestPermissionsAsync();
+    if (status !== "granted") {
+      console.log("Permission to access location was denied");
+      return;
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    console.log(location.coords.latitude + "," + location.coords.longitude);
+  };
+
+  useLayoutEffect(() => {
+    Network.getNetworkStateAsync().then((res) => {
+      if (!res.isConnected) {
+        Alert.alert(
+          "No Internet Connection",
+          "Check your network settings and try again."
+        );
+      }
+    });
+    return () => {};
+  }, []);
   return (
     <SafeAreaProvider>
       <DataLayer initialState={initialState} reducer={reducer}>

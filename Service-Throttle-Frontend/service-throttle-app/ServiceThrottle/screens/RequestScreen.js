@@ -76,7 +76,7 @@ const RequestScreen = ({ navigation }) => {
               borderBottomWidth: 0.5,
             }}
           >
-            {item.createdAt + "\nOrder #" + item.id}
+            {item.whenWant + "\nOrder #" + item.id}
           </Text>
         </View>
         <View style={{ flexDirection: "row", marginTop: 10 }}>

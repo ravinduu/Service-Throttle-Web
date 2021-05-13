@@ -1,5 +1,7 @@
 const _addRequest = async (authAxios, request) => {
   try {
+    console.log(request);
+
     const res = await authAxios.post(`/service-request/new`, request);
     const _request = res.data;
     return _request;
@@ -12,7 +14,6 @@ const _getRequest = async (authAxios, username) => {
   try {
     const res = await authAxios.get(`/service-request/by-customer/${username}`);
     const _requests = res.data;
-    console.log(_requests);
     return _requests;
   } catch (error) {
     console.log(error);
