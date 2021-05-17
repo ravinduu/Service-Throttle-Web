@@ -31,7 +31,6 @@ const headCells = [
   { id: "vehicleServicePrice", label: "Price" },
   { id: "vehicleServiceDescription", label: "Description" },
   { id: "vehicleServiceType", label: "Type" },
-  { id: "imageURL", label: "Image" },
   { id: "actions", label: "Actions", disableSorting: true },
 ];
 
@@ -166,7 +165,6 @@ function SrService() {
                 <TableCell>{service.vehicleServicePrice}</TableCell>
                 <TableCell>{service.vehicleServiceDescription}</TableCell>
                 <TableCell>{service.vehicleServiceType}</TableCell>
-                <TableCell>{service.imageURL}</TableCell>
                 <TableCell>
                   <IconButton
                     color="primary"

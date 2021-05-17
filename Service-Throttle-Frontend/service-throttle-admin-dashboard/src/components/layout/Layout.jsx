@@ -23,6 +23,7 @@ import Promotion from "../../pages/promotions/Promotion";
 import SrService from "../../pages/srservices/SrService";
 
 import { useDataLayerValue } from "../../dataLayer/DataLayer";
+import SrRequests from "../../pages/srrequests/SrRequests";
 
 function Layout() {
   const [{ api }, dispatch] = useDataLayerValue();
@@ -94,6 +95,7 @@ function Layout() {
             <Route path="/st/vehicle/services" component={SrService} />
 
             <Route path="/st/footer" component={Footer} />
+            <Route path="/st/service-request" component={SrRequests} />
           </Switch>
         </div>
       </div>

@@ -30,7 +30,6 @@ const headCells = [
   { id: "promoCode", label: "Promo Code" },
   { id: "discount", label: "Discount" },
   { id: "promoDescription", label: "Description" },
-  { id: "imageUri", label: "Image" },
   { id: "createdAt", label: "Start" },
   { id: "endAt", label: "End" },
   { id: "actions", label: "Actions", disableSorting: true },
@@ -166,7 +165,6 @@ function Promotion() {
                 <TableCell>{promo.promoCode}</TableCell>
                 <TableCell>{promo.discount}</TableCell>
                 <TableCell>{promo.promoDescription}</TableCell>
-                <TableCell>{promo.imageUri}</TableCell>
                 <TableCell>{promo.createdAt}</TableCell>
                 <TableCell>{promo.endAt}</TableCell>
 

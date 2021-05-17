@@ -26,7 +26,12 @@ import classNames from "classnames";
 
 const structure = [
   { id: 0, option: "Dashboard", icon: DashboardIcon, link: "/" },
-  { id: 1, option: "Service Requests", icon: AddBoxIcon, link: "/st/navbar" },
+  {
+    id: 1,
+    option: "Service Requests",
+    icon: AddBoxIcon,
+    link: "/st/service-request",
+  },
   {
     id: 2,
     option: "Users",
