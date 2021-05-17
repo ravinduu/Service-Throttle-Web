@@ -74,9 +74,10 @@ public class UserAccountService {
                 success = customerService.registerCustomer(username, email);
             }
             else if (accountType.equals(MOBILE_MECHANIC_ACCOUNT.getAccountType())){
+                userCredentials.setLocked(true);
                 userCredentials.setAccountType(MOBILE_MECHANIC_ACCOUNT.getAccountType());
                 userAuthority.add(authorityService.createAuthorityIfNotFound(MOBILE_MECHANIC.getAuthorityType()));
-                success = mobileMechanicService.registerMobileMechanic(username, email);
+                success = mobileMechanicService.registerMobileMechanic(username, email, true);
             }
 
 //        userCredentials.setActivated(false);

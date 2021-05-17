@@ -42,6 +42,9 @@ public class UserDetailsDto {
 
     private Instant created;
 
+    private boolean locked;
+
+
     public UserDetailsDto(Admin admin) {
         this.id = admin.getId();
         this.firstname = admin.getFirstname();
@@ -51,6 +54,7 @@ public class UserDetailsDto {
         this.email = admin.getEmail() ;
         this.address = admin.getAddress();
         this.created = admin.getCreated();
+        this.locked = admin.isLocked();
     }
 
     public UserDetailsDto(Customer customer) {
@@ -62,6 +66,7 @@ public class UserDetailsDto {
         this.email = customer.getEmail() ;
         this.address = customer.getAddress();
         this.created = customer.getCreated();
+        this.locked = customer.isLocked();
     }
 
     public UserDetailsDto(Supervisor supervisor) {
@@ -73,6 +78,7 @@ public class UserDetailsDto {
         this.email = supervisor.getEmail() ;
         this.address = supervisor.getAddress();
         this.created = supervisor.getCreated();
+        this.locked = supervisor.isLocked();
     }
 
     public UserDetailsDto(MobileMechanic mobileMechanic) {
@@ -84,5 +90,6 @@ public class UserDetailsDto {
         this.email = mobileMechanic.getEmail() ;
         this.address = mobileMechanic.getAddress();
         this.created = mobileMechanic.getCreated();
+        this.locked = mobileMechanic.isLocked();
     }
 }

@@ -1,5 +1,6 @@
 package com.servicethrottle.servicethrottlebackend.models;
 
+import com.servicethrottle.servicethrottlebackend.models.enums.RequestStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -67,5 +68,9 @@ public class ServiceRequest implements Serializable {
     @ManyToOne
     @JoinColumn(name = "location_id")
     private Location location;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "request_status")
+    private RequestStatus requestStatus;
 
 }

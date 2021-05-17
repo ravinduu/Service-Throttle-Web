@@ -59,4 +59,6 @@ public class User implements Serializable {
 
     private Instant created;
 
+    private boolean locked = false;
+
 }

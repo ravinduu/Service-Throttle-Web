@@ -29,7 +29,7 @@ public class MobileMechanicService {
         return mobileMechanicRepository.findAll().stream().map(UserDetailsDto::new).collect(Collectors.toList());
     }
 
-    public boolean registerMobileMechanic(String username, String email) {
+    public boolean registerMobileMechanic(String username, String email, boolean isLocked) {
 
         mobileMechanicRepository.findOneByEmail(email).ifPresent(
                 customerExist -> {
@@ -41,6 +41,7 @@ public class MobileMechanicService {
         mobileMechanic.setUsername(username);
         mobileMechanic.setEmail(email);
         mobileMechanic.setCreated(Instant.now());
+        mobileMechanic.setLocked(isLocked);
         mobileMechanic.setAssignToTask(false);
 
         mobileMechanicRepository.save(mobileMechanic);

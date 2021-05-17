@@ -5,6 +5,7 @@ import com.servicethrottle.servicethrottlebackend.models.Customer;
 import com.servicethrottle.servicethrottlebackend.models.CustomerVehicle;
 import com.servicethrottle.servicethrottlebackend.models.ServiceRequest;
 import com.servicethrottle.servicethrottlebackend.models.dto.ServiceRequestDto;
+import com.servicethrottle.servicethrottlebackend.models.enums.RequestStatus;
 import com.servicethrottle.servicethrottlebackend.repositories.ServiceRequestRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class ServiceRequestService {
 
     public ServiceRequest createServiceRequest(ServiceRequestDto serviceRequestDto) {
         ServiceRequest serviceRequest = new ServiceRequest();
+        serviceRequestDto.setRequestStatus(RequestStatus.IN_PROGRESS);
         return addDataAndSaveServiceRequest(serviceRequest, serviceRequestDto);
     }
 
@@ -35,6 +37,7 @@ public class ServiceRequestService {
         serviceRequest.setCustomerVehicle(serviceRequestDto.getCustomerVehicle());
         serviceRequest.setVehicleServices(serviceRequestDto.getVehicleServices());
         serviceRequest.setLocation(serviceRequestDto.getLocation());
+        serviceRequest.setRequestStatus(serviceRequestDto.getRequestStatus());
         serviceRequestRepository.save(serviceRequest);
         return serviceRequest;
     }
