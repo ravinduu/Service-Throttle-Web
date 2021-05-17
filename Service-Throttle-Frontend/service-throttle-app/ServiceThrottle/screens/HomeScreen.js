@@ -18,6 +18,7 @@ const HomeScreen = ({ navigation }) => {
       id={item.id}
       price={""}
       description={item.promoDescription}
+      // imageUri={item.imageUri}
     />
   );
 

@@ -67,6 +67,15 @@ const RequestScreen = ({ navigation }) => {
         </Text>
         <View style={{ width: "100%" }}>
           <Text
+            style={[
+              styles.in_progress,
+              item.requestStatus === "PROCESSING" ? styles.processing : null,
+              item.requestStatus === "COMPLETED" ? styles.completd : null,
+            ]}
+          >
+            {item.requestStatus}
+          </Text>
+          <Text
             style={{
               fontSize: 13,
               marginTop: 5,
@@ -173,5 +182,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  in_progress: {
+    fontSize: 13,
+    marginTop: 5,
+    color: "red",
+  },
+  processing: {
+    color: "orange",
+  },
+  completd: {
+    color: "green",
   },
 });
