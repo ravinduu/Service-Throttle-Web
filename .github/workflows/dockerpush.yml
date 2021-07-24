@@ -2,9 +2,9 @@ name: Maven build and push to docker hub
 
 on:
   push:
-    branches: [ backend ]
+    branches: [ master ]
   pull_request:
-    branches: [ backend ]
+    branches: [ master ]
 
   workflow_dispatch:
 
