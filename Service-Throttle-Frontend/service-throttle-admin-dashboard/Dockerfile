@@ -8,7 +8,7 @@ ENV PATH /app/node_modules/.bin:$PATH
 # install app dependencies
 COPY ./Service-Throttle-Frontend/service-throttle-admin-dashboard/package.json .
 COPY ./Service-Throttle-Frontend/service-throttle-admin-dashboard/package-lock.json .
-RUN npm install --silent
+RUN npm install -g npm@7.20.1 --silent
 RUN npm install react-scripts@3.4.1 -g --silent
 
 # add app
