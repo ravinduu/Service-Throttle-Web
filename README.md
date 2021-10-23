@@ -6,7 +6,7 @@ There are three main components in this project
 - Admin dashboard ( [React JS V17.0.1](https://github.com/facebook/react))
 - Backend server ( [Spring boot V2.3.4](https://spring.io/projects/spring-boot) | [PostgresQL](https://github.com/postgres/postgres) )
 
-## Docker
+## Install | Docker
 ### Admin Dashboard and Backend Server
 1. Get the docker images
 ```
